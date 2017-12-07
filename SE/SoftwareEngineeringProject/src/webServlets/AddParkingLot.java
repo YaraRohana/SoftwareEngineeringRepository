@@ -1,4 +1,4 @@
-package allClasses;
+package webServlets;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Try
+ * Servlet implementation class AddParkingLot
  */
-@WebServlet("/Try")
-public class Try extends HttpServlet {
+@WebServlet("/AddParkingLot")
+public class AddParkingLot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Try() {
+    public AddParkingLot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,17 +27,17 @@ public class Try extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String id=request.getParameter("id");
-		System.out.println(id);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		int id=Integer.parseInt(request.getParameter("id"));
+		String name=request.getParameter("name");
+		String location=request.getParameter("location");
+			
+		
 	}
 
 }
