@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +30,7 @@ public class DataAccess implements DataInterface {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotById);
 		stm.setInt(1, p.getId());
 		ResultSet rs = stm.executeQuery();
-		if (rs.next()) // user exists
+		if (rs.next()) // parkingLot exists
 		{
 			System.out.println("rs.next(): " + rs.getString(2));
 			System.out.println("BAD, USER ALREADY EXISTS");

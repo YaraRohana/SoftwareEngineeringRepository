@@ -21,7 +21,7 @@ public class DBUtils {
 
 		}
 
-		String url = "jdbc:mysql://softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com";
+		String url = "mysql@softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com:3306";
 		String username = "fur_seal_admin";
 		String password = "*PecVE3K!nr85HW{";
 
