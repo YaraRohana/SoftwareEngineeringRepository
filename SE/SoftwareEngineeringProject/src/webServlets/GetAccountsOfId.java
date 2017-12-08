@@ -1,12 +1,16 @@
 package webServlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import allClasses.ParkingLot;
+import da.DataAccess;
 
 //import org.tsofen.project1.Customer;
 
@@ -30,8 +34,19 @@ public class GetAccountsOfId extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id=request.getParameter("id");
-		response.getWriter().append("yara's frist server ").append(id);
+	//	response.getWriter().append("yara's frist server ").append(id);
 		System.out.println(id);
+		
+		ParkingLot p=new ParkingLot(5, "haifa", "haifa", true, true, "ya");	
+	//	DataAccess da=new DataAccess();
+		boolean res=false;
+//		try {
+//			res=da.AddParkingLot(p);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		System.out.println(res);
 	}
 
 	/**

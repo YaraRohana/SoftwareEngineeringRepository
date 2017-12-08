@@ -13,16 +13,8 @@ public class DBUtils {
 		if (conn != null)
 			return conn;
 		try {
-			try {
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
+			Class.forName("com.mysql.jdbc.Driver");
+		//	DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
