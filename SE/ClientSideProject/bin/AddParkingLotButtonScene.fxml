@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <Button layoutX="186.0" layoutY="235.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="207.0" text="Add Parking Lot" />
+      <TextArea blendMode="DARKEN" layoutX="105.0" layoutY="14.0" prefHeight="79.0" prefWidth="365.0" text="Welcome to CPS">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </TextArea>
+   </children>
+</AnchorPane>
