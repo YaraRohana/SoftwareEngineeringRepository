@@ -17,7 +17,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
-	private Stage PrimaryStage;
 	@Override
 	 public void start(Stage primaryStage) throws IOException { // constructing our scene 
 		java.net.URL url = getClass().getResource("/AddParkingLotButtonScene.fxml");
@@ -26,26 +25,11 @@ public class Main extends Application {
 			 primaryStage.setScene( scene );
 			 primaryStage.setTitle( "Hello World Demo" );
 			 primaryStage.show();
-			 this.PrimaryStage = primaryStage;
-	}
+			 }
 	
 	
 
 	public static void main(String[] args) {
 		launch(args);
 	}
-
-
-
-	public Main() {
-		super();
-	}
-
-
-
-	public Stage getPrimaryStage() {
-		return PrimaryStage;
-	}
-	
-	
 }

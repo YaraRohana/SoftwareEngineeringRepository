@@ -44,7 +44,7 @@ public class MyServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 	
 		System.out.println("im heree");
-		ParkingLot p = new ParkingLot(24, "Mall", "haifa", true, true, "Yaman");
+		ParkingLot p = new ParkingLot(6, "Mall", "haifa", true, true, "Yaman");
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		try {
