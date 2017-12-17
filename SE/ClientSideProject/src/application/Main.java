@@ -17,19 +17,35 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
+	private Stage PrimaryStage;
 	@Override
 	 public void start(Stage primaryStage) throws IOException { // constructing our scene 
-		java.net.URL url = getClass().getResource("HelloWorldScene.fxml");
+		java.net.URL url = getClass().getResource("/AddParkingLotButtonScene.fxml");
 	 AnchorPane pane = FXMLLoader.load( url ); Scene scene
 			 = new Scene( pane ); // setting the stage
 			 primaryStage.setScene( scene );
 			 primaryStage.setTitle( "Hello World Demo" );
 			 primaryStage.show();
-			 }
+			 this.PrimaryStage = primaryStage;
+	}
 	
 	
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+
+
+	public Main() {
+		super();
+	}
+
+
+
+	public Stage getPrimaryStage() {
+		return PrimaryStage;
+	}
+	
+	
 }
