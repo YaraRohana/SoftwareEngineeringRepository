@@ -47,10 +47,8 @@ void addParkingLotButton(ActionEvent event) {
           
           String response;
           while ( (response = in.readLine()) != null ) {
-              System.out.println( response +"loveeeeeee");
           }
           in.close();
-          System.out.print("geeeeeer");
       }
       catch ( MalformedURLException ex ) {
           // a real program would need to handle this exception
