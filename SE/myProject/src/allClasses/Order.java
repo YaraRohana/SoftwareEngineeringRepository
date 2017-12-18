@@ -26,9 +26,8 @@ public class Order {
 	String Compensation;
 	String SubscriptionDate;
 	
-	public Order(int id, OrderType type, String arrivingAt, String leavingAt, String chargement, String compensation, String subscriptionDate) {
+	public Order(OrderType type, String arrivingAt, String leavingAt, String chargement, String compensation, String subscriptionDate) {
 		super();
-		this.id = id;
 		this.type = type;
 		this.arrivingAt = arrivingAt;
 		this.leavingAt = leavingAt;

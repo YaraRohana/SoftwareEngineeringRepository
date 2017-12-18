@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,8 +31,8 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean AddParkingLot(ParkingLot p) throws SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotById);
-		stm.setInt(1, p.getId());
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
+		stm.setString(1, p.getName());
 		ResultSet rs = stm.executeQuery();
 		if (rs.next()) // parkingLot exists
 		{
@@ -39,16 +40,16 @@ public class DataAccess implements DataInterface {
 			System.out.println("BAD, USER ALREADY EXISTS");
 			return false;
 		}
-		
-		else{
+
+		else {
 			PreparedStatement stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewParkingLot);
-			stm1.setInt(1, p.getId());
-			stm1.setString(2, p.getName());
-			stm1.setString(3, p.getLocation());
-			stm1.setBoolean(4, p.isActive());
-			stm1.setBoolean(5, p.isAvailable());
-			stm1.setString(6, p.getManager());
 			
+			stm1.setString(1, p.getName());
+			stm1.setString(2, p.getLocation());
+			stm1.setBoolean(3, p.isActive());
+			stm1.setBoolean(4, p.isAvailable());
+			stm1.setString(5, p.getManager());
+
 			stm1.executeUpdate();
 			System.out.println("added to database");
 		}
@@ -56,26 +57,43 @@ public class DataAccess implements DataInterface {
 	}
 
 	@Override
-	public boolean AddOrder(Order order, Customer customer, Vehicle v, ParkingLot p) throws SQLException {
-		
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectOrderById);
-		stm.setInt(1, order.getId());
+	public boolean deleteParkingLot(String nameOfParkingLot) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
+		stm.setString(1, nameOfParkingLot);
 		ResultSet rs = stm.executeQuery();
-		if (rs.next()) // parkingLot exists
-		{
-			System.out.println("rs.next(): " + rs.getInt(1));
-			System.out.println("BAD, order ALREADY EXISTS");
+		if (!rs.next()) {
+			System.out.println("Parking lot does not exist,try a different parking lot");
 			return false;
 		}
-		
-		else{
-			
+		PreparedStatement stm1 = c.prepareStatement(sqlStatements.Allstatements.deleteParkingLot);
+		stm1.setString(1, nameOfParkingLot);
+		stm1.executeUpdate();
+		System.out.println("Parking lot deleted successfully");
+		return true;
+	}
+	
+	public int getParkingIdLotByName(String name) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
+		stm.setString(1, name);
+		ResultSet rs=stm.executeQuery();
+		int id=0;
+		while(rs.next()) {
+			id=rs.getInt("parkingLotId");
+			return id;
+		}
+		return 0;	
+	}
+	
+	
+	@Override
+	/*public boolean AddOrder(Order order, Customer customer, Vehicle v, ParkingLot p) throws SQLException {
+
 			PreparedStatement stm1 = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotById);
 			stm1.setInt(1, p.getId());
 			rs = stm1.executeQuery();
 
-			if(rs.next()){
-				//adding order info into orders table
+			if (rs.next()) {
+				// adding order info into orders table
 				stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewOrder);
 				stm1.setInt(1, order.getId());
 				stm1.setInt(2, order.isType().getValue());
@@ -85,41 +103,53 @@ public class DataAccess implements DataInterface {
 				stm1.setString(6, order.getChargement());
 				stm1.setString(7, order.getCompensation());
 				stm1.setString(8, order.getSubscriptionDate());
-				
+
 				stm1.executeUpdate();
-				
-				//adding new customer into customers table in case customer doesn't exist 
-				
+
+				// adding new customer into customers table in case customer doesn't exist
+
 				stm1 = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 				stm1.setString(1, customer.getId());
 				rs = stm1.executeQuery();
-				if(!rs.next()){
+				if (!rs.next()) {
 					System.out.println("fffffff");
-				stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewCustomer);
-				stm1.setString(1, customer.getId());
-				stm1.setString(2, customer.getEmail());
-				stm1.executeUpdate();
+					stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewCustomer);
+					stm1.setString(1, customer.getId());
+					stm1.setString(2, customer.getEmail());
+					stm1.executeUpdate();
 				}
-				
+
 				stm1 = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByOrderId);
 				stm1.setInt(1, order.getId());
 				rs = stm1.executeQuery();
-				if(!rs.next()){
+				if (!rs.next()) {
 					System.out.println("gggggggg");
-				stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewVehicle);
-				stm1.setString(1, v.getVehicleNumber());
-				stm1.setString(2, customer.getId());
-				stm1.setInt(3,order.getId());
-				stm1.setBoolean(4,v.isLate());
-				stm1.executeUpdate();
+					stm1 = c.prepareStatement(sqlStatements.Allstatements.addNewVehicle);
+					stm1.setString(1, v.getVehicleNumber());
+					stm1.setString(2, customer.getId());
+					stm1.setInt(3, order.getId());
+					stm1.setBoolean(4, v.isLate());
+					stm1.executeUpdate();
 				}
-				
+
 				System.out.println("order added to database");
 				return true;
-			}
-			else
+			} else
 				return false;
 		}
+	}
+*/
+	public ArrayList<ParkingLot> GetAllParkingLots() throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllParkingLots);
+		ArrayList<ParkingLot> allParkingLots = new ArrayList<ParkingLot>();
+		ParkingLot p = null;
+		ResultSet rs = stm.executeQuery();
+		while (rs.next()) {
+			p = new ParkingLot( rs.getString("name"), rs.getString("location"),
+					rs.getBoolean("isActive"), rs.getBoolean("available"), rs.getString("manager"));
+			allParkingLots.add(p);
+		}
+		return allParkingLots;
 	}
 
 }

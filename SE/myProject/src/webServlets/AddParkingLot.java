@@ -33,25 +33,16 @@ public class AddParkingLot extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//System.out.println("yaratrgggg");
-		int ID = 1;
-		String id = request.getParameter("id");
 		String name = request.getParameter("name");
 		String location = request.getParameter("location");
-		// String active=request.getParameter("active");
-		// String available=request.getParameter("available");
-		// String manager=request.getParameter("manager");
-		//response.getWriter().append("yara's frist server ").append(id + " ").append(name + " ").append(location);
-		if (id != null) {
-			ID = Integer.parseInt(id);
-			System.out.println("id is" + ID);
-			ParkingLot p = new ParkingLot(ID, "Mall", "haifa", true, true, "Yaman");
+		String manager=request.getParameter("manager");
+		if (name!= null && location!=null && manager!=null) {
+			ParkingLot p = new ParkingLot(name,location, false, true,manager);
 			DataAccess da = new DataAccess();
 			boolean res = false;
 			try {
 				res = da.AddParkingLot(p);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println(res);

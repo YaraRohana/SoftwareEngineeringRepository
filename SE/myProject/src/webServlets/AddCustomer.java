@@ -1,30 +1,23 @@
 package webServlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.ParkingLot;
-import da.DataAccess;
-
 /**
- * Servlet implementation class MyServlet
+ * Servlet implementation class AddCustomer
  */
-@WebServlet("/MyServlet")
-public class MyServlet extends HttpServlet {
+@WebServlet("/AddCustomer")
+public class AddCustomer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private final static String _USERNAME = "username";
-
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MyServlet() {
+    public AddCustomer() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,21 +34,7 @@ public class MyServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ParkingLot p = new ParkingLot("Mall", "haifa", true, true, "Yaman");
-		DataAccess da = new DataAccess();
-		boolean res = false;
-		try {
-			res = da.AddParkingLot(p);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(res);
-		
-		PrintWriter out = response.getWriter();
-	        String username = request.getParameter( _USERNAME );
-	        
-	        response.setContentType("text/html");
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

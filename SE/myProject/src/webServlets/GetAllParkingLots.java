@@ -1,8 +1,8 @@
 package webServlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,17 +14,16 @@ import allClasses.ParkingLot;
 import da.DataAccess;
 
 /**
- * Servlet implementation class MyServlet
+ * Servlet implementation class GetAllParkingLots
  */
-@WebServlet("/MyServlet")
-public class MyServlet extends HttpServlet {
+@WebServlet("/GetAllParkingLots")
+public class GetAllParkingLots extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private final static String _USERNAME = "username";
-
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MyServlet() {
+    public GetAllParkingLots() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,27 +34,23 @@ public class MyServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		ArrayList<ParkingLot> parkingLots=new ArrayList<ParkingLot>();
+		DataAccess da=new DataAccess();
+		try {
+			parkingLots=da.GetAllParkingLots();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (ParkingLot parkingLot : parkingLots) {
+			System.out.println(parkingLot.toString());
+		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ParkingLot p = new ParkingLot("Mall", "haifa", true, true, "Yaman");
-		DataAccess da = new DataAccess();
-		boolean res = false;
-		try {
-			res = da.AddParkingLot(p);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(res);
-		
-		PrintWriter out = response.getWriter();
-	        String username = request.getParameter( _USERNAME );
-	        
-	        response.setContentType("text/html");
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

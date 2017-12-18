@@ -1,6 +1,9 @@
 package allClasses;
 
+import java.util.ArrayList;
+
 public class ParkingLot {
+
 
 	int id;
 	String name;
@@ -8,16 +11,17 @@ public class ParkingLot {
 	boolean isActive;
 	boolean available;
 	String manager;
+	ArrayList<Customer> allCustomers;
 
-	public ParkingLot(int id, String name, String location, boolean isActive,
+	public ParkingLot(String name, String location, boolean isActive,
 			boolean available, String manager) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.location = location;
 		this.isActive = isActive;
 		this.available = available;
 		this.manager = manager;
+		this.allCustomers=new ArrayList<Customer>();
 	}
 
 	public int getId() {
@@ -66,5 +70,11 @@ public class ParkingLot {
 
 	public void setManager(String manager) {
 		this.manager = manager;
+	}
+	
+	@Override
+	public String toString() {
+		return "ParkingLot [id=" + id + ", name=" + name + ", location=" + location + ", isActive=" + isActive
+				+ ", available=" + available + ", manager=" + manager + "]";
 	}
 }
