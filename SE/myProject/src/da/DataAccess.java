@@ -47,7 +47,7 @@ public class DataAccess implements DataInterface {
 			stm1.setString(1, p.getName());
 			stm1.setString(2, p.getLocation());
 			stm1.setBoolean(3, p.isActive());
-			stm1.setBoolean(4, p.isAvailable());
+			stm1.setBoolean(4, p.isFull());
 			stm1.setString(5, p.getManager());
 
 			stm1.executeUpdate();
@@ -146,7 +146,7 @@ public class DataAccess implements DataInterface {
 		ResultSet rs = stm.executeQuery();
 		while (rs.next()) {
 			p = new ParkingLot( rs.getString("name"), rs.getString("location"),
-					rs.getBoolean("isActive"), rs.getBoolean("available"), rs.getString("manager"));
+					rs.getBoolean("isActive"), rs.getBoolean("isFull"), rs.getString("manager"));
 			allParkingLots.add(p);
 		}
 		return allParkingLots;

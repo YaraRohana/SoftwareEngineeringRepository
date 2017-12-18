@@ -11,7 +11,7 @@ public class Allstatements {
 	
 	
 	
-	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,available,manager)"+"values(?,?,?,?,?);";
+	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,isFull,manager)"+"values(?,?,?,?,?);";
 	public final static String addNewOrder = "INSERT INTO fur_seal_schema.orders VALUES(?,?,?,?,?,?,?,?)";
 	public final static String addNewCustomer = "INSERT INTO fur_seal_schema.customers VALUES(?,?)";
 	public final static String addNewVehicle = "INSERT INTO fur_seal_schema.vehicles VALUES(?,?,?,?)";

@@ -9,17 +9,17 @@ public class ParkingLot {
 	String name;
 	String location;
 	boolean isActive;
-	boolean available;
+	boolean isFull;
 	String manager;
 	ArrayList<Customer> allCustomers;
 
 	public ParkingLot(String name, String location, boolean isActive,
-			boolean available, String manager) {
+			boolean isFull, String manager) {
 		super();
 		this.name = name;
 		this.location = location;
 		this.isActive = isActive;
-		this.available = available;
+		this.isFull = isFull;
 		this.manager = manager;
 		this.allCustomers=new ArrayList<Customer>();
 	}
@@ -56,12 +56,12 @@ public class ParkingLot {
 		this.isActive = isActive;
 	}
 
-	public boolean isAvailable() {
-		return available;
+	public boolean isFull() {
+		return isFull;
 	}
 
-	public void setAvailable(boolean available) {
-		this.available = available;
+	public void setFull(boolean isFull) {
+		this.isFull = isFull;
 	}
 
 	public String getManager() {
@@ -75,6 +75,6 @@ public class ParkingLot {
 	@Override
 	public String toString() {
 		return "ParkingLot [id=" + id + ", name=" + name + ", location=" + location + ", isActive=" + isActive
-				+ ", available=" + available + ", manager=" + manager + "]";
+				+ ", isFull=" + isFull + ", manager=" + manager + "]";
 	}
 }

@@ -13,10 +13,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class AddParkingLotButtonController implements javafx.fxml.Initializable {
@@ -24,12 +28,14 @@ public class AddParkingLotButtonController implements javafx.fxml.Initializable 
 @FXML
 private Button addParkingLotButton;
 
-public void AddParkingLotController() {}
+@FXML
+private AnchorPane rootPane;
+
+
+public AddParkingLotButtonController() {}
 
 @FXML
 void addParkingLotButton(ActionEvent event) {
-	
-	
 	
 	  try {
           
@@ -58,28 +64,35 @@ void addParkingLotButton(ActionEvent event) {
       }
 	
 	
-	
-	
-	
-//	java.net.URL url = getClass().getResource("AddParkingLotButton.fxml");
-//	 AnchorPane pane = FXMLLoader.load( url );   
-//	 Scene scene = new Scene( pane ); // setting the stage
-//			 primaryStage.setScene( scene );
-//	//		 primaryStage.setTitle( "Add new parking lot" );
-//			 primaryStage.show();
-			 
-			 
-	
+	  try {
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/AddParkingLotScene.fxml"));
+		rootPane.getChildren().setAll(pane);
+		
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+	  
+	  
+//	  
+//	  try {
+//		  Main main = new Main();
+//	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AddParkingLotScene.fxml"));
+//	                Parent root1 = (Parent) fxmlLoader.load();
+//	                Stage stage = main.getPrimaryStage();
+//	             //   Stage stage = new Stage();
+//	                stage.setScene(new Scene(root1));  
+//	                stage.show();
+//	        } catch(Exception e) {
+//	           e.printStackTrace();
+//	          }
+
 }
-	
-	
-	
-	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 

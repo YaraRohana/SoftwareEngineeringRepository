@@ -41,21 +41,21 @@ public class MyServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ParkingLot p = new ParkingLot("Mall", "haifa", true, true, "Yaman");
-		DataAccess da = new DataAccess();
-		boolean res = false;
-		try {
-			res = da.AddParkingLot(p);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(res);
-		
-		PrintWriter out = response.getWriter();
-	        String username = request.getParameter( _USERNAME );
-	        
-	        response.setContentType("text/html");
+//		ParkingLot p = new ParkingLot("Mall", "haifa", true, true, "Yaman");
+//		DataAccess da = new DataAccess();
+//		boolean res = false;
+//		try {
+//			res = da.AddParkingLot(p);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(res);
+//		
+//		PrintWriter out = response.getWriter();
+//	        String username = request.getParameter( _USERNAME );
+//	        
+//	        response.setContentType("text/html");
 		doGet(request, response);
 	}
 

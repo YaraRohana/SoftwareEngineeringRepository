@@ -1,19 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.AddParkingLotButtonController">
+<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddParkingLotController">
    <children>
-      <Button fx:id="addParkingLotButton" layoutX="171.0" layoutY="214.0" mnemonicParsing="false" onAction="#addParkingLotButton" prefHeight="45.0" prefWidth="207.0" text="Add Parking Lot" />
-      <TextArea blendMode="DARKEN" layoutX="99.0" layoutY="25.0" prefHeight="79.0" prefWidth="365.0" text="Welcome to CPS">
+      <Button fx:id="createNewParkingLot" layoutX="167.0" layoutY="408.0" mnemonicParsing="false" onAction="#createNewParkingLot" prefHeight="45.0" prefWidth="261.0" text="Create new parking lot" textAlignment="CENTER" textFill="#25e1d7">
+         <effect>
+            <InnerShadow />
+         </effect></Button>
+      <TextField fx:id="name" layoutX="182.0" layoutY="247.0" prefHeight="25.0" prefWidth="230.0" />
+      <TextField fx:id="location" layoutX="182.0" layoutY="291.0" prefHeight="25.0" prefWidth="230.0" />
+      <TextField fx:id="manager" layoutX="182.0" layoutY="343.0" prefHeight="25.0" prefWidth="230.0" />
+      <Text layoutX="61.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="89.13671875">
          <font>
-            <Font size="41.0" />
+            <Font name="Comic Sans MS" size="18.0" />
          </font>
-      </TextArea>
+      </Text>
+      <Text layoutX="61.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="89.13671875">
+         <font>
+            <Font name="Comic Sans MS" size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="61.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manager" wrappingWidth="89.13671875">
+         <font>
+            <Font name="Comic Sans MS" size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="28.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please fill the form bellow to add new parking lot " wrappingWidth="473.337890625">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Text>
+      <Text fill="#d73737" layoutX="125.0" layoutY="85.0" strokeType="INSIDE" strokeWidth="0.0" text="Add Parking Lot" textAlignment="CENTER" wrappingWidth="312.0869140625">
+         <font>
+            <Font name="Viner Hand ITC" size="37.0" />
+         </font>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Text>
    </children>
 </AnchorPane>

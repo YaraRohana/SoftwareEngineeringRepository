@@ -33,11 +33,20 @@ public class AddParkingLot extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String name = request.getParameter("name");
 		String location = request.getParameter("location");
 		String manager=request.getParameter("manager");
 		if (name!= null && location!=null && manager!=null) {
-			ParkingLot p = new ParkingLot(name,location, false, true,manager);
+			ParkingLot p = new ParkingLot(name,location,false,true,manager);
 			DataAccess da = new DataAccess();
 			boolean res = false;
 			try {
@@ -47,15 +56,6 @@ public class AddParkingLot extends HttpServlet {
 			}
 			System.out.println(res);
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
 	}
 
 }

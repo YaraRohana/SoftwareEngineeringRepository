@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <Text layoutX="48.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding new Parking Lot Status " wrappingWidth="249.13671875" />
+      <Text layoutX="48.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The proccess of adding Parking Lot Status was stopped due to lack of given info" />
+      <Text layoutX="48.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Not able to add new parking lot because it's already in the CPS " />
+      <Text layoutX="48.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Couldn't add a new parking lot due to lack of credibility in the provided info" />
+      <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The parking lot was added successfully to the CPS.                                                                            Current info about the parking lot are given bellow: Name: location: Manager" wrappingWidth="538.3125" />
+   </children>
+</AnchorPane>
