@@ -6,21 +6,28 @@ public class Customer {
 
 	String id;
 	String email;
-	ArrayList<Order> allOrders;
+	String password;
+	
+	public Customer(String id, String email,String password) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+	}
 	
 	public Customer(String id, String email) {
 		super();
 		this.id = id;
 		this.email = email;
-		this.allOrders=new ArrayList<Order>();
+		//this.password = password;has to be generated randomly
+	}
+	
+	public String getPassword() {
+		return password;
 	}
 
-	public ArrayList<Order> getAllOrders() {
-		return allOrders;
-	}
-
-	public void setAllOrders(ArrayList<Order> allOrders) {
-		this.allOrders = allOrders;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getId() {
@@ -39,6 +46,9 @@ public class Customer {
 		this.email = email;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", email=" + email + ", password=" + password + "]";
+	}
 	
 }

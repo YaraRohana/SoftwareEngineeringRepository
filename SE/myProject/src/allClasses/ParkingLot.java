@@ -4,24 +4,23 @@ import java.util.ArrayList;
 
 public class ParkingLot {
 
-
 	int id;
 	String name;
 	String location;
 	boolean isActive;
 	boolean isFull;
 	String manager;
-	ArrayList<Customer> allCustomers;
+	int width;
 
-	public ParkingLot(String name, String location, boolean isActive,
-			boolean isFull, String manager) {
+	public ParkingLot( String name, String location, boolean isActive, boolean isFull, String manager,
+			int width) {
 		super();
 		this.name = name;
 		this.location = location;
 		this.isActive = isActive;
 		this.isFull = isFull;
 		this.manager = manager;
-		this.allCustomers=new ArrayList<Customer>();
+		this.width = width;
 	}
 
 	public int getId() {
@@ -71,10 +70,19 @@ public class ParkingLot {
 	public void setManager(String manager) {
 		this.manager = manager;
 	}
-	
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 	@Override
 	public String toString() {
 		return "ParkingLot [id=" + id + ", name=" + name + ", location=" + location + ", isActive=" + isActive
-				+ ", isFull=" + isFull + ", manager=" + manager + "]";
+				+ ", isFull=" + isFull + ", manager=" + manager + ", width=" + width + "]";
 	}
+
 }

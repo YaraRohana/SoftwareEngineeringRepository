@@ -3,11 +3,17 @@ package allClasses;
 public class Vehicle {
 
 	String vehicleNumber;
-	boolean isLate;
-	public Vehicle(String vehicleNumber, boolean isLate) {
+	String customerId;
+	boolean arrivingLate;
+	boolean leavingLate;
+	
+	
+	public Vehicle(String vehicleNumber, String customerId, boolean arrivingLate, boolean leavingLate) {
 		super();
 		this.vehicleNumber = vehicleNumber;
-		this.isLate = isLate;
+		this.customerId = customerId;
+		this.arrivingLate = arrivingLate;
+		this.leavingLate = leavingLate;
 	}
 	public String getVehicleNumber() {
 		return vehicleNumber;
@@ -15,15 +21,28 @@ public class Vehicle {
 	public void setVehicleNumber(String vehicleNumber) {
 		this.vehicleNumber = vehicleNumber;
 	}
-	public boolean isLate() {
-		return isLate;
+	public String getCustomerId() {
+		return customerId;
 	}
-	public void setLate(boolean isLate) {
-		this.isLate = isLate;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
-	
-	
-	
-	
+	public boolean isArrivingLate() {
+		return arrivingLate;
+	}
+	public void setArrivingLate(boolean arrivingLate) {
+		this.arrivingLate = arrivingLate;
+	}
+	public boolean isLeavingLate() {
+		return leavingLate;
+	}
+	public void setLeavingLate(boolean leavingLate) {
+		this.leavingLate = leavingLate;
+	}
+	@Override
+	public String toString() {
+		return "Vehicle [vehicleNumber=" + vehicleNumber + ", customerId=" + customerId + ", arrivingLate="
+				+ arrivingLate + ", leavingLate=" + leavingLate + "]";
+	}	
 	
 }

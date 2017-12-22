@@ -6,7 +6,7 @@ public class Order {
 	
 	public enum OrderType
 	{
-		atParkingLot(0) , prior(1) , routineSubscription(2) , fullSubscription(3);
+		uponArrivalOrder(0) , preOrder(1);
 		
 		private final int value;
 	    private OrderType(int value) {
@@ -18,80 +18,103 @@ public class Order {
 	    }
 	}
 
-	int id;
+	int orderId;
 	OrderType type;
+	int parkingLotId;//maybe should be String parkingLot?
 	String arrivingAt;
 	String leavingAt;
-	String chargement;
-	String Compensation;
-	String SubscriptionDate;
+	String customerId;
+	String vehicleNum;
 	
-	public Order(OrderType type, String arrivingAt, String leavingAt, String chargement, String compensation, String subscriptionDate) {
+	
+	public Order(int orderId, OrderType type, int parkingLotId, String arrivingAt, String leavingAt, String customerId,
+			String vehicleNum) {
 		super();
+		this.orderId = orderId;
 		this.type = type;
+		this.parkingLotId = parkingLotId;
 		this.arrivingAt = arrivingAt;
 		this.leavingAt = leavingAt;
-		this.chargement = chargement;
-		this.Compensation = compensation;
-		this.SubscriptionDate = subscriptionDate;
+		this.customerId = customerId;
+		this.vehicleNum = vehicleNum;
 	}
 
-	public int getId() {
-		return id;
+
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public String getSubscriptionDate() {
-		return SubscriptionDate;
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 
-	public void setSubscriptionDate(String subscriptionDate) {
-		SubscriptionDate = subscriptionDate;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public OrderType isType() {
+	public OrderType getType() {
 		return type;
 	}
+
 
 	public void setType(OrderType type) {
 		this.type = type;
 	}
 
+
+	public int getParkingLotId() {
+		return parkingLotId;
+	}
+
+
+	public void setParkingLotId(int parkingLotId) {
+		this.parkingLotId = parkingLotId;
+	}
+
+
 	public String getArrivingAt() {
 		return arrivingAt;
 	}
+
 
 	public void setArrivingAt(String arrivingAt) {
 		this.arrivingAt = arrivingAt;
 	}
 
+
 	public String getLeavingAt() {
 		return leavingAt;
 	}
+
 
 	public void setLeavingAt(String leavingAt) {
 		this.leavingAt = leavingAt;
 	}
 
-	public String getChargement() {
-		return chargement;
+
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setChargement(String chargement) {
-		this.chargement = chargement;
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
-	public String getCompensation() {
-		return Compensation;
+
+	public String getVehicleNum() {
+		return vehicleNum;
 	}
 
-	public void setCompensation(String compensation) {
-		Compensation = compensation;
+
+	public void setVehicleNum(String vehicleNum) {
+		this.vehicleNum = vehicleNum;
 	}
-	
-	
-	
+
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", type=" + type + ", parkingLotId=" + parkingLotId + ", arrivingAt="
+				+ arrivingAt + ", leavingAt=" + leavingAt + ", customerId=" + customerId + ", vehicleNum=" + vehicleNum
+				+ "]";
+	}
+
 }

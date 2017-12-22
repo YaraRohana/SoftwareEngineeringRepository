@@ -36,48 +36,52 @@ public class AddOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String type = request.getParameter("type");
+		if (type != null) {
+			int realType = type.equals("uponArrivalOrder") ? 0 : 1;
+			OrderType ordertype = (realType == 0) ? Order.OrderType.uponArrivalOrder : Order.OrderType.preOrder;
+			String parkingLot = request.getParameter("parkingLot");
+			String arrivingAt = request.getParameter("arrival");
+			String leavingAt = request.getParameter("leavingAt");
+			String customerId = request.getParameter("customerId");
+			String vehicle = request.getParameter("vehicleNum");
+			String email = request.getParameter("email");
+			DataAccess da = new DataAccess();
+			int parkingLotID = 0;
+			if (customerId != null) {
+				try {
+					parkingLotID = da.getParkingIdLotByName(parkingLot);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				if (parkingLotID != 0) {
+					Order o = new Order(0, ordertype, parkingLotID, arrivingAt, leavingAt, customerId, vehicle);
+					try {
+						da.addOrder(o);
+					} catch (SQLException e) {
+						System.out.println("Unable to add order");
+						e.printStackTrace();
+					}
 
-		/*String arrivingAt = request.getParameter("arrivingAt");
-		String leavingAt = request.getParameter("leavingAt");
-		String parkingLot = request.getParameter("parkingLot");
-		// String chargement =request.getParameter("chargement");
-		// String compensation=request.getParameter("compensation");
-		// String subscriptionDate = request.getParameter("subscriptionDate");
+					Vehicle v = new Vehicle(vehicle, customerId, false, false);
+					try {
+						da.addVehicle(v);
+					} catch (SQLException e) {
+						System.out.println("Unable to add vehicle");
+						e.printStackTrace();
+					}
+					Customer c = new Customer(customerId, email);
+					try {
+						da.addCustomer(c);
+					} catch (SQLException e) {
+						System.out.println("Unable to add customer");
+						e.printStackTrace();
+					}
 
-		// vehicle info
-		// String vehicleNumber =request.getParameter("vehicleNumber");
-		// String isLate=request.getParameter("isLate");
-
-		// customer info
-		// String customerID =request.getParameter("customerID");
-		// String email=request.getParameter("email");
-
-		// parkingLot info
-		// String parkingLotID=request.getParameter("parkingLotID");
-		// String name=request.getParameter("name");
-		// String location=request.getParameter("location");
-		// String isActive =request.getParameter("isActive");
-		// String available=request.getParameter("available");
-		// String manager=request.getParameter("manager");
-		// Order order = new
-		// Order(ID,OrderType.prior,arrivingAt,leavingAt,chargement,compensation);
-		Order order = new Order(Order.OrderType.atParkingLot, arrivingAt, leavingAt, "20$", "0$", "8/12/2017");
-		DataAccess da = new DataAccess();
-		int parkingLotId = da.getParkingIdLotByName(parkingLot);
-		if (parkingLotId != 0) {
-			boolean res = false;
-			try {
-			} catch (SQLException e) {
-				da.AddOrder(order);
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				}
 			}
-			System.out.println(res);
-			// response.getWriter().append("Served at: ").append(request.getContextPath());
-		}*/
+		}
 	}
-
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

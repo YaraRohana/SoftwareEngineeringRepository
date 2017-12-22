@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -42,19 +43,24 @@ public class AddParkingLot extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("this is a new age");
 		String name = request.getParameter("name");
 		String location = request.getParameter("location");
 		String manager=request.getParameter("manager");
+		int width=Integer.parseInt(request.getParameter("width"));
+				
 		if (name!= null && location!=null && manager!=null) {
-			ParkingLot p = new ParkingLot(name,location,false,true,manager);
+			ParkingLot p = new ParkingLot(name,location,false,true,manager,width);
 			DataAccess da = new DataAccess();
 			boolean res = false;
 			try {
-				res = da.AddParkingLot(p);
+				res = da.addParkingLot(p);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			System.out.println(res);
+			
+			PrintWriter out=response.getWriter();
+			out.println(res);
 		}
 	}
 

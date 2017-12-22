@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<AnchorPane fx:id="rootPane" prefHeight="518.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text layoutX="48.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding new Parking Lot Status " wrappingWidth="249.13671875" />
-      <Text layoutX="48.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The proccess of adding Parking Lot Status was stopped due to lack of given info" />
-      <Text layoutX="48.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Not able to add new parking lot because it's already in the CPS " />
-      <Text layoutX="48.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Couldn't add a new parking lot due to lack of credibility in the provided info" />
-      <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The parking lot was added successfully to the CPS.                                                                            Current info about the parking lot are given bellow: Name: location: Manager" wrappingWidth="538.3125" />
+      <Text layoutX="48.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding New Parking Lot Status " wrappingWidth="464.13671875">
+         <font>
+            <Font name="Viner Hand ITC" size="30.0" />
+         </font>
+         <effect>
+            <InnerShadow color="#da1818" />
+         </effect></Text>
+      <Text fx:id="addParkingLotStatus" layoutX="32.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="497.13671875">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <effect>
+            <InnerShadow color="#111717" />
+         </effect></Text>
+      <TableView fx:id="table" layoutX="72.0" layoutY="185.0" prefHeight="221.0" prefWidth="298.0">
+        <columns>
+          <TableColumn fx:id="name" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="location" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="manager" prefWidth="75.0" text="Manager" />
+            <TableColumn fx:id="width" prefWidth="75.0" text="Width" />
+        </columns>
+      </TableView>
+      <Button fx:id="back" layoutX="312.0" layoutY="431.0" mnemonicParsing="false" onAction="#returnToTheFormerPage" text="return to the former page">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
+      <Text fx:id="host" layoutX="479.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
+      <Text fx:id="port" layoutX="479.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
    </children>
 </AnchorPane>
