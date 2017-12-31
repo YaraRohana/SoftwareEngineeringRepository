@@ -9,7 +9,8 @@ public class Allstatements {
 	public final static String selectParkingLotByName = "SELECT * from fur_seal_schema.parkingLots where name=?;";
 
 	public final static String checkIfOrderExists = "select * from fur_seal_schema.orders where parkingLot=? AND vehicleNumber=? AND customerId=?";
-
+	public final static String checkIfVehicleExists="select * from fur_seal_schema.vehicles where vehicleNumber=?";
+	
 	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,isFull,manager,width)"
 			+ "values(?,?,?,?,?,?);";
 	public final static String addNewOrder = "INSERT INTO `fur_seal_schema`.`orders` (`orderID`, `type`, `parkingLot`, `arrivingAt`, `leavingAt`, `customerId`, `vehicleNumber`, `arrivingLate`, `leavingLate`) VALUES ('0',?,?,?,?,?,?, '0','0');";
@@ -26,7 +27,7 @@ public class Allstatements {
 	public final static String getAlOrdersByCustomerId = "select * from fur_seal_schema.orders where customerId=?;";
 	public final static String getAllOrdersByVehicleNum = "select * from fur_seal_schema.orders where vehicleNumber=?;";
 
-	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`subscriptions` (`customerId`, `subscriptionId`, `vehicleNumber`, `type`, `startingDate`, `parkingLot`, `arrivedSince`, `leavingAt`,`amount`) VALUES (?,'0',?,'1',?, 'null', ?,'null','0');";
+	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`fullSubscription` (`customerId`, `subscriptionId`, `vehicleNumber`, `startingDate`, `arrivedSince`) VALUES (?,?,?,?,?);";
 	public final static String addRegularSubscription = "";
 
 }

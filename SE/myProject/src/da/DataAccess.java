@@ -257,10 +257,11 @@ public class DataAccess implements DataInterface {
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addFullSubscription);
 		stm.setString(1, fullSubscription.getCustomerId());
-		stm.setString(2, fullSubscription.getVehicleNumber());
-		stm.setDate(3, fullSubscription.getStartDate());
+		stm.setString(2, fullSubscription.getSubsciptionId());
+		stm.setString(3, fullSubscription.getVehicleNumber());
 		stm.setDate(4, fullSubscription.getStartDate());
 		stm.setDate(5, fullSubscription.getStartDate());
+		//stm.setDate(5, fullSubscription.getStartDate());
 		stm.executeUpdate();
 		System.out.println("Full Subscription Added Successfully");
 		return true;
@@ -278,4 +279,18 @@ public class DataAccess implements DataInterface {
 		System.out.println("Regular Subscription Added Successfully");
 		return true;
 	}
+	
+
+	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
+		stm.setString(1, vehicleNum);
+		ResultSet res=stm.executeQuery();
+		if(res.next()) {
+			System.out.println("Vehicle exists in CPS");
+			return true;
+		}
+		return false;
+	}
+	
+	
 }
