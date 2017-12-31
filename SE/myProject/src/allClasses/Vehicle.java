@@ -4,17 +4,28 @@ public class Vehicle {
 
 	String vehicleNumber;
 	String customerId;
-	boolean arrivingLate;
-	boolean leavingLate;
+	int row;
+	int column;
+	int width;
 	
-	
-	public Vehicle(String vehicleNumber, String customerId, boolean arrivingLate, boolean leavingLate) {
+	public Vehicle(String vehicleNumber, String customerId) {
 		super();
 		this.vehicleNumber = vehicleNumber;
 		this.customerId = customerId;
-		this.arrivingLate = arrivingLate;
-		this.leavingLate = leavingLate;
+		
 	}
+	
+	
+	public Vehicle(String vehicleNumber, String customerId, int row, int column, int width) {
+		super();
+		this.vehicleNumber = vehicleNumber;
+		this.customerId = customerId;
+		this.row = row;
+		this.column = column;
+		this.width = width;
+	}
+
+
 	public String getVehicleNumber() {
 		return vehicleNumber;
 	}
@@ -27,22 +38,41 @@ public class Vehicle {
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
-	public boolean isArrivingLate() {
-		return arrivingLate;
+	
+	
+	public int getRow() {
+		return row;
 	}
-	public void setArrivingLate(boolean arrivingLate) {
-		this.arrivingLate = arrivingLate;
+
+
+	public void setRow(int row) {
+		this.row = row;
 	}
-	public boolean isLeavingLate() {
-		return leavingLate;
+
+
+	public int getColumn() {
+		return column;
 	}
-	public void setLeavingLate(boolean leavingLate) {
-		this.leavingLate = leavingLate;
+
+
+	public void setColumn(int column) {
+		this.column = column;
 	}
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
 	@Override
 	public String toString() {
-		return "Vehicle [vehicleNumber=" + vehicleNumber + ", customerId=" + customerId + ", arrivingLate="
-				+ arrivingLate + ", leavingLate=" + leavingLate + "]";
+		return "Vehicle [vehicleNumber=" + vehicleNumber + ", customerId=" + customerId + "]";
 	}	
 	
 }

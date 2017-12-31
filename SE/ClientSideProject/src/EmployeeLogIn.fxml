@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="cancel" layoutX="360.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancelActivity" prefHeight="36.0" prefWidth="138.0" text="Cancel" />
+      <Button fx:id="logIn" layoutX="99.0" layoutY="361.0" mnemonicParsing="false" onAction="#logIn" prefHeight="36.0" prefWidth="138.0" text="Log In" />
+      <TextField fx:id="password" layoutX="280.0" layoutY="261.0" />
+      <TextField fx:id="name" layoutX="280.0" layoutY="193.0" />
+      <Text layoutX="50.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fx:id="msg" fill="#d31010" layoutX="23.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In was rejected!! Please Try Again after checking your userName and password " wrappingWidth="513.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

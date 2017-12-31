@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="518.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="43.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get All Available Parking Lots" wrappingWidth="485.13671875">
+         <effect>
+            <InnerShadow color="#da1818" />
+         </effect>
+         <font>
+            <Font name="Viner Hand ITC" size="30.0" />
+         </font>
+      </Text>
+      <Text fx:id="status" layoutX="32.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="497.13671875">
+         <effect>
+            <InnerShadow color="#111717" />
+         </effect>
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TableView fx:id="table" layoutX="72.0" layoutY="185.0" prefHeight="221.0" prefWidth="302.0">
+         <columns>
+            <TableColumn fx:id="name" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="location" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="manager" prefWidth="75.0" text="Manager" />
+            <TableColumn fx:id="width" prefWidth="75.0" text="Empty Spots" />
+         </columns>
+      </TableView>
+      <Button fx:id="goBackToPreviousPage" layoutX="312.0" layoutY="431.0" mnemonicParsing="false" onAction="#goBackToPreviousPage" text="Go Back to Previous Page">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
+      <Text fx:id="host" layoutX="479.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
+      <Text fx:id="port" layoutX="479.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
+   </children>
+</AnchorPane>

@@ -11,6 +11,18 @@ public class ParkingLot {
 	boolean isFull;
 	String manager;
 	int width;
+	int canceledOrders;
+	ParkingSpot[][][] ParkingSpots = new ParkingSpot[3][3][width];
+	
+	
+	
+	public int getCanceledOrders() {
+		return canceledOrders;
+	}
+
+	public void setCanceledOrders(int canceledOrders) {
+		this.canceledOrders = canceledOrders;
+	}
 
 	public ParkingLot( String name, String location, boolean isActive, boolean isFull, String manager,
 			int width) {
@@ -82,7 +94,10 @@ public class ParkingLot {
 	@Override
 	public String toString() {
 		return "ParkingLot [id=" + id + ", name=" + name + ", location=" + location + ", isActive=" + isActive
-				+ ", isFull=" + isFull + ", manager=" + manager + ", width=" + width + "]";
+				+ ", isFull=" + isFull + ", manager=" + manager + ", width=" + width + ", canceledOrders="
+				+ canceledOrders + "]";
 	}
+
+
 
 }

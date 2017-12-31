@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Updated Status " textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Button fx:id="goTo" layoutX="125.0" layoutY="354.0" mnemonicParsing="false" onAction="#goToMainPage" prefHeight="49.0" prefWidth="339.0" text="Go To Main Page" />
+      <Text fx:id="status" layoutX="93.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="402.13671875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

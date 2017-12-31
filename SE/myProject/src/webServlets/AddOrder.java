@@ -37,33 +37,30 @@ public class AddOrder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String type = request.getParameter("type");
-		if (type != null) {
-			int realType = type.equals("uponArrivalOrder") ? 0 : 1;
-			OrderType ordertype = (realType == 0) ? Order.OrderType.uponArrivalOrder : Order.OrderType.preOrder;
+		//System.out.println("type is" +type);
+		if(type!=null) {
+			OrderType ordertype = type.equals("uponArrivalOrder")? Order.OrderType.uponArrivalOrder: Order.OrderType.preOrder;
 			String parkingLot = request.getParameter("parkingLot");
+			//System.out.println("parking is" +parkingLot);
 			String arrivingAt = request.getParameter("arrival");
 			String leavingAt = request.getParameter("leavingAt");
 			String customerId = request.getParameter("customerId");
 			String vehicle = request.getParameter("vehicleNum");
 			String email = request.getParameter("email");
 			DataAccess da = new DataAccess();
-			int parkingLotID = 0;
+			//int parkingLotID = 0;
 			if (customerId != null) {
-				try {
-					parkingLotID = da.getParkingIdLotByName(parkingLot);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				if (parkingLotID != 0) {
-					Order o = new Order(0, ordertype, parkingLotID, arrivingAt, leavingAt, customerId, vehicle);
+					Order o = new Order(0, ordertype, parkingLot, arrivingAt, leavingAt, customerId, vehicle);
 					try {
+						System.out.println("trying to add order");
 						da.addOrder(o);
 					} catch (SQLException e) {
 						System.out.println("Unable to add order");
 						e.printStackTrace();
+						return;
 					}
 
-					Vehicle v = new Vehicle(vehicle, customerId, false, false);
+					Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
 					try {
 						da.addVehicle(v);
 					} catch (SQLException e) {
@@ -78,7 +75,7 @@ public class AddOrder extends HttpServlet {
 						e.printStackTrace();
 					}
 
-				}
+				
 			}
 		}
 	}

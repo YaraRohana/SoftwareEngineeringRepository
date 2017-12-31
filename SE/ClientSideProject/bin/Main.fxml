@@ -5,13 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane prefHeight="518.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text fx:id="message" layoutX="24.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="489.13671875">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
+      <Text fx:id="ip" layoutX="121.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
+      <Text fx:id="port" layoutX="121.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
    </children>
 </AnchorPane>

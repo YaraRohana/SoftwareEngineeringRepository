@@ -47,21 +47,11 @@ public class AddParkingLotController implements Initializable {
 	private TextField width;
 	@FXML
 	private AnchorPane rootPane;
-	@FXML
-	private Text host;
-	@FXML 
-	private Text port;
-	
-	void initData(String _host,String _port){
-		host.setText(_host);
-		port.setText(_port);
-	}
-	
-	
+
 	@FXML
 	void createNewParkingLot(ActionEvent event) throws JSONException {
-		String IP = host.getText();
-		String Port = port.getText();
+		String IP = Main.getIP();
+		String Port = Main.getPort();
 		
 		HashMap<String,String> params= new HashMap<String,String>(); 		
 		  
@@ -89,7 +79,7 @@ public class AddParkingLotController implements Initializable {
 	          params.put("location", _location);
 	          params.put("manager", _manager);
 	          params.put("width", _width);
-	          out.write(getPostDataString(params));
+	          out.write(MyFunctions.getPostDataString(params));
 	          out.flush();
 	          out.close();
 	          os.close();
@@ -122,7 +112,6 @@ public class AddParkingLotController implements Initializable {
 	          // a real program would need to handle this exception
 	      }
 		
-		
 // Setting the next scene		
 		 try {
 			 
@@ -130,7 +119,7 @@ public class AddParkingLotController implements Initializable {
 			 ApproveParkingLotController controller = new ApproveParkingLotController();
 			 loader.setController(controller);
 			 AnchorPane pane = loader.load();	
-			 controller.initData(parkingLots,status,IP,Port);
+			 controller.initData(parkingLots,status);
 			 rootPane.getChildren().setAll(pane);
 				
 		 } catch (IOException e) {
@@ -140,32 +129,13 @@ public class AddParkingLotController implements Initializable {
 		 }
 	}
 	
-	
-	private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException{
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first){
-                first = false;
-            }
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
-    }
-	
 	@Override
 	public void initialize(URL location1, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		name.setText("");
-		location.setText("");
-		manager.setText("");
-		width.setText("");
+//		name.setText("");
+//		location.setText("");
+//		manager.setText("");
+//		width.setText("");
 
 	}
 	

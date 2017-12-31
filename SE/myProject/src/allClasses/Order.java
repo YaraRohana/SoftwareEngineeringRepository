@@ -20,23 +20,27 @@ public class Order {
 
 	int orderId;
 	OrderType type;
-	int parkingLotId;//maybe should be String parkingLot?
+	String parkingLot;//maybe should be String parkingLot?
 	String arrivingAt;
 	String leavingAt;
 	String customerId;
 	String vehicleNum;
+	boolean arrivingLate;
+	boolean leavingLate;
 	
 	
-	public Order(int orderId, OrderType type, int parkingLotId, String arrivingAt, String leavingAt, String customerId,
+	public Order(int orderId, OrderType type, String parkingLot, String arrivingAt, String leavingAt, String customerId,
 			String vehicleNum) {
 		super();
 		this.orderId = orderId;
 		this.type = type;
-		this.parkingLotId = parkingLotId;
+		this.parkingLot = parkingLot;
 		this.arrivingAt = arrivingAt;
 		this.leavingAt = leavingAt;
 		this.customerId = customerId;
 		this.vehicleNum = vehicleNum;
+		this.arrivingLate=false;
+		this.leavingLate=false;
 	}
 
 
@@ -60,13 +64,13 @@ public class Order {
 	}
 
 
-	public int getParkingLotId() {
-		return parkingLotId;
+	public String getParkingLot() {
+		return parkingLot;
 	}
 
 
-	public void setParkingLotId(int parkingLotId) {
-		this.parkingLotId = parkingLotId;
+	public void setParkingLot(String parkingLot) {
+		this.parkingLot = parkingLot;
 	}
 
 
@@ -112,7 +116,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", type=" + type + ", parkingLotId=" + parkingLotId + ", arrivingAt="
+		return "Order [orderId=" + orderId + ", type=" + type + ", parkingLotId=" + parkingLot + ", arrivingAt="
 				+ arrivingAt + ", leavingAt=" + leavingAt + ", customerId=" + customerId + ", vehicleNum=" + vehicleNum
 				+ "]";
 	}

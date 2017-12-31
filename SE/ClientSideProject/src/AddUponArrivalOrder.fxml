@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="548.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Upon Arrival Order" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <font>
+            <Font size="33.0" />
+         </font>
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+      </Text>
+      <Text layoutX="67.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID" wrappingWidth="64.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="35.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vehicle Number" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="35.0" layoutY="268.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Leaving time">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="cancel" layoutX="388.0" layoutY="433.0" mnemonicParsing="false" onAction="#toDo" prefHeight="36.0" prefWidth="138.0" text="Cancel" />
+      <Button fx:id="submit" layoutX="96.0" layoutY="433.0" mnemonicParsing="false" onAction="#toDo" prefHeight="36.0" prefWidth="138.0" text="Submit" />
+      <TextField fx:id="email" layoutX="264.0" layoutY="322.0" />
+      <TextField fx:id="vehicle" layoutX="270.0" layoutY="196.0" />
+      <TextField fx:id="id" layoutX="270.0" layoutY="139.0" />
+      <Text layoutX="40.0" layoutY="343.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail" wrappingWidth="58.123046875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fx:id="msg" layoutX="40.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Failed to create new Upon Arrival Order. Please try again" wrappingWidth="345.576171875" />
+      <ComboBox fx:id="hourComboBox" layoutX="248.0" layoutY="247.0" prefHeight="25.0" prefWidth="93.0" promptText="hour" />
+      <ComboBox fx:id="minComboBox" layoutX="339.0" layoutY="247.0" prefHeight="25.0" prefWidth="93.0" promptText="min" />
+      <ComboBox fx:id="secComboBox" layoutX="432.0" layoutY="247.0" prefHeight="25.0" prefWidth="93.0" promptText="sec" />
+   </children>
+</AnchorPane>

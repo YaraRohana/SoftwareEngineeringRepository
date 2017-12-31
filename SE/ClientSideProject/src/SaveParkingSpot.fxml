@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save Parking Spot" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Row" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="cancel" layoutX="366.0" layoutY="397.0" mnemonicParsing="false" onAction="#cancel" prefHeight="36.0" prefWidth="138.0" text="Cancel" />
+      <Button fx:id="add" layoutX="99.0" layoutY="397.0" mnemonicParsing="false" onAction="#add" prefHeight="36.0" prefWidth="138.0" text="Add" />
+      <TextField fx:id="column" layoutX="280.0" layoutY="261.0" />
+      <TextField fx:id="row" layoutX="280.0" layoutY="204.0" />
+      <Text layoutX="44.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Column" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Width" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <TextField fx:id="width" layoutX="280.0" layoutY="319.0" />
+      <Text layoutX="44.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ParkingLot" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <TextField fx:id="parkingLot" layoutX="280.0" layoutY="143.0" />
+   </children>
+</AnchorPane>

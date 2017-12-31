@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exit Parking Lot" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Button fx:id="next" layoutX="63.0" layoutY="397.0" mnemonicParsing="false" onAction="#next" prefHeight="56.0" prefWidth="440.0" text="Next" textFill="#e80303">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Button>
+      <Text layoutX="55.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one of the following options if you have.." wrappingWidth="383.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <RadioButton fx:id="full" layoutX="63.0" layoutY="201.0" mnemonicParsing="false" text="Full subscription ">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="regular" layoutX="63.0" layoutY="252.0" mnemonicParsing="false" text="Regular Subscription">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="preOrder" layoutX="63.0" layoutY="301.0" mnemonicParsing="false" text="Pre Order">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </RadioButton>
+      <Button fx:id="back" layoutX="22.0" layoutY="30.0" mnemonicParsing="false" onAction="#next" prefHeight="25.0" prefWidth="74.0" text="&lt;&lt; Back" />
+      <RadioButton fx:id="uponArrival" layoutX="63.0" layoutY="347.0" mnemonicParsing="false" text="Upon Arrival Order">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </RadioButton>
+   </children>
+</AnchorPane>

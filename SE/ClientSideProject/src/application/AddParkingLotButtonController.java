@@ -35,8 +35,8 @@ void initData(String _host,String _port){
 
 @FXML
 void addParkingLotButton(ActionEvent event) {
-	String _host = host.getText();
-	String _port = port.getText();
+//	String _host = host.getText();
+//	String _port = port.getText();
 	
 	try {
 		URL url = new URL("http://localhost:8080/myProject/MyServlet");
@@ -48,7 +48,7 @@ void addParkingLotButton(ActionEvent event) {
 			 loader.setController(controller);
 			 AnchorPane pane1 = loader.load();
 			 System.out.println(host+"add parking lot controller");
-			 controller.initData(_host,_port);
+		//	 controller.initData(_host,_port);
 			 rootPane.getChildren().setAll(pane1);
 		  
 	} catch (IOException e) {

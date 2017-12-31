@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose Activity" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Button fx:id="addPreOrder" layoutX="358.0" layoutY="177.0" mnemonicParsing="false" onAction="#addPreOrder" prefHeight="36.0" prefWidth="144.0" text="Add Pre Order" />
+      <Button fx:id="addUponArrivalOrder" layoutX="86.0" layoutY="177.0" mnemonicParsing="false" onAction="#addUponArrivalOrder" prefHeight="36.0" prefWidth="164.0" text="Add Upon Arrival Order" />
+      <Text fx:id="message" layoutX="60.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="message">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="addFullSubscription" layoutX="99.0" layoutY="271.0" mnemonicParsing="false" onAction="#addFullSubscription" prefHeight="36.0" prefWidth="138.0" text="Add Full Subscription" />
+      <Button fx:id="addRegularSubscription" layoutX="355.0" layoutY="271.0" mnemonicParsing="false" onAction="#addRegularSubscription" prefHeight="36.0" prefWidth="151.0" text="Add Regular Subscription" />
+      <Button fx:id="sendComplaint" layoutX="99.0" layoutY="365.0" mnemonicParsing="false" onAction="#sendComplaint" prefHeight="36.0" prefWidth="138.0" text="Send Complaint" />
+      <Button fx:id="followOrders_Subscriptions" layoutX="355.0" layoutY="365.0" mnemonicParsing="false" onAction="#followOrders_Subscriptions" prefHeight="36.0" prefWidth="182.0" text="Follow Orders\Subscriptions" />
+   </children>
+   <effect>
+      <InnerShadow color="#6f2a8c" />
+   </effect>
+</AnchorPane>

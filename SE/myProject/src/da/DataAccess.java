@@ -1,6 +1,7 @@
 package da;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +9,14 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import allClasses.Complaint;
 import allClasses.Customer;
+import allClasses.FullSubscription;
 import allClasses.Order;
 import allClasses.Order.OrderType;
+import allClasses.Subscription.subscriptionType;
 import allClasses.ParkingLot;
+import allClasses.RegularSubscription;
 import allClasses.Vehicle;
 import da.DataInterface;
 
@@ -51,7 +56,7 @@ public class DataAccess implements DataInterface {
 			stm1.setBoolean(4, p.isFull());
 			stm1.setString(5, p.getManager());
 			stm1.setInt(6, p.getWidth());
-			
+
 			stm1.executeUpdate();
 			System.out.println("added to database");
 		}
@@ -93,10 +98,21 @@ public class DataAccess implements DataInterface {
 		ResultSet rs = stm.executeQuery();
 		while (rs.next()) {
 			p = new ParkingLot(rs.getString("name"), rs.getString("location"), rs.getBoolean("isActive"),
-					rs.getBoolean("isFull"), rs.getString("manager"),rs.getInt("width"));
+					rs.getBoolean("isFull"), rs.getString("manager"), rs.getInt("width"));
 			allParkingLots.add(p);
 		}
 		return allParkingLots;
+	}
+
+	public boolean checkIfCustomerExistsById(String customerId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		stm.setString(1, customerId);
+		ResultSet rs = stm.executeQuery();
+		if (!rs.next()) {
+			System.out.println("User does not exist in CPS");
+			return false;
+		}
+		return true;
 	}
 
 	public boolean addCustomer(Customer customer) throws SQLException {
@@ -110,7 +126,6 @@ public class DataAccess implements DataInterface {
 		stm = c.prepareStatement(sqlStatements.Allstatements.addNewCustomer);
 		stm.setString(1, customer.getId());
 		stm.setString(2, customer.getEmail());
-		stm.setString(3, "blah");
 		stm.executeUpdate();
 		System.out.println("User Added Successfully");
 		return true;
@@ -122,7 +137,7 @@ public class DataAccess implements DataInterface {
 		Customer tmp = null;
 		ResultSet rs = stm.executeQuery();
 		while (rs.next()) {
-			tmp = new Customer(rs.getString("customerId"), rs.getString("email"), rs.getString("password"));
+			tmp = new Customer(rs.getString("customerId"), rs.getString("email"));
 			allCustomers.add(tmp);
 		}
 		return allCustomers;
@@ -131,7 +146,7 @@ public class DataAccess implements DataInterface {
 
 	public boolean addOrder(Order o) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExists);
-		stm.setInt(1, o.getParkingLotId());
+		stm.setString(1, o.getParkingLot());
 		stm.setString(2, o.getVehicleNum());
 		stm.setString(3, o.getCustomerId());
 		ResultSet res = stm.executeQuery();
@@ -140,13 +155,26 @@ public class DataAccess implements DataInterface {
 			return false;
 		}
 		stm = c.prepareStatement(sqlStatements.Allstatements.addNewOrder);
-		stm.setInt(1, o.getParkingLotId());
-		stm.setString(2, o.getArrivingAt());
-		stm.setString(3, o.getLeavingAt());
-		stm.setString(4, o.getCustomerId());
-		stm.setString(5, o.getVehicleNum());
+		stm.setString(1, o.getType().name());
+		stm.setString(2, o.getParkingLot());
+		stm.setString(3, o.getArrivingAt());
+		stm.setString(4, o.getLeavingAt());
+		stm.setString(5, o.getCustomerId());
+		stm.setString(6, o.getVehicleNum());
 		stm.executeUpdate();
 		System.out.println("Order added successfully");
+		return true;
+	}
+
+	public boolean addComplaint(Complaint complaint) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addNewComplaint);
+		stm.setString(1, complaint.getParkingLot());
+		stm.setString(2, complaint.getCustomerId());
+		stm.setString(3, complaint.getSubmissionDate());
+		stm.setBoolean(4, false);
+		stm.setString(5, complaint.getComplaintText());
+		stm.executeUpdate();
+		System.out.println("Complaint added successfully");
 		return true;
 	}
 
@@ -156,7 +184,7 @@ public class DataAccess implements DataInterface {
 		Order o = null;
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getInt("parkingLotID"),
+			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
 					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
 					res.getString("vehicleNumber"));
 			allOrders.add(o);
@@ -171,7 +199,7 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getInt("parkingLotID"),
+			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
 					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
 					res.getString("vehicleNumber"));
 			allOrders.add(o);
@@ -187,7 +215,7 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getInt("parkingLotID"),
+			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
 					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
 					res.getString("vehicleNumber"));
 			allOrders.add(o);
@@ -207,8 +235,6 @@ public class DataAccess implements DataInterface {
 		stm = c.prepareStatement(sqlStatements.Allstatements.addNewVehicle);
 		stm.setString(1, v.getVehicleNumber());
 		stm.setString(2, v.getCustomerId());
-		stm.setBoolean(3, v.isArrivingLate());
-		stm.setBoolean(4, v.isLeavingLate());
 
 		stm.executeUpdate();
 		System.out.println("Vehicle added successfully to data base");
@@ -221,10 +247,35 @@ public class DataAccess implements DataInterface {
 		ResultSet res = stm.executeQuery();
 		Vehicle v = null;
 		while (res.next()) {
-			v = new Vehicle(res.getString("vehicleNumber"), res.getString("customerID"), res.getBoolean("arrivingLate"),
-					res.getBoolean("leavingLate"));
+			v = new Vehicle(res.getString("vehicleNumber"), res.getString("customerID"), res.getInt("row"),
+					res.getInt("column"), res.getInt("width"));
 			allVehicles.add(v);
 		}
 		return allVehicles;
+	}
+
+	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addFullSubscription);
+		stm.setString(1, fullSubscription.getCustomerId());
+		stm.setString(2, fullSubscription.getVehicleNumber());
+		stm.setDate(3, fullSubscription.getStartDate());
+		stm.setDate(4, fullSubscription.getStartDate());
+		stm.setDate(5, fullSubscription.getStartDate());
+		stm.executeUpdate();
+		System.out.println("Full Subscription Added Successfully");
+		return true;
+
+	}
+
+	public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addRegularSubscription);
+		stm.setString(1, RegularSubscription.getCustomerId());
+		//stm.setString(2, RegularSubscription.getSubsciptionId());
+		stm.setString(3, RegularSubscription.getVehicleNumber());
+		stm.setDate(5, RegularSubscription.getStartDate());
+		stm.setString(6, RegularSubscription.getParkingLot());
+		stm.setString(8, RegularSubscription.getLeavingAt());
+		System.out.println("Regular Subscription Added Successfully");
+		return true;
 	}
 }

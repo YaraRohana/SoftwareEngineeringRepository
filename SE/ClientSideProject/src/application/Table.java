@@ -39,7 +39,7 @@ public class Table {
 	public void setManager(String manager){
 		this.manager.set(manager);
 	}
-	public void setManager(Integer width){
+	public void setWidth(Integer width){
 		this.width.set(width);
 	}
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Full Subscription" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Text layoutX="77.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID" wrappingWidth="64.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="55.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vehicle Number" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="cancel" layoutX="388.0" layoutY="433.0" mnemonicParsing="false" onAction="#toDo" prefHeight="36.0" prefWidth="138.0" text="Cancel" />
+      <Button fx:id="submit" layoutX="96.0" layoutY="433.0" mnemonicParsing="false" onAction="#toDo" prefHeight="36.0" prefWidth="138.0" text="Submit" />
+      <TextField fx:id="vehicle" layoutX="280.0" layoutY="236.0" />
+      <TextField fx:id="id" layoutX="280.0" layoutY="192.0" />
+      <Text layoutX="55.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase Date">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <DatePicker fx:id="date" layoutX="268.0" layoutY="298.0" />
+   </children>
+</AnchorPane>

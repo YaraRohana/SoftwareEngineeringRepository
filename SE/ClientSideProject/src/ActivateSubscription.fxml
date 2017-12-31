@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="520.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Activate Subscription " textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription Number" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="cancel" layoutX="360.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancelActivation" prefHeight="36.0" prefWidth="138.0" text="Cancel" />
+      <Button fx:id="activate" layoutX="99.0" layoutY="361.0" mnemonicParsing="false" onAction="#activateSubscription" prefHeight="36.0" prefWidth="138.0" text="Activate" />
+      <TextField fx:id="vehicleNum" layoutX="280.0" layoutY="261.0" />
+      <TextField fx:id="subscriptionNum" layoutX="280.0" layoutY="193.0" />
+      <Text layoutX="50.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vehicle Number" wrappingWidth="192.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

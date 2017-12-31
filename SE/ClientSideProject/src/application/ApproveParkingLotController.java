@@ -40,19 +40,12 @@ public class ApproveParkingLotController implements Initializable{
 	private TableColumn<Table,Integer> width;
 	@FXML
 	private AnchorPane rootPane;
-	@FXML
-	private Text host;
-	@FXML
-	private Text port;
 	
 	public ApproveParkingLotController() {}
 	
 	
 	
-	void initData(ArrayList<JSONObject> parkingLots,boolean status,String host1,String port1) throws JSONException{
-		 host.setText(host1);
-		 port.setText(port1);
-		
+	void initData(ArrayList<JSONObject> parkingLots,boolean status) throws JSONException{
 		
 		if(status==false){
 			table.setVisible(false);
@@ -83,13 +76,10 @@ public class ApproveParkingLotController implements Initializable{
 	
 	@FXML
 	void returnToTheFormerPage(ActionEvent event) throws IOException {
-		String IP = host.getText();
-        String Port = port.getText();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddParkingLotScene.fxml" ));
         AddParkingLotController controller = new AddParkingLotController();
         loader.setController(controller);
         AnchorPane pane = loader.load();	
-        controller.initData(IP,Port);
         rootPane.getChildren().setAll(pane);
 	}
 	

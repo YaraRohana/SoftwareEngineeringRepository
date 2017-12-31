@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="592.0" prefWidth="614.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="99.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To CPS" textAlignment="CENTER" wrappingWidth="390.337890625">
+         <effect>
+            <InnerShadow color="#13c8ff" />
+         </effect>
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Text>
+      <Text layoutX="50.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one of the following options:  " wrappingWidth="383.607421875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fx:id="msg" layoutX="50.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please Log In in order to continue/ Are you sure?">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fx:id="passwordText" layoutX="54.0" layoutY="436.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="192.607421875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="name" layoutX="220.0" layoutY="359.0" />
+      <Text fx:id="nameText" layoutX="54.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" wrappingWidth="192.607421875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <PasswordField fx:id="password" layoutX="220.0" layoutY="416.0" />
+      <RadioButton fx:id="customer" layoutX="56.0" layoutY="188.0" mnemonicParsing="false" onAction="#continueAs" text="Continue As Customer">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="employee" layoutX="56.0" layoutY="239.0" mnemonicParsing="false" onAction="#continueAs" text="Continue As Employee">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </RadioButton>
+      <Button fx:id="logIn" layoutX="63.0" layoutY="467.0" mnemonicParsing="false" onAction="#continueAs" prefHeight="37.0" prefWidth="306.0" text="LogIn" />
+      <Text fx:id="fail" fill="#cd1414" layoutX="50.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In failed / your password incorrect!! Try Again" />
+      <Button fx:id="confirm" layoutX="54.0" layoutY="357.0" mnemonicParsing="false" onAction="#continueAs" prefHeight="30.0" prefWidth="123.0" text="Confirm" />
+   </children>
+</AnchorPane>
