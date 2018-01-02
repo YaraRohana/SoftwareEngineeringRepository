@@ -14,9 +14,10 @@ public abstract class Subscription {
 	protected String vehicleNumber;
 	protected static final DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	protected Date startDate;
+	protected String email;
 
 	public enum subscriptionType{
-		regularSubscription(0),regularBusinessSubscription(1),fullSubscription(2);
+		oneCarRegularSubscription(0),regularBusinessSubscription(1),fullSubscription(2);
 		
 		private final int value;
 	    private subscriptionType(int value) {
@@ -28,13 +29,30 @@ public abstract class Subscription {
 	    }
 	}
 
-	public Subscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate) {
+
+
+	public Subscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate, String email) {
 		super();
 		this.customerId = customerId;
 		this.subsciptionId = subsciptionId;
 		this.vehicleNumber = vehicleNumber;
 		this.startDate = startDate;
+		this.email = email;
 	}
+
+	
+	
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 
 	public String getCustomerId() {
 		return customerId;
@@ -66,6 +84,14 @@ public abstract class Subscription {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Subscription [customerId=" + customerId + ", subsciptionId=" + subsciptionId + ", vehicleNumber="
+				+ vehicleNumber + ", startDate=" + startDate + ", email=" + email + "]";
 	}
 	
 	

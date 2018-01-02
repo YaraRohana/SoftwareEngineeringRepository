@@ -9,14 +9,16 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import allClasses.BusinessRegularSubscription;
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
+import allClasses.OneCarRegularSubscription;
 import allClasses.Order;
 import allClasses.Order.OrderType;
 import allClasses.Subscription.subscriptionType;
 import allClasses.ParkingLot;
-import allClasses.RegularSubscription;
+import allClasses.Subscription;
 import allClasses.Vehicle;
 import da.DataInterface;
 
@@ -224,18 +226,49 @@ public class DataAccess implements DataInterface {
 		return allOrders;
 	}
 
-	public boolean addVehicle(Vehicle v) throws SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByVehicleNum);
-		stm.setString(1, v.getVehicleNumber());
+	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByCustomerId);
+		stm.setString(1, customerId);
 		ResultSet res = stm.executeQuery();
-		if (res.next()) {
-			System.out.println("Vehicle already registered in data base");
-			return false;
+		ArrayList<Subscription> subs = new ArrayList<Subscription>();
+		FullSubscription s = null;
+		while (res.next()) {
+			s = new FullSubscription(customerId, res.getString("subscriptionId"), res.getString("vehicleNumber"),
+					res.getDate("startingDate"), res.getString("email"), res.getDate("arrivedSince"),
+					subscriptionType.fullSubscription);
+			subs.add(s);
 		}
-		stm = c.prepareStatement(sqlStatements.Allstatements.addNewVehicle);
+		/*stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
+		stm.setString(1, customerId);
+		OneCarRegularSubscription oc = null;
+		BusinessRegularSubscription bs = null;
+		res = stm.executeQuery();
+		while (res.next()) {
+			if (res.getString("type").equals("oneCar")) {
+				oc = new OneCarRegularSubscription(customerId, res.getString("subscriptionId"),
+						res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
+						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
+						res.getString("leavingAt"));
+				subs.add(oc);
+			} else {
+				bs = new BusinessRegularSubscription(customerId, res.getString("subscriptionId"),
+						res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
+						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
+						res.getString("leavingAt"));
+				subs.add(bs);
+			}
+		}
+*/
+		return subs;
+	}
+
+	public boolean addVehicle(Vehicle v) throws SQLException {
+		boolean res = checkIfVehicleExistsByNumber(v.getVehicleNumber());
+		if (res)
+			return false;
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addNewVehicle);
 		stm.setString(1, v.getVehicleNumber());
 		stm.setString(2, v.getCustomerId());
-
 		stm.executeUpdate();
 		System.out.println("Vehicle added successfully to data base");
 		return true;
@@ -261,36 +294,34 @@ public class DataAccess implements DataInterface {
 		stm.setString(3, fullSubscription.getVehicleNumber());
 		stm.setDate(4, fullSubscription.getStartDate());
 		stm.setDate(5, fullSubscription.getStartDate());
-		//stm.setDate(5, fullSubscription.getStartDate());
+		// stm.setDate(5, fullSubscription.getStartDate());
 		stm.executeUpdate();
 		System.out.println("Full Subscription Added Successfully");
 		return true;
 
 	}
 
-	public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addRegularSubscription);
-		stm.setString(1, RegularSubscription.getCustomerId());
-		//stm.setString(2, RegularSubscription.getSubsciptionId());
-		stm.setString(3, RegularSubscription.getVehicleNumber());
-		stm.setDate(5, RegularSubscription.getStartDate());
-		stm.setString(6, RegularSubscription.getParkingLot());
-		stm.setString(8, RegularSubscription.getLeavingAt());
-		System.out.println("Regular Subscription Added Successfully");
-		return true;
-	}
-	
-
+	/*
+	 * public boolean addRegularSubscription(RegularSubscription
+	 * RegularSubscription) throws SQLException { PreparedStatement stm =
+	 * c.prepareStatement(sqlStatements.Allstatements.addRegularSubscription);
+	 * stm.setString(1, RegularSubscription.getCustomerId()); // stm.setString(2,
+	 * RegularSubscription.getSubsciptionId()); stm.setString(3,
+	 * RegularSubscription.getVehicleNumber()); stm.setDate(5,
+	 * RegularSubscription.getStartDate()); stm.setString(6,
+	 * RegularSubscription.getParkingLot()); stm.setString(8,
+	 * RegularSubscription.getLeavingAt());
+	 * System.out.println("Regular Subscription Added Successfully"); return true; }
+	 */
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
 		stm.setString(1, vehicleNum);
-		ResultSet res=stm.executeQuery();
-		if(res.next()) {
+		ResultSet res = stm.executeQuery();
+		if (res.next()) {
 			System.out.println("Vehicle exists in CPS");
 			return true;
 		}
 		return false;
 	}
-	
-	
+
 }

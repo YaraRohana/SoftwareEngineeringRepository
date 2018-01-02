@@ -8,7 +8,7 @@ import allClasses.Customer;
 import allClasses.FullSubscription;
 import allClasses.Order;
 import allClasses.ParkingLot;
-import allClasses.RegularSubscription;
+import allClasses.Subscription;
 import allClasses.Vehicle;
 
 public interface  DataInterface {
@@ -26,6 +26,8 @@ public interface  DataInterface {
 	public ArrayList<Order> getAllOrders() throws SQLException;
 	public ArrayList<Order> getAllOrdersByCustomerId(String id) throws SQLException;
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException;
+	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException;
+	
 	
 	public boolean addVehicle(Vehicle v) throws SQLException;
 	public ArrayList<Vehicle> getAllVehicles()throws SQLException;
@@ -33,7 +35,10 @@ public interface  DataInterface {
 	public boolean addComplaint(Complaint c) throws SQLException;
 	
 	public boolean checkIfCustomerExistsById(String customerId) throws SQLException;
-	public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException;
+	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException;
+	
+	
+	//public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException;
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
 	//public boolean addFullSubscription(String customerId, String vehicleNumber, Date startDate) throws SQLException;
 	//public boolean addRegularSubscription(String customerId, String vehicleNumber, Date startDate, String parkingLot, String leavingAt) throws SQLException;

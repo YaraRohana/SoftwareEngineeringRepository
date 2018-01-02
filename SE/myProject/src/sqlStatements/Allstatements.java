@@ -26,7 +26,8 @@ public class Allstatements {
 
 	public final static String getAlOrdersByCustomerId = "select * from fur_seal_schema.orders where customerId=?;";
 	public final static String getAllOrdersByVehicleNum = "select * from fur_seal_schema.orders where vehicleNumber=?;";
-
+	public final static String getAllRegularSubsByCustomerId="select * from fur_seal_schema.regularSubscriptions where customerId=?";
+	public final static String getAllFullSubsByCustomerId="select * from fur_seal_schema.fullSubscriptions where customerId=?;";
 	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`fullSubscription` (`customerId`, `subscriptionId`, `vehicleNumber`, `startingDate`, `arrivedSince`) VALUES (?,?,?,?,?);";
 	public final static String addRegularSubscription = "";
 

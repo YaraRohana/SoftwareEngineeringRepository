@@ -45,25 +45,20 @@ public class AddFullSubscription extends HttpServlet {
 		String customerId = request.getParameter("customerId");
 		String vehicleNumber = request.getParameter("vehicleNumber");
 		String startDate = request.getParameter("startDate");
+		String email=request.getParameter("email");
 		System.out.println(startDate);
 
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		if (vehicleNumber != null && customerId != null) {
-			try {
-				res = da.checkIfCustomerExistsById(customerId);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			if (!res) {
-				Customer customer = new Customer(customerId, null);
+
+				Customer customer = new Customer(customerId, email);
 				try {
 					res = da.addCustomer(customer);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date = null;
 			try {
@@ -74,7 +69,7 @@ public class AddFullSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-			FullSubscription c = new FullSubscription(customerId, null, vehicleNumber, sqlStartDate, sqlStartDate,
+			FullSubscription c = new FullSubscription(customerId, null, vehicleNumber, sqlStartDate,email, sqlStartDate,
 					subscriptionType.fullSubscription);
 			try {
 				res = da.addFullSubscription(c);

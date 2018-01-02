@@ -8,9 +8,12 @@ public class FullSubscription extends Subscription {
 	subscriptionType type=subscriptionType.fullSubscription;
 	
 	
-	public FullSubscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate,
+
+
+
+	public FullSubscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate, String email,
 			Date arrivedSince, subscriptionType type) {
-		super(customerId, subsciptionId, vehicleNumber, startDate);
+		super(customerId, subsciptionId, vehicleNumber, startDate, email);
 		this.arrivedSince = arrivedSince;
 		this.type = type;
 	}
