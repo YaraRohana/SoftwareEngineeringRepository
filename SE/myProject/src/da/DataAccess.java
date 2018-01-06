@@ -131,6 +131,7 @@ public class DataAccess implements DataInterface {
 		stm.setString(1, customer.getId());
 		stm.setString(2, customer.getEmail());
 		stm.setInt(3, customer.getCredit());
+		stm.setBoolean(4, false);
 		stm.executeUpdate();
 		System.out.println("User Added Successfully");
 		return true;

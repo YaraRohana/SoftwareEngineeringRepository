@@ -48,7 +48,7 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String num = request.getParameter("num");
 		int numOfVehicles = 0;
 		if (num != null) {
-			System.out.println("we are here");
+			//System.out.println("we are here");
 			numOfVehicles = Integer.parseInt(num);
 			String customerId = request.getParameter("customerId");
 			String email = request.getParameter("email");

@@ -53,6 +53,8 @@ public class AddFullSubscription extends HttpServlet {
 		if (vehicleNumber != null && customerId != null) {
 
 				Customer customer = new Customer(customerId, email);
+				customer.setCredit(0);
+				customer.setConnected(false);
 				try {
 					res = da.addCustomer(customer);
 				} catch (SQLException e) {

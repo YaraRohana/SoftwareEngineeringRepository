@@ -15,7 +15,7 @@ public class Allstatements {
 	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,isFull,manager,width)"
 			+ "values(?,?,?,?,?,?);";
 	public final static String addNewOrder = "INSERT INTO `fur_seal_schema`.`orders` (`orderID`, `type`, `parkingLot`, `arrivingAt`, `leavingAt`, `customerId`, `vehicleNumber`, `arrivingLate`, `leavingLate`) VALUES ('0',?,?,?,?,?,?, '0','0');";
-	public final static String addNewCustomer = "INSERT INTO `fur_seal_schema`.`customers` (`customerID`, `email`,`credit`) VALUES (?,?,?);";
+	public final static String addNewCustomer = "INSERT INTO `fur_seal_schema`.`customers` (`customerID`, `email`,`credit`,`isConnected`) VALUES (?,?,?,?);";
 	public final static String addNewVehicle = "INSERT INTO `fur_seal_schema`.`vehicles` (`vehicleNumber`, `customerID`,`row`,`column`,`width`) VALUES (?,?,'-1','-1','-1');";
 	public final static String addNewComplaint = "INSERT INTO `fur_seal_schema`.`complaints` (`parkingLot`, `customerID`, `submissionDate`, `isChecked`, `text`) VALUES (?,?,?,?,?);";
 	public final static String deleteParkingLot = "DELETE FROM `fur_seal_schema`.`parkingLots` WHERE `name`=?;";

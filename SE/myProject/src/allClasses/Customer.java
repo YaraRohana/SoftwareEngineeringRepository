@@ -7,8 +7,20 @@ public class Customer {
 	String id;
 	String email;
 	int credit;
+	boolean isConnected;
 	
-	
+
+
+	public boolean isConnected() {
+		return isConnected;
+	}
+
+
+
+	public void setConnected(boolean isConnected) {
+		this.isConnected = isConnected;
+	}
+
 
 
 	public Customer(String id, String email) {
