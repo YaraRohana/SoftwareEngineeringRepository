@@ -6,13 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import allClasses.BusinessRegularSubscription;
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
+import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
 import allClasses.Order;
 import allClasses.Order.OrderType;
@@ -21,6 +22,7 @@ import allClasses.ParkingLot;
 import allClasses.Subscription;
 import allClasses.Vehicle;
 import da.DataInterface;
+import sqlStatements.Allstatements;
 
 public class DataAccess implements DataInterface {
 
@@ -128,6 +130,7 @@ public class DataAccess implements DataInterface {
 		stm = c.prepareStatement(sqlStatements.Allstatements.addNewCustomer);
 		stm.setString(1, customer.getId());
 		stm.setString(2, customer.getEmail());
+		stm.setInt(3, customer.getCredit());
 		stm.executeUpdate();
 		System.out.println("User Added Successfully");
 		return true;
@@ -195,6 +198,10 @@ public class DataAccess implements DataInterface {
 	}
 
 	public ArrayList<Order> getAllOrdersByCustomerId(String id) throws SQLException {
+		boolean result=checkIfCustomerExistsById(id);
+		if(!result) {
+			return null;
+		}
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAlOrdersByCustomerId);
 		stm.setString(1, id);
 		ResultSet res = stm.executeQuery();
@@ -211,6 +218,10 @@ public class DataAccess implements DataInterface {
 	}
 
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException {
+		boolean result=checkIfVehicleExistsByNumber(vehicleNum);
+		if(!result) {
+			return null;
+		}
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByVehicleNum);
 		stm.setString(1, vehicleNum);
 		ResultSet res = stm.executeQuery();
@@ -227,6 +238,8 @@ public class DataAccess implements DataInterface {
 	}
 
 	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException {
+		boolean result=checkIfCustomerExistsById(customerId);
+		if(!result) return null;
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByCustomerId);
 		stm.setString(1, customerId);
 		ResultSet res = stm.executeQuery();
@@ -300,19 +313,20 @@ public class DataAccess implements DataInterface {
 		return true;
 
 	}
-
-	/*
-	 * public boolean addRegularSubscription(RegularSubscription
-	 * RegularSubscription) throws SQLException { PreparedStatement stm =
-	 * c.prepareStatement(sqlStatements.Allstatements.addRegularSubscription);
-	 * stm.setString(1, RegularSubscription.getCustomerId()); // stm.setString(2,
-	 * RegularSubscription.getSubsciptionId()); stm.setString(3,
-	 * RegularSubscription.getVehicleNumber()); stm.setDate(5,
-	 * RegularSubscription.getStartDate()); stm.setString(6,
-	 * RegularSubscription.getParkingLot()); stm.setString(8,
-	 * RegularSubscription.getLeavingAt());
-	 * System.out.println("Regular Subscription Added Successfully"); return true; }
-	 */
+	
+	public boolean addOneCarRegularSubscription (OneCarRegularSubscription oneCarRegularSubscription) throws SQLException{
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addOneCarRegularSubscription);
+		stm.setString(1, oneCarRegularSubscription.getCustomerId());
+		stm.setString(2, oneCarRegularSubscription.getVehicleNumber());
+		stm.setDate(3, oneCarRegularSubscription.getStartDate());
+		stm.setString(4, oneCarRegularSubscription.getParkingLot());
+		stm.setString(5, oneCarRegularSubscription.getLeavingAt());
+		stm.setString(6, oneCarRegularSubscription.getEmail());
+		stm.executeUpdate();
+		System.out.println("One Car Regular Subscription Added Successfully");
+		return true;
+	}
+	
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
 		stm.setString(1, vehicleNum);
@@ -324,4 +338,39 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
+	public ArrayList<Complaint> getAllComplaints() throws SQLException{
+		ArrayList<Complaint> complaints=new ArrayList<Complaint>();
+		PreparedStatement statement=c.prepareStatement(sqlStatements.Allstatements.getAllComplaints);
+		Complaint complaint=null;
+		ResultSet res=statement.executeQuery();
+		while(res.next()) {
+			complaint=new Complaint(res.getString("parkingLot"), res.getString("customerId"), res.getString("text"));
+			complaint.setSubmissionDate(res.getString("submissionDate"));
+			complaint.setChecked(res.getBoolean("isChecked"));
+			complaints.add(complaint);
+		}
+		return complaints;
+	}
+
+	public boolean checkIfEmployeeExists(String name,String password) throws SQLException{
+		PreparedStatement statement=c.prepareStatement(sqlStatements.Allstatements.checkIfEmployeeExists);
+		statement.setString(1, name);
+		statement.setString(2, password);
+		ResultSet res=statement.executeQuery();
+		return res.next();
+	}
+	
+	public boolean addBuisnessRegularSubscription (OneCarBusinessSubscription sub) throws SQLException{
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.addBusinessRegularSubscription);
+		stm.setString(1,sub.getCustomerId());
+		stm.setString(2,sub.getSubsciptionId());
+		stm.setString(3,sub.getVehicleNumber());
+		stm.setDate(4, sub.getStartDate());
+		stm.setString(5,sub.getParkingLot());
+		stm.setString(6,sub.getLeavingAt());
+		stm.setString(7,sub.getEmail());
+		stm.executeUpdate();
+		System.out.println("Business Regular subscription added successfully!");
+		return true;
+	}
 }

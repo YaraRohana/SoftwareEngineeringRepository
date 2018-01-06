@@ -6,13 +6,30 @@ public class Customer {
 
 	String id;
 	String email;
+	int credit;
 	
+	
+
+
 	public Customer(String id, String email) {
 		super();
 		this.id = id;
 		this.email = email;
 	}
 	
+
+	
+	public int getCredit() {
+		return credit;
+	}
+
+
+
+	public void setCredit(int credit) {
+		this.credit = credit;
+	}
+
+
 
 	public String getId() {
 		return id;

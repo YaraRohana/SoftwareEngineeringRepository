@@ -63,9 +63,7 @@ public class GetAllParkingLots extends HttpServlet {
 			} catch (JSONException ex) {
 
 			}
-
 			out.flush();
-
 			System.out.println(parkingLot.toString());
 		}
 	}

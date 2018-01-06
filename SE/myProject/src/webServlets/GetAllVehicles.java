@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -9,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import allClasses.Vehicle;
 import da.DataAccess;
@@ -36,12 +40,30 @@ public class GetAllVehicles extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		ArrayList<Vehicle> vehicles=new ArrayList<Vehicle>();
 		DataAccess da=new DataAccess();
-		Vehicle v=null;
 		try {
 			vehicles=da.getAllVehicles();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		PrintWriter out = response.getWriter();
+		response.setContentType("application/json");
+		JSONObject jsonVhicle;
+		for (Vehicle vehicle : vehicles) {
+			jsonVhicle=new JSONObject();
+			try {
+				jsonVhicle.put("vehicle number", vehicle.getVehicleNumber());
+				jsonVhicle.put("customer id", vehicle.getCustomerId());
+				out.println(jsonVhicle);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			;
+			/*jsonVhicle.put("row", vehicle.getRow());
+			jsonVhicle.put("column", vehicle.getColumn());
+			jsonVhicle.put("width", vehicle.getWidth());*/
+			out.flush();
+			System.out.println(vehicle.toString());
 		}
 	}
 

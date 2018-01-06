@@ -2,10 +2,11 @@ package da;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
+import allClasses.OneCarBusinessSubscription;
+import allClasses.OneCarRegularSubscription;
 import allClasses.Order;
 import allClasses.ParkingLot;
 import allClasses.Subscription;
@@ -27,7 +28,7 @@ public interface  DataInterface {
 	public ArrayList<Order> getAllOrdersByCustomerId(String id) throws SQLException;
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException;
 	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException;
-	
+	public ArrayList<Complaint> getAllComplaints() throws SQLException;
 	
 	public boolean addVehicle(Vehicle v) throws SQLException;
 	public ArrayList<Vehicle> getAllVehicles()throws SQLException;
@@ -36,8 +37,9 @@ public interface  DataInterface {
 	
 	public boolean checkIfCustomerExistsById(String customerId) throws SQLException;
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException;
-	
-	
+	public boolean checkIfEmployeeExists(String name,String password) throws SQLException;
+	public boolean addBuisnessRegularSubscription (OneCarBusinessSubscription sub) throws SQLException;
+	public boolean addOneCarRegularSubscription (OneCarRegularSubscription oneCarRegularSubscription) throws SQLException;
 	//public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException;
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
 	//public boolean addFullSubscription(String customerId, String vehicleNumber, Date startDate) throws SQLException;

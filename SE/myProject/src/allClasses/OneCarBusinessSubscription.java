@@ -2,14 +2,12 @@ package allClasses;
 
 import java.sql.Date;
 
-public class BusinessRegularSubscription extends Subscription {
+public class OneCarBusinessSubscription extends Subscription{
 
 	subscriptionType type=subscriptionType.regularBusinessSubscription;
 	String parkingLot;
 	String leavingAt;
-	
-	
-	public BusinessRegularSubscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate,
+	public OneCarBusinessSubscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate,
 			String email, subscriptionType type, String parkingLot, String leavingAt) {
 		super(customerId, subsciptionId, vehicleNumber, startDate, email);
 		this.type = type;
@@ -34,7 +32,6 @@ public class BusinessRegularSubscription extends Subscription {
 	public void setLeavingAt(String leavingAt) {
 		this.leavingAt = leavingAt;
 	}
-	
 	
 	
 }

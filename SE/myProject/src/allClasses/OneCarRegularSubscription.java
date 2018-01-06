@@ -8,7 +8,6 @@ public class OneCarRegularSubscription extends Subscription{
 	String parkingLot;
 	String leavingAt;
 	
-	
 	public OneCarRegularSubscription(String customerId, String subsciptionId, String vehicleNumber, Date startDate,
 			String email, subscriptionType type, String parkingLot, String leavingAt) {
 		super(customerId, subsciptionId, vehicleNumber, startDate, email);

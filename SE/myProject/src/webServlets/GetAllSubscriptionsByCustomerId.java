@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -9,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import allClasses.Order;
 import allClasses.Subscription;
@@ -49,7 +53,23 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 				e.printStackTrace();
 			}
 			System.out.println("Subscriptions of customer " + id + ":");
+			PrintWriter out = response.getWriter();
+			response.setContentType("application/json");
+			JSONObject jsonSub;
 			for (Subscription subscription : subs) {
+				jsonSub=new JSONObject();
+				try {
+					jsonSub.put("customer id", subscription.getCustomerId());
+					jsonSub.put("subscription id", subscription.getSubsciptionId());
+					jsonSub.put("vehicle number", subscription.getVehicleNumber());
+					jsonSub.put("starting date", subscription.getStartDate());
+					jsonSub.put("email", subscription.getEmail());
+					out.println(jsonSub);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				out.flush();
 				System.out.println(subscription.toString());
 			}
 		}

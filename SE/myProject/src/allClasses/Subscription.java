@@ -12,7 +12,6 @@ public abstract class Subscription {
 	protected String customerId;
 	protected  String subsciptionId;
 	protected String vehicleNumber;
-	protected static final DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	protected Date startDate;
 	protected String email;
 

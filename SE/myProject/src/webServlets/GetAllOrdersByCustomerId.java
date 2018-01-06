@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -9,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import allClasses.Order;
 import da.DataAccess;
@@ -43,8 +47,25 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 		System.out.println("Unable to retrieve orders for customer " +id);
 		e.printStackTrace();
 	}
-	System.out.println("Orders of customer "+id+":");
+	PrintWriter out = response.getWriter();
+	response.setContentType("application/json");
+	JSONObject jsonOrder;
 	for (Order order : orders) {
+		try {
+			jsonOrder=new JSONObject();
+			jsonOrder.put("order ID", order.getOrderId());
+			jsonOrder.put("type", order.getType());
+			jsonOrder.put("parking lot", order.getParkingLot());
+			jsonOrder.put("arriving at", order.getArrivingAt());
+			jsonOrder.put("leaving at", order.getLeavingAt());
+			jsonOrder.put("customer Id", order.getCustomerId());
+			jsonOrder.put("vehicle number", order.getVehicleNum());
+			out.println(jsonOrder);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		out.flush();
 		System.out.println(order.toString());
 	}
 	

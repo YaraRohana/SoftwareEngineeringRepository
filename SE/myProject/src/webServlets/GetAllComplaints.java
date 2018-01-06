@@ -14,20 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import allClasses.Customer;
+import allClasses.Complaint;
 import da.DataAccess;
 
 /**
- * Servlet implementation class GetAllCustomers
+ * Servlet implementation class GetAllComplaints
  */
-@WebServlet("/GetAllCustomers")
-public class GetAllCustomers extends HttpServlet {
+@WebServlet("/GetAllComplaints")
+public class GetAllComplaints extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetAllCustomers() {
+    public GetAllComplaints() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,31 +38,32 @@ public class GetAllCustomers extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		ArrayList<Customer> allCustomers=new ArrayList<Customer>();
+		ArrayList<Complaint> complaints=new ArrayList<Complaint>();
 		DataAccess da=new DataAccess();
 		try {
-			allCustomers=da.getAllCustomers();
+			complaints=da.getAllComplaints();
 		} catch (SQLException e) {
-			
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
-		JSONObject jsonCustomer;
-		for (Customer customer : allCustomers) {
-			jsonCustomer=new JSONObject();
+		JSONObject jsonComplaint;
+		for (Complaint complaint : complaints) {
+			jsonComplaint=new JSONObject();
 			try {
-				jsonCustomer.put("customerID", customer.getId());
-				jsonCustomer.put("email", customer.getEmail());
-				jsonCustomer.put("credit", customer.getCredit());
-				out.println(jsonCustomer);
+				jsonComplaint.put("parking lot", complaint.getParkingLot());
+				jsonComplaint.put("customer id", complaint.getCustomerId());
+				jsonComplaint.put("submission date", complaint.getSubmissionDate());
+				jsonComplaint.put("text", complaint.getComplaintText());
+				jsonComplaint.put("is checked", complaint.isChecked());
+				out.println(jsonComplaint);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			out.flush();
-
-			System.out.println(customer.toString());
+			System.out.println(complaint.toString());
 		}
 	}
 
