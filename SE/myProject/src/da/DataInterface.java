@@ -15,7 +15,6 @@ import allClasses.Vehicle;
 public interface  DataInterface {
 	
 	public boolean addParkingLot(ParkingLot p) throws SQLException;
-	//public boolean AddOrder(Order order, Customer c , Vehicle v ,ParkingLot p ) throws SQLException;
 	public boolean deleteParkingLot(String nameOfParkingLot) throws SQLException;
 	public ArrayList<ParkingLot> GetAllParkingLots() throws SQLException;
 	public int getParkingIdLotByName(String name) throws SQLException;
@@ -38,11 +37,12 @@ public interface  DataInterface {
 	public boolean checkIfCustomerExistsById(String customerId) throws SQLException;
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException;
 	public boolean checkIfEmployeeExists(String name,String password) throws SQLException;
+	public Order checkIfOrderExistsByAllParameters(String customerId,String vehicle,String arrivingDate,String arrivingAt,String leavingDate,String leavingAt,String parkingLot)throws SQLException;
 	public boolean addBuisnessRegularSubscription (OneCarBusinessSubscription sub) throws SQLException;
 	public boolean addOneCarRegularSubscription (OneCarRegularSubscription oneCarRegularSubscription) throws SQLException;
-	//public boolean addRegularSubscription(RegularSubscription RegularSubscription) throws SQLException;
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
-	//public boolean addFullSubscription(String customerId, String vehicleNumber, Date startDate) throws SQLException;
-	//public boolean addRegularSubscription(String customerId, String vehicleNumber, Date startDate, String parkingLot, String leavingAt) throws SQLException;
+	
+	public void cancelOrder(Order order) throws SQLException;
+	public void setupParkingLot(String parkingLot,int width)throws SQLException;
 	
 }

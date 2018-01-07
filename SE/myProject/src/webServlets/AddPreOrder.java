@@ -20,13 +20,13 @@ import da.DataAccess;
  * Servlet implementation class AddOrder
  */
 @WebServlet("/AddOrder")
-public class AddOrder extends HttpServlet {
+public class AddPreOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AddOrder() {
+	public AddPreOrder() {
 		super();
 	}
 
@@ -36,21 +36,17 @@ public class AddOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String type = request.getParameter("type");
-		//System.out.println("type is" +type);
-		if(type!=null) {
-			OrderType ordertype = type.equals("uponArrivalOrder")? Order.OrderType.uponArrivalOrder: Order.OrderType.preOrder;
+			String arrivingTime=request.getParameter("arrivingTime");
+			String leavingTime=request.getParameter("leavingTime");
+			String leavingDate=request.getParameter("leavingDate");
+			String arrivingDate=request.getParameter("arrivingDate");
 			String parkingLot = request.getParameter("parkingLot");
-			//System.out.println("parking is" +parkingLot);
-			String arrivingAt = request.getParameter("arrival");
-			String leavingAt = request.getParameter("leavingAt");
-			String customerId = request.getParameter("customerId");
-			String vehicle = request.getParameter("vehicleNum");
+			String customerId = request.getParameter("id");
+			String vehicle = request.getParameter("vehicle");
 			String email = request.getParameter("email");
 			DataAccess da = new DataAccess();
-			//int parkingLotID = 0;
 			if (customerId != null) {
-					Order o = new Order(0, ordertype, parkingLot, arrivingAt, leavingAt, customerId, vehicle);
+					Order o = new Order(0,OrderType.preOrder,parkingLot,arrivingDate,leavingDate,arrivingTime,leavingTime,customerId,vehicle,false,false,false);
 					try {
 						System.out.println("trying to add order");
 						da.addOrder(o);
@@ -78,7 +74,6 @@ public class AddOrder extends HttpServlet {
 				
 			}
 		}
-	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

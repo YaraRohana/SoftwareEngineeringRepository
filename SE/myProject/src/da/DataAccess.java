@@ -163,10 +163,12 @@ public class DataAccess implements DataInterface {
 		stm = c.prepareStatement(sqlStatements.Allstatements.addNewOrder);
 		stm.setString(1, o.getType().name());
 		stm.setString(2, o.getParkingLot());
-		stm.setString(3, o.getArrivingAt());
-		stm.setString(4, o.getLeavingAt());
-		stm.setString(5, o.getCustomerId());
-		stm.setString(6, o.getVehicleNum());
+		stm.setString(3, o.getArrivingDate());
+		stm.setString(4, o.getArrivingAt());
+		stm.setString(5, o.getLeavingDate());
+		stm.setString(6, o.getLeavingAt());
+		stm.setString(7, o.getCustomerId());
+		stm.setString(8, o.getVehicleNum());
 		stm.executeUpdate();
 		System.out.println("Order added successfully");
 		return true;
@@ -190,17 +192,21 @@ public class DataAccess implements DataInterface {
 		Order o = null;
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
-					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
-					res.getString("vehicleNumber"));
-			allOrders.add(o);
+			if (res.getBoolean("canceled") == false) {
+				OrderType type = (OrderType) res.getObject("type");
+				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
+						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
+						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
+						res.getBoolean("leavingLate"), res.getBoolean("canceled"));
+				allOrders.add(o);
+			}
 		}
 		return allOrders;
 	}
 
 	public ArrayList<Order> getAllOrdersByCustomerId(String id) throws SQLException {
-		boolean result=checkIfCustomerExistsById(id);
-		if(!result) {
+		boolean result = checkIfCustomerExistsById(id);
+		if (!result) {
 			return null;
 		}
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAlOrdersByCustomerId);
@@ -209,18 +215,21 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
-					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
-					res.getString("vehicleNumber"));
-			allOrders.add(o);
+			if (res.getBoolean("canceled") == false) {
+				OrderType type = (OrderType) res.getObject("type");
+				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
+						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
+						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
+						res.getBoolean("leavingLate"), res.getBoolean("canceled"));
+				allOrders.add(o);
+			}
 		}
-
 		return allOrders;
 	}
 
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException {
-		boolean result=checkIfVehicleExistsByNumber(vehicleNum);
-		if(!result) {
+		boolean result = checkIfVehicleExistsByNumber(vehicleNum);
+		if (!result) {
 			return null;
 		}
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByVehicleNum);
@@ -229,18 +238,22 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			o = new Order(res.getInt("orderID"), OrderType.uponArrivalOrder, res.getString("parkingLot"),
-					res.getString("arrivingAt"), res.getString("leavingAt"), res.getString("customerId"),
-					res.getString("vehicleNumber"));
-			allOrders.add(o);
+			if (res.getBoolean("canceled") == false) {
+				OrderType type = (OrderType) res.getObject("type");
+				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
+						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
+						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
+						res.getBoolean("leavingLate"), res.getBoolean("canceled"));
+				allOrders.add(o);
+			}
 		}
-
 		return allOrders;
 	}
 
-	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException {
-		boolean result=checkIfCustomerExistsById(customerId);
-		if(!result) return null;
+	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException {// TODO: this
+		boolean result = checkIfCustomerExistsById(customerId);
+		if (!result)
+			return null;
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByCustomerId);
 		stm.setString(1, customerId);
 		ResultSet res = stm.executeQuery();
@@ -252,27 +265,22 @@ public class DataAccess implements DataInterface {
 					subscriptionType.fullSubscription);
 			subs.add(s);
 		}
-		/*stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
-		stm.setString(1, customerId);
-		OneCarRegularSubscription oc = null;
-		BusinessRegularSubscription bs = null;
-		res = stm.executeQuery();
-		while (res.next()) {
-			if (res.getString("type").equals("oneCar")) {
-				oc = new OneCarRegularSubscription(customerId, res.getString("subscriptionId"),
-						res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
-						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
-						res.getString("leavingAt"));
-				subs.add(oc);
-			} else {
-				bs = new BusinessRegularSubscription(customerId, res.getString("subscriptionId"),
-						res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
-						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
-						res.getString("leavingAt"));
-				subs.add(bs);
-			}
-		}
-*/
+		/*
+		 * stm =
+		 * c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId)
+		 * ; stm.setString(1, customerId); OneCarRegularSubscription oc = null;
+		 * BusinessRegularSubscription bs = null; res = stm.executeQuery(); while
+		 * (res.next()) { if (res.getString("type").equals("oneCar")) { oc = new
+		 * OneCarRegularSubscription(customerId, res.getString("subscriptionId"),
+		 * res.getString("vehicleNumber"), res.getDate("startingDate"),
+		 * res.getString("email"), subscriptionType.oneCarRegularSubscription,
+		 * res.getString("parkingLot"), res.getString("leavingAt")); subs.add(oc); }
+		 * else { bs = new BusinessRegularSubscription(customerId,
+		 * res.getString("subscriptionId"), res.getString("vehicleNumber"),
+		 * res.getDate("startingDate"), res.getString("email"),
+		 * subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
+		 * res.getString("leavingAt")); subs.add(bs); } }
+		 */
 		return subs;
 	}
 
@@ -314,8 +322,9 @@ public class DataAccess implements DataInterface {
 		return true;
 
 	}
-	
-	public boolean addOneCarRegularSubscription (OneCarRegularSubscription oneCarRegularSubscription) throws SQLException{
+
+	public boolean addOneCarRegularSubscription(OneCarRegularSubscription oneCarRegularSubscription)
+			throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addOneCarRegularSubscription);
 		stm.setString(1, oneCarRegularSubscription.getCustomerId());
 		stm.setString(2, oneCarRegularSubscription.getVehicleNumber());
@@ -327,7 +336,7 @@ public class DataAccess implements DataInterface {
 		System.out.println("One Car Regular Subscription Added Successfully");
 		return true;
 	}
-	
+
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
 		stm.setString(1, vehicleNum);
@@ -339,13 +348,13 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
-	public ArrayList<Complaint> getAllComplaints() throws SQLException{
-		ArrayList<Complaint> complaints=new ArrayList<Complaint>();
-		PreparedStatement statement=c.prepareStatement(sqlStatements.Allstatements.getAllComplaints);
-		Complaint complaint=null;
-		ResultSet res=statement.executeQuery();
-		while(res.next()) {
-			complaint=new Complaint(res.getString("parkingLot"), res.getString("customerId"), res.getString("text"));
+	public ArrayList<Complaint> getAllComplaints() throws SQLException {
+		ArrayList<Complaint> complaints = new ArrayList<Complaint>();
+		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.getAllComplaints);
+		Complaint complaint = null;
+		ResultSet res = statement.executeQuery();
+		while (res.next()) {
+			complaint = new Complaint(res.getString("parkingLot"), res.getString("customerId"), res.getString("text"));
 			complaint.setSubmissionDate(res.getString("submissionDate"));
 			complaint.setChecked(res.getBoolean("isChecked"));
 			complaints.add(complaint);
@@ -353,25 +362,68 @@ public class DataAccess implements DataInterface {
 		return complaints;
 	}
 
-	public boolean checkIfEmployeeExists(String name,String password) throws SQLException{
-		PreparedStatement statement=c.prepareStatement(sqlStatements.Allstatements.checkIfEmployeeExists);
+	public boolean checkIfEmployeeExists(String name, String password) throws SQLException {
+		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.checkIfEmployeeExists);
 		statement.setString(1, name);
 		statement.setString(2, password);
-		ResultSet res=statement.executeQuery();
+		ResultSet res = statement.executeQuery();
 		return res.next();
 	}
-	
-	public boolean addBuisnessRegularSubscription (OneCarBusinessSubscription sub) throws SQLException{
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.addBusinessRegularSubscription);
-		stm.setString(1,sub.getCustomerId());
-		stm.setString(2,sub.getSubsciptionId());
-		stm.setString(3,sub.getVehicleNumber());
+
+	public boolean addBuisnessRegularSubscription(OneCarBusinessSubscription sub) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addBusinessRegularSubscription);
+		stm.setString(1, sub.getCustomerId());
+		stm.setString(2, sub.getSubsciptionId());
+		stm.setString(3, sub.getVehicleNumber());
 		stm.setDate(4, sub.getStartDate());
-		stm.setString(5,sub.getParkingLot());
-		stm.setString(6,sub.getLeavingAt());
-		stm.setString(7,sub.getEmail());
+		stm.setString(5, sub.getParkingLot());
+		stm.setString(6, sub.getLeavingAt());
+		stm.setString(7, sub.getEmail());
 		stm.executeUpdate();
 		System.out.println("Business Regular subscription added successfully!");
 		return true;
+	}
+
+
+	public Order checkIfOrderExistsByAllParameters(String customerId,String vehicle,String arrivingDate,String arrivingAt,String leavingDate,String leavingAt,String parkingLot) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByAllParameters);
+		stm.setString(1, parkingLot);
+		stm.setString(2, vehicle);
+		stm.setString(3, customerId);
+		stm.setString(4, arrivingDate);
+		stm.setString(5, arrivingAt);
+		stm.setString(6, leavingDate);
+		stm.setString(7, leavingAt);
+		ResultSet res=stm.executeQuery();
+		Order o=null;
+		if(res.next()) {
+			OrderType type = (OrderType) res.getObject("type");
+			 o=new Order(res.getInt("orderID"),type,parkingLot,arrivingDate,leavingDate,arrivingDate,leavingDate,customerId,vehicle,res.getBoolean("arrivingLate"),res.getBoolean("leavingLate"),res.getBoolean("canceled"));
+			
+		}
+		return o;
+		
+	}
+
+	public void cancelOrder(Order order) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.cancelOrder);
+		stm.setString(1, order.getParkingLot());
+		stm.setString(2, order.getVehicleNum());
+		stm.setString(3,order.getCustomerId());
+		stm.setString(4, order.getArrivingDate());
+		stm.setString(5, order.getArrivingAt());
+		stm.setString(6, order.getLeavingDate());
+		stm.setString(7, order.getLeavingAt());
+		stm.executeUpdate();
+		System.out.println("Order canceled");
+		
+	}
+	
+	public void setupParkingLot(String parkingLot,int width) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.setupParkingLot);
+		stm.setInt(1, width);
+		stm.setString(2, parkingLot);
+		stm.executeUpdate();
+		System.out.println("Setup of parking lot "+parkingLot+" is finished");
 	}
 }

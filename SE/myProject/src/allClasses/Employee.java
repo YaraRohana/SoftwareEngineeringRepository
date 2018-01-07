@@ -4,6 +4,7 @@ public abstract class Employee {
 
 	String name;
 	String password;	
+	boolean isConnected;
 	
 	public enum employeeType{
 		parkingLotManager(0),companyManager(1),customerServiceEmployee(2),parkingLotEmployee(3);

@@ -15,13 +15,13 @@ import da.DataAccess;
  * Servlet implementation class Login
  */
 @WebServlet("/Login")
-public class Login extends HttpServlet {
+public class LoginEmployee extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Login() {
+	public LoginEmployee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
