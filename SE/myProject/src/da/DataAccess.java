@@ -426,4 +426,19 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 		System.out.println("Setup of parking lot "+parkingLot+" is finished");
 	}
+	
+	public void logOutEmployee(String name) throws SQLException{
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.logOutEmployee);
+		stm.setString(1, name);
+		stm.executeUpdate();
+		System.out.println("Employee logged out");
+	}
+	
+	public void logOutCustomer(String customerId) throws SQLException{
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.logOutCustomer);
+		stm.setString(1, customerId);
+		stm.executeUpdate();
+		System.out.println("Customer logged out");
+	}
+
 }

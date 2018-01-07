@@ -44,5 +44,7 @@ public interface  DataInterface {
 	
 	public void cancelOrder(Order order) throws SQLException;
 	public void setupParkingLot(String parkingLot,int width)throws SQLException;
-	
+	public void logOutEmployee(String name) throws SQLException;
+	public void logOutCustomer(String customerId) throws SQLException;
+
 }

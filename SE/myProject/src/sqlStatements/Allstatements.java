@@ -38,4 +38,7 @@ public class Allstatements {
 	public final static String cancelOrder="UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' WHERE `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
 	public final static String checkIfOrderExistsByAllParameters="select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
 
+	public final static String logOutEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='0' WHERE `name`=?"; 
+	public final static String logOutCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;"; 
+
 }
