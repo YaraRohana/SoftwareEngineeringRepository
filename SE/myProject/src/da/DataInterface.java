@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import allClasses.Complaint;
 import allClasses.Customer;
+import allClasses.Employee.employeeType;
 import allClasses.FullSubscription;
 import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
@@ -46,5 +47,8 @@ public interface  DataInterface {
 	public void setupParkingLot(String parkingLot,int width)throws SQLException;
 	public void logOutEmployee(String name) throws SQLException;
 	public void logOutCustomer(String customerId) throws SQLException;
-
+	
+	public void loginCustomer(String customerId)throws SQLException;
+	public void loginEmployee(String name,String password) throws SQLException;
+	public String getEmployeeType(String name) throws SQLException;
 }

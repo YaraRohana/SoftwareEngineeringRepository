@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.Employee.employeeType;
 import da.DataAccess;
 
 /**
@@ -46,9 +48,24 @@ public class LoginEmployee extends HttpServlet {
 			}
 			if (!res) {
 				System.out.println("Employee does not exist!");
+				PrintWriter out=response.getWriter();
+				out.println(res);
 				return;
-			} else
-				System.out.println("Employee exists");
+			} else {
+				String type=null;
+				try {
+					da.loginEmployee(name,pass);
+					type=da.getEmployeeType(name);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+			PrintWriter out=response.getWriter();
+			out.println(res);
+			PrintWriter out1=response.getWriter();
+			out.println(type);
+			}	
 		}
 	}
 
@@ -58,7 +75,7 @@ public class LoginEmployee extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }

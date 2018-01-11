@@ -11,7 +11,7 @@ public class Allstatements {
 	public final static String checkIfOrderExists = "select * from fur_seal_schema.orders where parkingLot=? AND vehicleNumber=? AND customerId=?";
 	public final static String checkIfVehicleExists="select * from fur_seal_schema.vehicles where vehicleNumber=?";
 	public final static String checkIfEmployeeExists="select * from fur_seal_schema.employees where name=? AND password=?";
-	
+	public final static String getEmployeeByName="select * from fur_seal_schema.employees where name=?";
 	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,isFull,manager,width)"
 			+ "values(?,?,?,?,?,?);";
 	public final static String addNewOrder = "INSERT INTO `fur_seal_schema`.`orders` (`type`,`parkingLot`, `arrivingDate`, `arrivingAt`, `leavingDate`, `leavingAt`, `customerId`, `vehicleNumber`, `arrivingLate`, `leavingLate`, `canceled`) VALUES (?,?, ?, ?, ?, ?, ?, ?, '0', '0', '0')";
@@ -40,5 +40,7 @@ public class Allstatements {
 
 	public final static String logOutEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='0' WHERE `name`=?"; 
 	public final static String logOutCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;"; 
-
+	public final static String logInEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='1' WHERE `name`=? and `password`=?"; 
+	public final static String logInCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
+	//public final static String getEmployeeType=""
 }

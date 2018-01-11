@@ -21,6 +21,7 @@ import allClasses.Subscription.subscriptionType;
 import allClasses.ParkingLot;
 import allClasses.Subscription;
 import allClasses.Vehicle;
+import allClasses.Employee.employeeType;
 import da.DataInterface;
 import sqlStatements.Allstatements;
 
@@ -265,22 +266,26 @@ public class DataAccess implements DataInterface {
 					subscriptionType.fullSubscription);
 			subs.add(s);
 		}
-		/*
-		 * stm =
-		 * c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId)
-		 * ; stm.setString(1, customerId); OneCarRegularSubscription oc = null;
-		 * BusinessRegularSubscription bs = null; res = stm.executeQuery(); while
-		 * (res.next()) { if (res.getString("type").equals("oneCar")) { oc = new
-		 * OneCarRegularSubscription(customerId, res.getString("subscriptionId"),
-		 * res.getString("vehicleNumber"), res.getDate("startingDate"),
-		 * res.getString("email"), subscriptionType.oneCarRegularSubscription,
-		 * res.getString("parkingLot"), res.getString("leavingAt")); subs.add(oc); }
-		 * else { bs = new BusinessRegularSubscription(customerId,
-		 * res.getString("subscriptionId"), res.getString("vehicleNumber"),
-		 * res.getDate("startingDate"), res.getString("email"),
-		 * subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
-		 * res.getString("leavingAt")); subs.add(bs); } }
-		 */
+		stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
+		stm.setString(1, customerId);
+		res = stm.executeQuery();
+		while (res.next()) {
+			Object type = res.getObject("type");
+			if (type.equals("oneCar")) {
+				OneCarRegularSubscription oc = new OneCarRegularSubscription(customerId,
+						res.getString("subscriptionId"), res.getString("vehicleNumber"), res.getDate("startDate"),
+						res.getString("email"), subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
+						res.getString("leavingAt"));
+				subs.add(oc);
+			}
+			if (type.equals("business")) {
+				OneCarBusinessSubscription bs = new OneCarBusinessSubscription(customerId,
+						res.getString("subscriptionId"), res.getString("vehicleNumber"), res.getDate("startDate"),
+						res.getString("email"), subscriptionType.regularBusinessSubscription,
+						res.getString("parkingLot"), res.getString("leavingAt"));
+				subs.add(bs);
+			}
+		}
 		return subs;
 	}
 
@@ -384,9 +389,9 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
-
-	public Order checkIfOrderExistsByAllParameters(String customerId,String vehicle,String arrivingDate,String arrivingAt,String leavingDate,String leavingAt,String parkingLot) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByAllParameters);
+	public Order checkIfOrderExistsByAllParameters(String customerId, String vehicle, String arrivingDate,
+			String arrivingAt, String leavingDate, String leavingAt, String parkingLot) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByAllParameters);
 		stm.setString(1, parkingLot);
 		stm.setString(2, vehicle);
 		stm.setString(3, customerId);
@@ -394,51 +399,90 @@ public class DataAccess implements DataInterface {
 		stm.setString(5, arrivingAt);
 		stm.setString(6, leavingDate);
 		stm.setString(7, leavingAt);
-		ResultSet res=stm.executeQuery();
-		Order o=null;
-		if(res.next()) {
+		ResultSet res = stm.executeQuery();
+		Order o = null;
+		if (res.next()) {
 			OrderType type = (OrderType) res.getObject("type");
-			 o=new Order(res.getInt("orderID"),type,parkingLot,arrivingDate,leavingDate,arrivingDate,leavingDate,customerId,vehicle,res.getBoolean("arrivingLate"),res.getBoolean("leavingLate"),res.getBoolean("canceled"));
-			
+			o = new Order(res.getInt("orderID"), type, parkingLot, arrivingDate, leavingDate, arrivingDate, leavingDate,
+					customerId, vehicle, res.getBoolean("arrivingLate"), res.getBoolean("leavingLate"),
+					res.getBoolean("canceled"));
+
 		}
 		return o;
-		
+
 	}
 
 	public void cancelOrder(Order order) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.cancelOrder);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.cancelOrder);
 		stm.setString(1, order.getParkingLot());
 		stm.setString(2, order.getVehicleNum());
-		stm.setString(3,order.getCustomerId());
+		stm.setString(3, order.getCustomerId());
 		stm.setString(4, order.getArrivingDate());
 		stm.setString(5, order.getArrivingAt());
 		stm.setString(6, order.getLeavingDate());
 		stm.setString(7, order.getLeavingAt());
 		stm.executeUpdate();
 		System.out.println("Order canceled");
-		
+
 	}
-	
-	public void setupParkingLot(String parkingLot,int width) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.setupParkingLot);
+
+	public void setupParkingLot(String parkingLot, int width) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.setupParkingLot);
 		stm.setInt(1, width);
 		stm.setString(2, parkingLot);
 		stm.executeUpdate();
-		System.out.println("Setup of parking lot "+parkingLot+" is finished");
+		System.out.println("Setup of parking lot " + parkingLot + " is finished");
 	}
-	
-	public void logOutEmployee(String name) throws SQLException{
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.logOutEmployee);
+
+	public void logOutEmployee(String name) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logOutEmployee);
 		stm.setString(1, name);
 		stm.executeUpdate();
 		System.out.println("Employee logged out");
 	}
-	
-	public void logOutCustomer(String customerId) throws SQLException{
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.logOutCustomer);
+
+	public void logOutCustomer(String customerId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logOutCustomer);
 		stm.setString(1, customerId);
 		stm.executeUpdate();
 		System.out.println("Customer logged out");
 	}
 
+	public void loginCustomer(String customerId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logInCustomer);
+		stm.setString(1, customerId);
+		stm.executeUpdate();
+		System.out.println("Customer logged in");
+
+	}
+
+	public void loginEmployee(String name, String password) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logInEmployee);
+		stm.setString(1, name);
+		stm.setString(2, password);
+		stm.executeUpdate();
+		System.out.println("Employee logged in");
+
+	}
+
+	public String getEmployeeType(String name) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
+		stm.setString(1, name);
+		String type1 = null;
+		ResultSet res = stm.executeQuery();
+		while (res.next()) {
+			Object type = res.getObject("type");
+
+			if (type.equals("companyManager")) {
+				type1 = "companyManager";
+			} else if (type.equals("parkingLotManager")) {
+				type1 = "parkingLotManager";
+			} else if (type.equals("customerServiceEmployee")) {
+				type1 = "customerServiceEmployee";
+			} else if (type.equals("parkingLotEmployee")) {
+				type1 = "parkingLotEmployee";
+			}
+		}
+		return type1;
+	}
 }

@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -33,7 +34,7 @@ public class LoginCustomer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String customerId=request.getParameter("customerId");
+		String customerId=request.getParameter("id");
 		DataAccess da=new DataAccess();
 		boolean res=false;
 		if(customerId!=null) {
@@ -44,8 +45,17 @@ public class LoginCustomer extends HttpServlet {
 			}
 			if(!res) {
 				System.out.println("Customer does not exist!");
+				PrintWriter out=response.getWriter();
+				out.println(res);
 				return;
 			}
+			try {
+				da.loginCustomer(customerId);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			PrintWriter out=response.getWriter();
+			out.println(res);
 		}
 	}
 
