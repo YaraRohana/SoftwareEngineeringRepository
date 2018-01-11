@@ -64,7 +64,7 @@ public class LoginEmployee extends HttpServlet {
 			PrintWriter out=response.getWriter();
 			out.println(res);
 			PrintWriter out1=response.getWriter();
-			out.println(type);
+			out1.println(type);
 			}	
 		}
 	}

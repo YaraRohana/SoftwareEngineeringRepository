@@ -14,20 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import allClasses.Complaint;
+import allClasses.ParkingLot;
 import da.DataAccess;
 
 /**
- * Servlet implementation class GetAllComplaints
+ * Servlet implementation class GetAllAvailableParkingLots
  */
-@WebServlet("/GetAllComplaints")
-public class GetAllComplaints extends HttpServlet {
+@WebServlet("/GetAllAvailableParkingLots")
+public class GetAllAvailableParkingLots extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetAllComplaints() {
+    public GetAllAvailableParkingLots() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,32 +38,36 @@ public class GetAllComplaints extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		ArrayList<Complaint> complaints=new ArrayList<Complaint>();
+		int size;
 		DataAccess da=new DataAccess();
+		ArrayList<ParkingLot> ParkingLots = new ArrayList<ParkingLot>();
 		try {
-			complaints=da.getAllComplaints();
+			ParkingLots = da.GetAllParkingLots();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		ParkingLot temp = null;
+		size = ParkingLots.size();
+		
+		while(--size>=0) {
+			temp = ParkingLots.get(size);
+			if(temp.isActive()==false||temp.isFull()==true) {
+				ParkingLots.remove(size);
+				}
+			}
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
-		JSONObject jsonComplaint;
-		for (Complaint complaint : complaints) {
-			jsonComplaint=new JSONObject();
+		JSONObject jsonParkingLot;
+		for (ParkingLot parkingLot : ParkingLots) {
 			try {
-				//jsonComplaint.put("parking lot", complaint.getParkingLot());
-				jsonComplaint.put("customer id", complaint.getCustomerId());
-				jsonComplaint.put("submission date", complaint.getSubmissionDate());
-				jsonComplaint.put("text", complaint.getComplaintText());
-				//jsonComplaint.put("is checked", complaint.isChecked());
-				out.println(jsonComplaint);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				jsonParkingLot = new JSONObject();
+				jsonParkingLot.put("name", parkingLot.getName());
+				jsonParkingLot.put("location", parkingLot.getLocation());
+			} catch (JSONException ex) {
+
 			}
 			out.flush();
-			System.out.println(complaint.toString());
+			System.out.println(parkingLot.toString());
 		}
 	}
 
