@@ -59,10 +59,10 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 			for (Subscription subscription : subs) {
 				jsonSub=new JSONObject();
 				try {
-					jsonSub.put("customer id", subscription.getCustomerId());
-					jsonSub.put("subscription id", subscription.getSubsciptionId());
-					jsonSub.put("vehicle number", subscription.getVehicleNumber());
-					jsonSub.put("starting date", subscription.getStartDate());
+					jsonSub.put("customerId", subscription.getCustomerId());
+					jsonSub.put("subscriptionId", subscription.getSubsciptionId());
+					jsonSub.put("vehicleNumber", subscription.getVehicleNumber());
+					jsonSub.put("startingDate", subscription.getStartDate());
 					jsonSub.put("email", subscription.getEmail());
 					out.println(jsonSub);
 				} catch (JSONException e) {

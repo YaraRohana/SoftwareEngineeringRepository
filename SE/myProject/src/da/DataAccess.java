@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -216,7 +218,7 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			if (res.getBoolean("canceled") == false) {
+			if (res.getBoolean("canceled") == false ) {
 				OrderType type = (OrderType) res.getObject("type");
 				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
 						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
@@ -484,5 +486,38 @@ public class DataAccess implements DataInterface {
 			}
 		}
 		return type1;
+	}
+	
+	public ArrayList<ParkingLot> ParkingLotsAvailability() throws SQLException, Exception {
+		int size;
+		ArrayList<ParkingLot> ParkingLots = new ArrayList<ParkingLot>();
+		ParkingLots = GetAllParkingLots();
+		ParkingLot temp = null;
+		size = ParkingLots.size();
+		
+		while(--size>=0) {
+			temp = ParkingLots.get(size);
+			if(temp.isActive()==false||temp.isFull()==true) {
+				ParkingLots.remove(size);
+				}
+			}
+		return ParkingLots;
+		
+	}
+	
+	public double getOrderCost(Order o) throws SQLException, Exception {
+		double cost;
+		DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+		Date ArrivingAt = (Date) dateFormat.parse(o.getArrivingAt());
+		Date LeavingAt = (Date) dateFormat.parse(o.getLeavingAt());
+		
+		long diff = ArrivingAt.getTime() - LeavingAt.getTime();
+
+		long diffMinutes = diff / (60 * 1000) % 60;
+		long diffHours = diff / (60 * 60 * 1000) % 24;
+		
+		if(o.getType()== OrderType.preOrder)	return (4*diffHours+(diffMinutes/15));
+		if(o.getType()== OrderType.uponArrivalOrder)	return (5*diffHours+(diffMinutes/15));
+		return -1;
 	}
 }

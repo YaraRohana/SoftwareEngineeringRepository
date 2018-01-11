@@ -27,11 +27,8 @@ public class Complaint {
 		this.customerId = customerId;
 		this.complaintText = text;
 		this.isChecked = false;
-		//LocalDateTime now = LocalDateTime.now();
-		//System.out.println(dtf.format(now));
 		Date date=new Date();
 		this.submissionDate=sdf.format(date);
-		//System.out.println("here"+realDate);
 	
 	}
 
