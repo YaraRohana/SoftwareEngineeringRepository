@@ -2,6 +2,7 @@ package da;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -491,4 +492,69 @@ public class DataAccess implements DataInterface {
 		return type1;
 	}
 
+	public void updateCompensationForCustomer(String customerId, int compensation) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		stm.setString(1, customerId);
+		ResultSet res = stm.executeQuery();
+		int credit = 0;
+		while (res.next()) {
+			credit = res.getInt("credit");
+			credit += compensation;
+		}
+		stm = c.prepareStatement(sqlStatements.Allstatements.updateCreditByCustomerId);
+		stm.setInt(1, credit);
+		stm.setString(2, customerId);
+		stm.executeUpdate();
+	}
+
+	@SuppressWarnings("deprecation")
+	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, OrderType type)
+			throws SQLException, Exception {
+		int h = 0;
+		double preOrderPrice=0.0, uporArrivalPrice=0.0;
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		java.util.Date ArrivingAt =  dateFormat.parse(arrivingAt);
+		java.util.Date LeavingAt = dateFormat.parse(leavingAt);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res = stm.executeQuery();
+		while(res.next()) {
+			preOrderPrice = Integer.parseInt(res.getString("preOrderPrice"));
+			uporArrivalPrice = Integer.parseInt(res.getString("uponArrivalPrice"));
+		}
+		long diff = LeavingAt.getTime() - ArrivingAt.getTime();
+		System.out.println(diff);
+		double diffMinutes = diff / (60 * 1000) % 60;
+		double diffHours = diff / (60 * 60 * 1000) % 24;
+		if (diffMinutes != 0)
+			h++;
+
+		if (type == OrderType.preOrder)
+			return (preOrderPrice * (diffHours + h));
+		if (type == OrderType.uponArrivalOrder)
+			return (uporArrivalPrice * (diffHours + h));
+		return -1;
+	}
+	
+	public int getFullSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res=stm.executeQuery();
+		int price=0;
+		while(res.next()) {
+			price=Integer.parseInt(res.getString("fullSubscriptionPrice"));
+		}
+		return price;
+	}
+	
+	public int getOneCarRegularSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException{
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res=stm.executeQuery();
+		int price=0;
+		while(res.next()) {
+			price=Integer.parseInt(res.getString("regularSubsForOneCar"));
+		}
+		return price;
+	}
 }

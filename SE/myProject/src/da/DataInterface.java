@@ -9,6 +9,7 @@ import allClasses.FullSubscription;
 import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
 import allClasses.Order;
+import allClasses.Order.OrderType;
 import allClasses.ParkingLot;
 import allClasses.Subscription;
 import allClasses.Vehicle;
@@ -51,4 +52,8 @@ public interface  DataInterface {
 	public void loginCustomer(String customerId)throws SQLException;
 	public void loginEmployee(String name,String password) throws SQLException;
 	public String getEmployeeType(String name) throws SQLException;
+	public void updateCompensationForCustomer(String customerId,int compensation) throws SQLException;
+	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, OrderType type) throws SQLException, Exception;
+	public int getFullSubscriptionCost(String parkingLot)  throws NumberFormatException, SQLException;
+
 }

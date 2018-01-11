@@ -28,6 +28,8 @@ public class Allstatements {
 	
 	public final static String setupParkingLot="UPDATE `fur_seal_schema`.`parkingLots` SET `width`=? WHERE `name`=?";
 	
+	public static final String getComplaintByCustomerId="select * from fur_seal_schema.complaints where customerID=?;";
+	
 	public final static String getAlOrdersByCustomerId = "select * from fur_seal_schema.orders where customerId=?;";
 	public final static String getAllOrdersByVehicleNum = "select * from fur_seal_schema.orders where vehicleNumber=?;";
 	public final static String getAllRegularSubsByCustomerId="select * from fur_seal_schema.regularSubscriptions where customerId=?";
@@ -42,5 +44,10 @@ public class Allstatements {
 	public final static String logOutCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;"; 
 	public final static String logInEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='1' WHERE `name`=? and `password`=?"; 
 	public final static String logInCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
-	//public final static String getEmployeeType=""
+	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
+
+	public final static String getPriceByParkingLot="select * from fur_seal_schema.prices where parkingLot=?;";
+
+	
+	
 }
