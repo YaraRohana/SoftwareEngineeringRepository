@@ -24,6 +24,7 @@ import allClasses.Order;
 import allClasses.Order.OrderType;
 import allClasses.Subscription.subscriptionType;
 import allClasses.ParkingLot;
+import allClasses.ParkingSpot;
 import allClasses.Subscription;
 import allClasses.Vehicle;
 import allClasses.Employee.employeeType;
@@ -89,16 +90,16 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
-	public int getParkingIdLotByName(String name) throws SQLException {
+	public ParkingLot getParkingLotByName(String name) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
 		stm.setString(1, name);
 		ResultSet rs = stm.executeQuery();
-		int id = 0;
+		ParkingLot pl = null;
 		while (rs.next()) {
-			id = rs.getInt("parkingLotId");
-			return id;
+			pl = new ParkingLot(name, rs.getString("location"), rs.getBoolean("isActive"), rs.getBoolean("isFull"),
+					rs.getString("manager"), rs.getInt("width"));
 		}
-		return 0;
+		return pl;
 	}
 
 	public ArrayList<ParkingLot> GetAllParkingLots() throws SQLException {
@@ -494,6 +495,21 @@ public class DataAccess implements DataInterface {
 		return type1;
 	}
 
+	public String getEmployeeParkingLot(String name) throws SQLException {
+		String employeeType = getEmployeeType(name);
+		String parkingLot = null;
+		if (employeeType.equals("parkingLotEmployee") || employeeType.equals("companyManager")
+				|| employeeType.equals("parkingLotManager")) {
+			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
+			stm.setString(1, name);
+			ResultSet res = stm.executeQuery();
+			while (res.next()) {
+				parkingLot = res.getString("parkingLot");
+			}
+		}
+		return parkingLot;
+	}
+
 	public void updateCompensationForCustomer(String customerId, int compensation) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
@@ -512,7 +528,7 @@ public class DataAccess implements DataInterface {
 	@SuppressWarnings("deprecation")
 	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, OrderType type)
 			throws SQLException, Exception {
-		//int h = 0;
+		// int h = 0;
 		double preOrderPrice = 0.0, uporArrivalPrice = 0.0;
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		java.util.Date ArrivingAt = dateFormat.parse(arrivingAt);
@@ -522,9 +538,9 @@ public class DataAccess implements DataInterface {
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
 			preOrderPrice = Integer.parseInt(res.getString("preOrderPrice"));
-			//System.out.println("pre order price"+preOrderPrice);
+			// System.out.println("pre order price"+preOrderPrice);
 			uporArrivalPrice = Integer.parseInt(res.getString("uponArrivalPrice"));
-			//System.out.println("upon arrival price"+uporArrivalPrice);
+			// System.out.println("upon arrival price"+uporArrivalPrice);
 		}
 		long diff = LeavingAt.getTime() - ArrivingAt.getTime();
 		System.out.println(diff);
@@ -534,15 +550,15 @@ public class DataAccess implements DataInterface {
 			diffHours++;
 
 		if (type == OrderType.preOrder) {
-			//System.out.println("we are here in pre order "+preOrderPrice * (diffHours));
+			// System.out.println("we are here in pre order "+preOrderPrice * (diffHours));
 			return (preOrderPrice * (diffHours));
 		}
-			
+
 		if (type == OrderType.uponArrivalOrder) {
-			//System.out.println("we are in upon ariival "+uporArrivalPrice * (diffHours));
+			// System.out.println("we are in upon ariival "+uporArrivalPrice * (diffHours));
 			return (uporArrivalPrice * (diffHours));
 		}
-			
+
 		return -1;
 	}
 
@@ -599,12 +615,12 @@ public class DataAccess implements DataInterface {
 		java.util.Date Arriving = dateFormat.parse(arrivingDate);
 		java.util.Date now = new java.util.Date();
 
-		long diff = Arriving.getTime()-now.getTime();
+		long diff = Arriving.getTime() - now.getTime();
 
 		long diffHours = diff / (60 * 60 * 1000) % 24;
 		long diffDays = diff / (24 * 60 * 60 * 1000);
-		System.out.println("diff hours "+diffHours);
-		System.out.println("diff days "+diffDays);
+		System.out.println("diff hours " + diffHours);
+		System.out.println("diff days " + diffDays);
 		if (diffDays > 0 || diffHours > 3) {
 			System.out.println("first if");
 			credit = -(1 / 10) * getOrderCost(parkingLot, arrivingAt, leavingAt, type);
@@ -612,12 +628,11 @@ public class DataAccess implements DataInterface {
 
 		else if (diffHours >= 1 && diffHours <= 3) {
 			System.out.println("second if");
-			System.out.println("price is"+ getOrderCost(parkingLot, arrivingAt, leavingAt, type));
+			System.out.println("price is" + getOrderCost(parkingLot, arrivingAt, leavingAt, type));
 			credit = -(1 / 2) * getOrderCost(parkingLot, arrivingAt, leavingAt, type);
-		}
-		else {
+		} else {
 			System.out.println("third if");
-		credit = -getOrderCost(parkingLot, arrivingAt, leavingAt, type);
+			credit = -getOrderCost(parkingLot, arrivingAt, leavingAt, type);
 		}
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
@@ -633,4 +648,37 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 		return true;
 	}
+
+	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
+		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+			ParkingLot pl=getParkingLotByName(parkingLot);
+			ParkingSpot[][][] tmp = pl.getParkingSpots();
+			//System.out.println(tmp.length);
+			ParkingSpot ps = tmp[row][column][width];
+			if (ps.isFaulted() == false && ps.isOccupied() == false && ps.isSaved() == false) {
+				tmp[row][column][width].setSaved(true);
+			}
+			for(int i=0;i<3;i++) {
+				for(int j=0;j<3;j++) {
+					for(int k=0;k<pl.getWidth();k++) {
+						System.out.println(tmp[i][j][k].isSaved());
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception {
+		String parkingLot = getEmployeeParkingLot(name);
+		System.out.println("parking lot " + parkingLot);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.updatePrices);
+		stm.setInt(1, preOrder);
+		stm.setInt(2, uponArrival);
+		stm.setString(3, parkingLot);
+		stm.executeUpdate();
+		return true;
+	}
+
 }

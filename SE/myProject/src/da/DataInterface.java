@@ -19,7 +19,7 @@ public interface  DataInterface {
 	public boolean addParkingLot(ParkingLot p) throws SQLException;
 	public boolean deleteParkingLot(String nameOfParkingLot) throws SQLException;
 	public ArrayList<ParkingLot> GetAllParkingLots() throws SQLException;
-	public int getParkingIdLotByName(String name) throws SQLException;
+	public ParkingLot getParkingLotByName(String name) throws SQLException;
 
 	public boolean addCustomer(Customer c) throws SQLException;
 	public ArrayList<Customer> getAllCustomers()throws SQLException;
@@ -57,5 +57,7 @@ public interface  DataInterface {
 	public int getFullSubscriptionCost(String parkingLot)  throws NumberFormatException, SQLException;
 	public int getBusinessRegularSubscriptionCost(String customerId,String parkingLot) throws NumberFormatException, SQLException;
 	public boolean getCancelOrderCredit(String parkingLot, String customerId, String arrivingDate, String arrivingAt,String leavingAt, OrderType type) throws SQLException, Exception;
-
+	public String getEmployeeParkingLot(String name)throws SQLException;
+	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception;
+	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
 }

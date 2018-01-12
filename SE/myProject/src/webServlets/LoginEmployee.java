@@ -53,9 +53,11 @@ public class LoginEmployee extends HttpServlet {
 				return;
 			} else {
 				String type=null;
+				String parkingLot=null;
 				try {
 					da.loginEmployee(name,pass);
 					type=da.getEmployeeType(name);
+					parkingLot=da.getEmployeeParkingLot(name);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -65,6 +67,11 @@ public class LoginEmployee extends HttpServlet {
 			out.println(res);
 			PrintWriter out1=response.getWriter();
 			out1.println(type);
+			if(parkingLot!=null) {
+				PrintWriter out2=response.getWriter();
+				out2.println(parkingLot);
+			}
+			
 			}	
 		}
 	}

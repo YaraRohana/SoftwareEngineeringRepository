@@ -2,6 +2,8 @@ package allClasses;
 
 import java.util.ArrayList;
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
 public class ParkingLot {
 
 	int id;
@@ -12,7 +14,7 @@ public class ParkingLot {
 	String manager;
 	int width;
 	int canceledOrders;
-	ParkingSpot[][][] ParkingSpots = new ParkingSpot[3][3][width];
+	ParkingSpot[][][] ParkingSpots;
 	
 	
 	
@@ -33,6 +35,14 @@ public class ParkingLot {
 		this.isFull = isFull;
 		this.manager = manager;
 		this.width = width;
+		this.ParkingSpots= new ParkingSpot[3][3][width];
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
+				for(int k=0;k<this.width;k++) {
+					this.ParkingSpots[i][j][k]=new ParkingSpot(false,false,false);
+				}
+			}
+		}
 	}
 
 	public int getId() {
@@ -89,6 +99,14 @@ public class ParkingLot {
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+
+	public ParkingSpot[][][] getParkingSpots() {
+		return ParkingSpots;
+	}
+
+	public void setParkingSpots(ParkingSpot[][][] parkingSpots) {
+		ParkingSpots = parkingSpots;
 	}
 
 	@Override
