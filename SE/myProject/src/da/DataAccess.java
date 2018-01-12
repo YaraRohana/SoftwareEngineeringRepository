@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.crypto.KeySelector.Purpose;
+
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
@@ -510,51 +512,125 @@ public class DataAccess implements DataInterface {
 	@SuppressWarnings("deprecation")
 	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, OrderType type)
 			throws SQLException, Exception {
-		int h = 0;
-		double preOrderPrice=0.0, uporArrivalPrice=0.0;
+		//int h = 0;
+		double preOrderPrice = 0.0, uporArrivalPrice = 0.0;
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-		java.util.Date ArrivingAt =  dateFormat.parse(arrivingAt);
+		java.util.Date ArrivingAt = dateFormat.parse(arrivingAt);
 		java.util.Date LeavingAt = dateFormat.parse(leavingAt);
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
 		stm.setString(1, parkingLot);
 		ResultSet res = stm.executeQuery();
-		while(res.next()) {
+		while (res.next()) {
 			preOrderPrice = Integer.parseInt(res.getString("preOrderPrice"));
+			//System.out.println("pre order price"+preOrderPrice);
 			uporArrivalPrice = Integer.parseInt(res.getString("uponArrivalPrice"));
+			//System.out.println("upon arrival price"+uporArrivalPrice);
 		}
 		long diff = LeavingAt.getTime() - ArrivingAt.getTime();
 		System.out.println(diff);
 		double diffMinutes = diff / (60 * 1000) % 60;
 		double diffHours = diff / (60 * 60 * 1000) % 24;
 		if (diffMinutes != 0)
-			h++;
+			diffHours++;
 
-		if (type == OrderType.preOrder)
-			return (preOrderPrice * (diffHours + h));
-		if (type == OrderType.uponArrivalOrder)
-			return (uporArrivalPrice * (diffHours + h));
+		if (type == OrderType.preOrder) {
+			//System.out.println("we are here in pre order "+preOrderPrice * (diffHours));
+			return (preOrderPrice * (diffHours));
+		}
+			
+		if (type == OrderType.uponArrivalOrder) {
+			//System.out.println("we are in upon ariival "+uporArrivalPrice * (diffHours));
+			return (uporArrivalPrice * (diffHours));
+		}
+			
 		return -1;
 	}
-	
+
 	public int getFullSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
 		stm.setString(1, parkingLot);
-		ResultSet res=stm.executeQuery();
-		int price=0;
-		while(res.next()) {
-			price=Integer.parseInt(res.getString("fullSubscriptionPrice"));
+		ResultSet res = stm.executeQuery();
+		int price1 = 0, price2 = 0;
+		while (res.next()) {
+			price1 = Integer.parseInt(res.getString("preOrderPrice"));
+			price2 = Integer.parseInt(res.getString("fullSubscriptionPrice"));
 		}
-		return price;
+		return price1 * price2;
 	}
-	
-	public int getOneCarRegularSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException{
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+
+	public int getOneCarRegularSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
 		stm.setString(1, parkingLot);
-		ResultSet res=stm.executeQuery();
-		int price=0;
-		while(res.next()) {
-			price=Integer.parseInt(res.getString("regularSubsForOneCar"));
+		ResultSet res = stm.executeQuery();
+		int price1 = 0, price2 = 0;
+		while (res.next()) {
+			price1 = Integer.parseInt(res.getString("preOrderPrice"));
+			price2 = Integer.parseInt(res.getString("regularSubsForOneCar"));
 		}
-		return price;
+		return price1 * price2;
+	}
+
+	public int getBusinessRegularSubscriptionCost(String customerId, String parkingLot)
+			throws NumberFormatException, SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res = stm.executeQuery();
+		int price1 = 0, price2 = 0;
+		while (res.next()) {
+			price1 = Integer.parseInt(res.getString("preOrderPrice"));
+			price2 = Integer.parseInt(res.getString("regularSubsForMulCars"));
+		}
+		stm = c.prepareStatement(sqlStatements.Allstatements.getAllBusinessSubsByCustomerId);
+		stm.setString(1, customerId);
+		res = stm.executeQuery();
+		int count = 0;
+		while (res.next()) {
+			count++;
+		}
+		return price1 * price2 * count;
+	}
+
+	public boolean getCancelOrderCredit(String parkingLot, String customerId, String arrivingDate, String arrivingAt,
+			String leavingAt, OrderType type) throws SQLException, Exception {
+		double credit = 0;
+		int Credit;
+		arrivingDate = arrivingDate + " " + arrivingAt;
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		java.util.Date Arriving = dateFormat.parse(arrivingDate);
+		java.util.Date now = new java.util.Date();
+
+		long diff = Arriving.getTime()-now.getTime();
+
+		long diffHours = diff / (60 * 60 * 1000) % 24;
+		long diffDays = diff / (24 * 60 * 60 * 1000);
+		System.out.println("diff hours "+diffHours);
+		System.out.println("diff days "+diffDays);
+		if (diffDays > 0 || diffHours > 3) {
+			System.out.println("first if");
+			credit = -(1 / 10) * getOrderCost(parkingLot, arrivingAt, leavingAt, type);
+		}
+
+		else if (diffHours >= 1 && diffHours <= 3) {
+			System.out.println("second if");
+			System.out.println("price is"+ getOrderCost(parkingLot, arrivingAt, leavingAt, type));
+			credit = -(1 / 2) * getOrderCost(parkingLot, arrivingAt, leavingAt, type);
+		}
+		else {
+			System.out.println("third if");
+		credit = -getOrderCost(parkingLot, arrivingAt, leavingAt, type);
+		}
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		stm.setString(1, customerId);
+		ResultSet res = stm.executeQuery();
+		while (res.next()) {
+			credit += Integer.parseInt(res.getString("credit"));
+		}
+		Credit = (int) credit;
+
+		stm = c.prepareStatement(sqlStatements.Allstatements.updateCreditByCustomerId);
+		stm.setInt(1, Credit);
+		stm.setString(2, customerId);
+		stm.executeUpdate();
+		return true;
 	}
 }

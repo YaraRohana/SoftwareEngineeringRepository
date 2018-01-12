@@ -55,5 +55,7 @@ public interface  DataInterface {
 	public void updateCompensationForCustomer(String customerId,int compensation) throws SQLException;
 	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, OrderType type) throws SQLException, Exception;
 	public int getFullSubscriptionCost(String parkingLot)  throws NumberFormatException, SQLException;
+	public int getBusinessRegularSubscriptionCost(String customerId,String parkingLot) throws NumberFormatException, SQLException;
+	public boolean getCancelOrderCredit(String parkingLot, String customerId, String arrivingDate, String arrivingAt,String leavingAt, OrderType type) throws SQLException, Exception;
 
 }

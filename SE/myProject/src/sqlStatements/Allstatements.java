@@ -33,6 +33,8 @@ public class Allstatements {
 	public final static String getAlOrdersByCustomerId = "select * from fur_seal_schema.orders where customerId=?;";
 	public final static String getAllOrdersByVehicleNum = "select * from fur_seal_schema.orders where vehicleNumber=?;";
 	public final static String getAllRegularSubsByCustomerId="select * from fur_seal_schema.regularSubscriptions where customerId=?";
+	public final static String getAllBusinessSubsByCustomerId="select * from fur_seal_schema.regularSubscriptions where customerId=? and type='business';";
+
 	public final static String getAllFullSubsByCustomerId="select * from fur_seal_schema.fullSubscriptions where customerId=?;";
 	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`fullSubscription` (`customerId`, `subscriptionId`, `vehicleNumber`, `startingDate`, `arrivedSince`) VALUES (?,?,?,?,?);";
 	public final static String addOneCarRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,'0',?,?,'oneCar',?,?,?);";
@@ -47,6 +49,8 @@ public class Allstatements {
 	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
 
 	public final static String getPriceByParkingLot="select * from fur_seal_schema.prices where parkingLot=?;";
+//	public final static String getCustomerbyCustomerId="select * from fur_seal_schema.customers where customerID=?;";
+//	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
 
 	
 	

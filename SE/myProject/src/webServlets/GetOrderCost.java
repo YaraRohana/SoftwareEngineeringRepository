@@ -51,12 +51,13 @@ public class GetOrderCost extends HttpServlet {
 		OrderType Type = null;
 		DataAccess da = new DataAccess();
 		if (type != null && arrivingTime != null && leavingTime!=null) {
-			System.out.println("fotna 3al if");
-			if (type == "preOrder")
+			if (type.equals("preOrder")) {
 				Type = OrderType.preOrder;
-			else
+			}
+			else if(type.equals("uponArrivalOrder")) {
 				Type = OrderType.uponArrivalOrder;
-
+			}	
+			System.out.println("we are in GetOrderCost and the type is "+Type);
 			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 			try {
 				ArrivingAt = dateFormat.parse(arrivingTime);
