@@ -41,7 +41,6 @@ public class GetOrderCost extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		double cost = -1;
-
 		String arrivingTime = request.getParameter("arrivingTime");
 		String leavingTime = request.getParameter("leavingTime");
 		String parkingLot = request.getParameter("parkingLot");
@@ -50,14 +49,13 @@ public class GetOrderCost extends HttpServlet {
 		Date LeavingAt = null;
 		OrderType Type = null;
 		DataAccess da = new DataAccess();
-		if (type != null && arrivingTime != null && leavingTime!=null) {
+		if (type != null && arrivingTime != null && leavingTime != null) {
 			if (type.equals("preOrder")) {
 				Type = OrderType.preOrder;
-			}
-			else if(type.equals("uponArrivalOrder")) {
+			} else if (type.equals("uponArrivalOrder")) {
 				Type = OrderType.uponArrivalOrder;
-			}	
-			System.out.println("we are in GetOrderCost and the type is "+Type);
+			}
+			System.out.println("we are in GetOrderCost and the type is " + Type);
 			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 			try {
 				ArrivingAt = dateFormat.parse(arrivingTime);
@@ -66,7 +64,7 @@ public class GetOrderCost extends HttpServlet {
 				e.printStackTrace();
 			}
 			try {
-				LeavingAt =dateFormat.parse(leavingTime);
+				LeavingAt = dateFormat.parse(leavingTime);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

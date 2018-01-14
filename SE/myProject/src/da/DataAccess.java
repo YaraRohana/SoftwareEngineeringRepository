@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import javax.xml.crypto.KeySelector.Purpose;
 
+import allClasses.CPS;
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.Email;
@@ -651,23 +652,47 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
-	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
+	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) {
+		if (parkingLot != null) {
+			CPS cps = CPS.getInstance();
+			for (ParkingLot i : cps.getParkingLots()) {
+				if (i.getName().equals(parkingLot)) {
+					return i;
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean saveParkingSpot(String parkingLot, int row, int column, int width){
 		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
-			ParkingLot pl=getParkingLotByName(parkingLot);
+			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
 			ParkingSpot[][][] tmp = pl.getParkingSpots();
-			//System.out.println(tmp.length);
 			ParkingSpot ps = tmp[row][column][width];
 			if (ps.isFaulted() == false && ps.isOccupied() == false && ps.isSaved() == false) {
 				tmp[row][column][width].setSaved(true);
 			}
-			for(int i=0;i<3;i++) {
-				for(int j=0;j<3;j++) {
-					for(int k=0;k<pl.getWidth();k++) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					for (int k = 0; k < pl.getWidth(); k++) {
 						System.out.println(tmp[i][j][k].isSaved());
 					}
 				}
 			}
 			return true;
+		}
+		return false;
+	}
+
+	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) {
+		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+			ParkingSpot[][][] tmp = pl.getParkingSpots();
+			ParkingSpot ps = tmp[row][column][width];
+			if (ps.isSaved() == true) {
+				ps.setSaved(false);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -682,36 +707,35 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 		return true;
 	}
-	
-	public String getSaltString() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 5) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
 
-    }
-	
-	
+	public String getSaltString() {
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		StringBuilder salt = new StringBuilder();
+		Random rnd = new Random();
+		while (salt.length() < 5) { // length of the random string.
+			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+			salt.append(SALTCHARS.charAt(index));
+		}
+		String saltStr = salt.toString();
+		return saltStr;
+
+	}
+
 	public String getCustomerMailById(String customerId) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
-		ResultSet res=stm.executeQuery();
-		String email=null;
-		while(res.next()) {
-			email=res.getString("email");
+		ResultSet res = stm.executeQuery();
+		String email = null;
+		while (res.next()) {
+			email = res.getString("email");
 		}
 		return email;
 	}
-	
-	public void sendComplaintReplyToMail(String email,String reply) {
+
+	public void sendComplaintReplyToMail(String email, String reply) {
 		Email.sendEmail(email, "Complaint Reply", reply);
 	}
-	
+
 	public ArrayList<Order> getAllPreOrdersByArrivingDate(String arriveDate, String arrivingAt) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByArrivingDate);
 		stm.setString(1, arriveDate);
@@ -746,7 +770,7 @@ public class DataAccess implements DataInterface {
 		}
 		return subs;
 	}
-	
+
 	public ArrayList<FullSubscription> getAllFullSubsByArrivedSince(Date arriveDate) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByArrivedSince);
 		stm.setDate(1, arriveDate);
@@ -770,7 +794,7 @@ public class DataAccess implements DataInterface {
 		Subscription s = null;
 		while (res.next()) {
 			Object type = res.getObject("type");
-			if (type.equals("oneCar"))  {
+			if (type.equals("oneCar")) {
 				s = new OneCarRegularSubscription(res.getString("customerId"), res.getString("subscriptionId"),
 						res.getString("vehicleNumber"), res.getDate("startDate"), res.getString("email"),
 						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
@@ -785,5 +809,77 @@ public class DataAccess implements DataInterface {
 		}
 		return subs;
 	}
-	
+
+	public ParkingSpot[][][] getParkingLotImage(String parkingLot) {
+		if (parkingLot != null) {
+			System.out.println("not null, we're okay");
+			CPS cps = CPS.getInstance();
+			if (cps == null) {
+				System.out.println("cps null");
+			}
+			ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
+			for (ParkingLot i : parkingLots) {
+				if (i.getName().equals(parkingLot)) {
+					System.out.println("found at location " + i);
+					return i.getParkingSpots();
+				}
+			}
+
+		}
+		return null;
+	}
+
+	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() {
+		CPS cps = CPS.getInstance();
+		ArrayList<ParkingSpot[][][]> parkingSpots = new ArrayList<ParkingSpot[][][]>();
+		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
+		for (ParkingLot parkingLot : parkingLots) {
+			parkingSpots.add(getParkingLotImage(parkingLot.getName()));
+		}
+		return parkingSpots;
+	}
+
+	public void printAllParkingLots() {
+		CPS cps = CPS.getInstance();
+		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
+		for (ParkingLot parkingLot : parkingLots) {
+			System.out.println(parkingLot.getName());
+		}
+	}
+
+	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException {
+		if (parkingLot != null && vehicleNumber != null) {
+			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByVehicleNum);
+			stm.setString(1, vehicleNumber);
+			ResultSet res = stm.executeQuery();
+			while (res.next()) {
+				if (res.getInt("row") == -1 && res.getInt("column") == -1 && res.getInt("width") == -1) {
+					ParkingSpot[][][] currentImage = getParkingLotImage(parkingLot);
+					if (currentImage == null) {
+						System.out.println("it's null");
+						return false;
+					}
+					for (int i = 0; i < 3; i++) {
+						for (int j = 0; j < 3; j++) {
+							for (int k = 0; k < pl.getWidth(); k++) {
+								ParkingSpot tmp = currentImage[i][j][k];
+								if (tmp.isFaulted() == false && tmp.isOccupied() == false && tmp.isSaved() == false) {
+									tmp.setOccupied(true);
+									stm = c.prepareStatement(sqlStatements.Allstatements.enterVehicleIntoParkingLot);
+									stm.setInt(1, i);
+									stm.setInt(2, j);
+									stm.setInt(3, k);
+									stm.setString(4, vehicleNumber);
+									stm.executeUpdate();
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class CPS {
 
 	
-	ArrayList<ParkingLot> parkingLots;
+	static ArrayList<ParkingLot> parkingLots;
 	ArrayList<Order> orders;
 	ArrayList<Customer> customers;
 	ArrayList<Complaint> complaints;
@@ -14,7 +14,7 @@ public class CPS {
 	
 	private static CPS single_instance = null;
 	private CPS(){
-		this.parkingLots=new ArrayList<ParkingLot>();
+		CPS.parkingLots=new ArrayList<ParkingLot>();
 		this.orders=new ArrayList<Order>();
 		this.customers=new ArrayList<Customer>();
 		this.complaints=new ArrayList<Complaint>();

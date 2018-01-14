@@ -52,6 +52,7 @@ public class AddFullSubscription extends HttpServlet {
 		CPS cps = CPS.getInstance();
 		DataAccess da = new DataAccess();
 		boolean res = false;
+		boolean res1 = false;
 		if (vehicleNumber != null && customerId != null) {
 
 				Customer customer = new Customer(customerId, email);
@@ -80,8 +81,8 @@ public class AddFullSubscription extends HttpServlet {
 			FullSubscription c = new FullSubscription(customerId, subsId, vehicleNumber, sqlStartDate,email, sqlStartDate,
 					subscriptionType.fullSubscription);
 			try {
-				res = da.addFullSubscription(c);
-				if(res) {
+				res1 = da.addFullSubscription(c);
+				if(res1) {
 					cps.getSubscriptions().add(c);
 				}
 				PrintWriter out=response.getWriter();
@@ -105,7 +106,8 @@ public class AddFullSubscription extends HttpServlet {
 				e.printStackTrace();
 			}
 
-			System.out.println("res is" + res);
+			PrintWriter out=response.getWriter();
+			out.println(res1);
 			PrintWriter out2=response.getWriter();
 			out2.println(subsId);
 		}

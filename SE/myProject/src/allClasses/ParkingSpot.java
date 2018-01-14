@@ -6,8 +6,6 @@ public class ParkingSpot {
 	boolean isFaulted;
 	boolean isSaved;
 	
-	
-	
 	public ParkingSpot(boolean isOccupied, boolean isFaulted, boolean isSaved) {
 		super();
 		this.isOccupied = isOccupied;

@@ -21,49 +21,47 @@ import da.DataAccess;
 @WebServlet("/EmployeeSaveParkingSpot")
 public class EmployeeSaveParkingSpot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EmployeeSaveParkingSpot() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public EmployeeSaveParkingSpot() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		String parkingLot = request.getParameter("parkingLot");
 		String row = request.getParameter("row");
 		String column = request.getParameter("column");
 		String width = request.getParameter("width");
-		
+
 		DataAccess da = new DataAccess();
-		if (parkingLot!=null && column!=null && row!=null && width!=null) {
-			int realRow=Integer.parseInt(row);
-			int realCol=Integer.parseInt(column);
-			int realWidth=Integer.parseInt(width);
-			//System.out.println("*******************"+"row="+realRow+"col="+realCol+"width="+realWidth);
-			boolean res=false;
-			try {
-				
-				res=da.saveParkingSpot(parkingLot,realRow,realCol,realWidth);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-			PrintWriter out=response.getWriter();
+		if (parkingLot != null && column != null && row != null && width != null) {
+			int realRow = Integer.parseInt(row);
+			int realCol = Integer.parseInt(column);
+			int realWidth = Integer.parseInt(width);
+			// System.out.println("*******************"+"row="+realRow+"col="+realCol+"width="+realWidth);
+			boolean res = false;
+			res = da.saveParkingSpot(parkingLot, realRow, realCol, realWidth);
+			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

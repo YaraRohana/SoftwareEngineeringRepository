@@ -69,6 +69,16 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 			boolean res = false;
 			CPS cps = CPS.getInstance();
 			String subsId = da.getSaltString();
+			Customer customer = new Customer(customerId, email);
+			customer.setCredit(0);
+			try {
+				res = da.addCustomer(customer);
+				if (res) {
+					cps.getCustomers().add(customer);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			for (int i = 0; i < numOfVehicles; i++) {
 				// System.out.println("we're inside the for");
 				String vehicleNum = request.getParameter("vehicleNum");
@@ -78,15 +88,25 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 						subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 				try {
 					res = da.addBuisnessRegularSubscription(tmp);
-					if(res) {
+					if (res) {
 						cps.getSubscriptions().add(tmp);
 					}
-					
+
 				} catch (SQLException e) {
 					System.out.println("Unable to add business subscription");
 					e.printStackTrace();
 				}
+				Vehicle v = new Vehicle(vehicleNum, customerId);
+				try {
+					res = da.addVehicle(v);
+					if (res) {
+						cps.getVehicles().add(v);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
+
 			PrintWriter out = response.getWriter();
 			out.println(res);
 			PrintWriter out1 = response.getWriter();

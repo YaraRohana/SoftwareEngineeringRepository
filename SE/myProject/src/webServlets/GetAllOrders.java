@@ -40,7 +40,7 @@ public class GetAllOrders extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		ArrayList<Order> allOrder = new ArrayList<Order>();
 		DataAccess da = new DataAccess();
 		try {

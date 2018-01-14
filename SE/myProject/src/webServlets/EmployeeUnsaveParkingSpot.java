@@ -1,28 +1,27 @@
 package webServlets;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import da.DataAccess;
 
 /**
- * Servlet implementation class LogOut
+ * Servlet implementation class EmployeeUnsaveParkingSpot
  */
-@WebServlet("/LogOutEmployee")
-public class LogOutEmployee extends HttpServlet {
+@WebServlet("/EmployeeUnsaveParkingSpot")
+public class EmployeeUnsaveParkingSpot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LogOutEmployee() {
+    public EmployeeUnsaveParkingSpot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,13 +31,20 @@ public class LogOutEmployee extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String name=request.getParameter("name");
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		String parkingLot=request.getParameter("parkingLot");
+		String row=request.getParameter("row");
+		String column=request.getParameter("column");
+		String width=request.getParameter("width");
 		DataAccess da=new DataAccess();
-		try {
-			da.logOutEmployee(name);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		boolean res=false;
+		if(parkingLot!=null && row!=null && column!=null && width!=null) {
+			int realRow = Integer.parseInt(row);
+			int realCol = Integer.parseInt(column);
+			int realWidth = Integer.parseInt(width);
+			res=da.unsaveParkingSpot(parkingLot, realRow, realCol, realWidth);
+			PrintWriter out = response.getWriter();
+			out.println(res);
 		}
 	}
 
@@ -46,7 +52,8 @@ public class LogOutEmployee extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

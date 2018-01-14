@@ -55,7 +55,7 @@ public class Allstatements {
 	public final static String getAllRegularSubsByStartingDate = "select * from fur_seal_schema.regularSubscriptions where startDate=?;";
 	public final static String getAllFullSubsByStartingDate = "select * from fur_seal_schema.fullSubscriptions where startingDate=?;";
 	public final static String getAllFullSubsByArrivedSince = "select * from fur_seal_schema.fullSubscriptions where arrivedSince=?;";
-	
+	public final static String enterVehicleIntoParkingLot="UPDATE `fur_seal_schema`.`vehicles` SET `row`=?, `column`=? , `width`=? WHERE vehicleNumber=?";
 
 	
 	

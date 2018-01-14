@@ -16,7 +16,7 @@ import da.DataAccess;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/Login")
+@WebServlet("/LoginEmployee")
 public class LoginEmployee extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -28,39 +29,41 @@ import da.DataAccess;
 @WebServlet("/AddRegularOneCarSubscription")
 public class AddRegularOneCarSubscription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AddRegularOneCarSubscription() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public AddRegularOneCarSubscription() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
 
 		String customerId = request.getParameter("customerId");
-		//String subscriptionId = request.getParameter("subscriptionId");
+		// String subscriptionId = request.getParameter("subscriptionId");
 		String vehicleNumber = request.getParameter("vehicleNumber");
 		String startDate = request.getParameter("startDate");
 		String parkingLot = request.getParameter("parkingLot");
 		String leavingAt = request.getParameter("leavingAt");
 		String email = request.getParameter("email");
-		CPS cps=CPS.getInstance();
+		CPS cps = CPS.getInstance();
 		DataAccess da = new DataAccess();
 		boolean res = false;
+		boolean res1 = false;
 		if (vehicleNumber != null && customerId != null) {
-			
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			try {
 				res = da.addCustomer(customer);
-				if(res) {
+				if (res) {
 					cps.getCustomers().add(customer);
 				}
 			} catch (SQLException e) {
@@ -75,42 +78,46 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-			String subsId=da.getSaltString();
-			
+			String subsId = da.getSaltString();
+
 			OneCarRegularSubscription c = new OneCarRegularSubscription(customerId, subsId, vehicleNumber, sqlStartDate,
 					email, subscriptionType.oneCarRegularSubscription, parkingLot, leavingAt);
 			try {
-				res = da.addOneCarRegularSubscription(c);
-				if(res){
+				res1 = da.addOneCarRegularSubscription(c);
+				if (res1) {
 					cps.getSubscriptions().add(c);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-			Vehicle v = new Vehicle(vehicleNumber, customerId); 
+
+			Vehicle v = new Vehicle(vehicleNumber, customerId);
 			try {
-				res=da.addVehicle(v);
-				if(res) {
+				res = da.addVehicle(v);
+				if (res) {
 					cps.getVehicles().add(v);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-		//	System.out.println("res is" + res);
-	
+
+			PrintWriter out = response.getWriter();
+			out.println(res1);
+			PrintWriter out1 = response.getWriter();
+			out1.println(subsId);
 		}
-		
+
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-		
+
 	}
 
 }

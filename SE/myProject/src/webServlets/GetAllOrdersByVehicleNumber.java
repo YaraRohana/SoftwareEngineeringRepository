@@ -37,7 +37,7 @@ public class GetAllOrdersByVehicleNumber extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String vehicle=request.getParameter("vehicleNumber");
 		ArrayList<Order> orders=new ArrayList<Order>();
 		DataAccess da=new DataAccess();
