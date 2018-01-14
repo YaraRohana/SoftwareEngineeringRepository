@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.CPS;
 import allClasses.Customer;
 import allClasses.FullSubscription;
 import allClasses.OneCarRegularSubscription;
@@ -50,16 +51,18 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 		String parkingLot = request.getParameter("parkingLot");
 		String leavingAt = request.getParameter("leavingAt");
 		String email = request.getParameter("email");
-		
-		
+		CPS cps=CPS.getInstance();
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		if (vehicleNumber != null && customerId != null) {
-
+			
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			try {
 				res = da.addCustomer(customer);
+				if(res) {
+					cps.getCustomers().add(customer);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -72,22 +75,30 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-			OneCarRegularSubscription c = new OneCarRegularSubscription(customerId, null, vehicleNumber, sqlStartDate,
+			String subsId=da.getSaltString();
+			
+			OneCarRegularSubscription c = new OneCarRegularSubscription(customerId, subsId, vehicleNumber, sqlStartDate,
 					email, subscriptionType.oneCarRegularSubscription, parkingLot, leavingAt);
 			try {
 				res = da.addOneCarRegularSubscription(c);
+				if(res){
+					cps.getSubscriptions().add(c);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
 			Vehicle v = new Vehicle(vehicleNumber, customerId); 
 			try {
-				da.addVehicle(v);
+				res=da.addVehicle(v);
+				if(res) {
+					cps.getVehicles().add(v);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
-			System.out.println("res is" + res);
+		//	System.out.println("res is" + res);
 	
 		}
 		

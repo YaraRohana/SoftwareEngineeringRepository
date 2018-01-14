@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ import javax.xml.crypto.KeySelector.Purpose;
 
 import allClasses.Complaint;
 import allClasses.Customer;
+import allClasses.Email;
 import allClasses.FullSubscription;
 import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
@@ -680,5 +682,108 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 		return true;
 	}
+	
+	public String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 5) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
 
+    }
+	
+	
+	public String getCustomerMailById(String customerId) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		stm.setString(1, customerId);
+		ResultSet res=stm.executeQuery();
+		String email=null;
+		while(res.next()) {
+			email=res.getString("email");
+		}
+		return email;
+	}
+	
+	public void sendComplaintReplyToMail(String email,String reply) {
+		Email.sendEmail(email, "Complaint Reply", reply);
+	}
+	
+	public ArrayList<Order> getAllPreOrdersByArrivingDate(String arriveDate, String arrivingAt) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByArrivingDate);
+		stm.setString(1, arriveDate);
+		stm.setString(2, arrivingAt);
+		ResultSet res = stm.executeQuery();
+		ArrayList<Order> allOrders = new ArrayList<Order>();
+		Order o = null;
+		while (res.next()) {
+			OrderType type = (OrderType) res.getObject("type");
+			if (type.equals(OrderType.preOrder)) {
+				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
+						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
+						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
+						res.getBoolean("leavingLate"), res.getBoolean("canceled"));
+				allOrders.add(o);
+			}
+		}
+		return allOrders;
+	}
+
+	public ArrayList<FullSubscription> getAllFullSubsByStartingDate(Date startDate) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByStartingDate);
+		stm.setDate(1, startDate);
+		ResultSet res = stm.executeQuery();
+		ArrayList<FullSubscription> subs = new ArrayList<FullSubscription>();
+		FullSubscription s = null;
+		while (res.next()) {
+			s = new FullSubscription(res.getString("customerId"), res.getString("subscriptionId"),
+					res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
+					res.getDate("arrivedSince"), subscriptionType.fullSubscription);
+			subs.add(s);
+		}
+		return subs;
+	}
+	
+	public ArrayList<FullSubscription> getAllFullSubsByArrivedSince(Date arriveDate) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByArrivedSince);
+		stm.setDate(1, arriveDate);
+		ResultSet res = stm.executeQuery();
+		ArrayList<FullSubscription> subs = new ArrayList<FullSubscription>();
+		FullSubscription s = null;
+		while (res.next()) {
+			s = new FullSubscription(res.getString("customerId"), res.getString("subscriptionId"),
+					res.getString("vehicleNumber"), res.getDate("startingDate"), res.getString("email"),
+					res.getDate("arrivedSince"), subscriptionType.fullSubscription);
+			subs.add(s);
+		}
+		return subs;
+	}
+
+	public ArrayList<Subscription> getAllRegSubsByStartingDate(Date startDate) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByStartingDate);
+		stm.setDate(1, startDate);
+		ResultSet res = stm.executeQuery();
+		ArrayList<Subscription> subs = new ArrayList<Subscription>();
+		Subscription s = null;
+		while (res.next()) {
+			Object type = res.getObject("type");
+			if (type.equals("oneCar"))  {
+				s = new OneCarRegularSubscription(res.getString("customerId"), res.getString("subscriptionId"),
+						res.getString("vehicleNumber"), res.getDate("startDate"), res.getString("email"),
+						subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
+						res.getString("leavingAt"));
+			} else {
+				s = new OneCarBusinessSubscription(res.getString("customerId"), res.getString("subscriptionId"),
+						res.getString("vehicleNumber"), res.getDate("startDate"), res.getString("email"),
+						subscriptionType.regularBusinessSubscription, res.getString("parkingLot"),
+						res.getString("leavingAt"));
+			}
+			subs.add(s);
+		}
+		return subs;
+	}
+	
 }

@@ -60,4 +60,10 @@ public interface  DataInterface {
 	public String getEmployeeParkingLot(String name)throws SQLException;
 	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception;
 	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
+	public String getSaltString();
+	public String getCustomerMailById(String customerId) throws SQLException;
+	public ArrayList<Subscription> getAllRegSubsByStartingDate(Date startDate) throws SQLException;
+	public ArrayList<FullSubscription> getAllFullSubsByArrivedSince(Date arriveDate) throws SQLException;
+	public ArrayList<FullSubscription> getAllFullSubsByStartingDate(Date startDate) throws SQLException;
+	public ArrayList<Order> getAllPreOrdersByArrivingDate(String arriveDate, String arrivingAt) throws SQLException;
 }

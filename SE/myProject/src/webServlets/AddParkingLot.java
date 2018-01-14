@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.CPS;
 import allClasses.ParkingLot;
 import da.DataAccess;
 
@@ -48,13 +49,16 @@ public class AddParkingLot extends HttpServlet {
 		String location = request.getParameter("location");
 		String manager=request.getParameter("manager");
 		int width=Integer.parseInt(request.getParameter("width"));
-				
+				CPS cps=CPS.getInstance();
 		if (name!= null && location!=null && manager!=null) {
 			ParkingLot p = new ParkingLot(name,location,false,true,manager,width);
 			DataAccess da = new DataAccess();
 			boolean res = false;
 			try {
 				res = da.addParkingLot(p);
+				if(res) {
+					cps.getParkingLots().add(p);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

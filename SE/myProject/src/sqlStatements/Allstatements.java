@@ -50,8 +50,12 @@ public class Allstatements {
 
 	public final static String getPriceByParkingLot="select * from fur_seal_schema.prices where parkingLot=?;";
 	public final static String updatePrices="UPDATE `fur_seal_schema`.`prices` SET `preOrderPrice`=?, `uponArrivalPrice`=? WHERE `parkingLot`=?;";
-//	public final static String getCustomerbyCustomerId="select * from fur_seal_schema.customers where customerID=?;";
-//	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
+	
+	public final static String getAllOrdersByArrivingDate = "select * from fur_seal_schema.orders where arrivingDate=? AND arrivingAt=? AND canceled='0';";
+	public final static String getAllRegularSubsByStartingDate = "select * from fur_seal_schema.regularSubscriptions where startDate=?;";
+	public final static String getAllFullSubsByStartingDate = "select * from fur_seal_schema.fullSubscriptions where startingDate=?;";
+	public final static String getAllFullSubsByArrivedSince = "select * from fur_seal_schema.fullSubscriptions where arrivedSince=?;";
+	
 
 	
 	

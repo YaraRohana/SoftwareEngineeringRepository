@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.CPS;
 import allClasses.Customer;
 import allClasses.Order;
 import allClasses.Vehicle;
@@ -41,11 +42,16 @@ public class AddUponArrivalOrder extends HttpServlet {
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
+		CPS cps=CPS.getInstance();
+		boolean res=false;
 		if (customerId != null) {
 				Order o = new Order(0,OrderType.uponArrivalOrder,parkingLot,null,leavingDate,null,leavingAt,customerId,vehicle,false,false,false);
 				try {
 					System.out.println("trying to add order");
-					da.addOrder(o);
+					res=da.addOrder(o);
+					if(res) {
+						cps.getOrders().add(o);
+					}
 				} catch (SQLException e) {
 					System.out.println("Unable to add order");
 					e.printStackTrace();
@@ -54,14 +60,20 @@ public class AddUponArrivalOrder extends HttpServlet {
 
 				Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
 				try {
-					da.addVehicle(v);
+					res=da.addVehicle(v);
+					if(res) {
+						cps.getVehicles().add(v);
+					}
 				} catch (SQLException e) {
 					System.out.println("Unable to add vehicle");
 					e.printStackTrace();
 				}
 				Customer c = new Customer(customerId, email);
 				try {
-					da.addCustomer(c);
+					res=da.addCustomer(c);
+					if(res) {
+						cps.getCustomers().add(c);
+					}
 				} catch (SQLException e) {
 					System.out.println("Unable to add customer");
 					e.printStackTrace();

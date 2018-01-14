@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mysql.fabric.xmlrpc.base.Param;
 
+import allClasses.CPS;
 import allClasses.Customer;
 import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
@@ -48,12 +50,12 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String num = request.getParameter("num");
 		int numOfVehicles = 0;
 		if (num != null) {
-			//System.out.println("we are here");
+			// System.out.println("we are here");
 			numOfVehicles = Integer.parseInt(num);
 			String customerId = request.getParameter("customerId");
 			String email = request.getParameter("email");
 			String startDate = request.getParameter("date");
-			String subsId = request.getParameter("subscriptionId");
+			// String subsId = request.getParameter("subscriptionId");
 			Date date1 = null;
 			try {
 				date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
@@ -63,23 +65,32 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 			}
 			java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
 			DataAccess da = new DataAccess();
-			ArrayList<OneCarBusinessSubscription> allVehicles = new ArrayList<OneCarBusinessSubscription>();
 			OneCarBusinessSubscription tmp = null;
+			boolean res = false;
+			CPS cps = CPS.getInstance();
+			String subsId = da.getSaltString();
 			for (int i = 0; i < numOfVehicles; i++) {
-				//System.out.println("we're inside the for");
+				// System.out.println("we're inside the for");
 				String vehicleNum = request.getParameter("vehicleNum");
 				String parkingLot = request.getParameter("parkingLot");
 				String leavingAt = request.getParameter("leavingAt");
 				tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
 						subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 				try {
-					da.addBuisnessRegularSubscription(tmp);
+					res = da.addBuisnessRegularSubscription(tmp);
+					if(res) {
+						cps.getSubscriptions().add(tmp);
+					}
+					
 				} catch (SQLException e) {
 					System.out.println("Unable to add business subscription");
 					e.printStackTrace();
 				}
 			}
-
+			PrintWriter out = response.getWriter();
+			out.println(res);
+			PrintWriter out1 = response.getWriter();
+			out1.println(subsId);
 		}
 	}
 

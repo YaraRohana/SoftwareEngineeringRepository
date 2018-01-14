@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.CPS;
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
@@ -46,8 +48,8 @@ public class AddFullSubscription extends HttpServlet {
 		String vehicleNumber = request.getParameter("vehicleNumber");
 		String startDate = request.getParameter("startDate");
 		String email=request.getParameter("email");
-		System.out.println(startDate);
-
+		//System.out.println(startDate);
+		CPS cps = CPS.getInstance();
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		if (vehicleNumber != null && customerId != null) {
@@ -57,6 +59,9 @@ public class AddFullSubscription extends HttpServlet {
 				customer.setConnected(false);
 				try {
 					res = da.addCustomer(customer);
+					if(res) {
+						cps.getCustomers().add(customer);
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -71,10 +76,17 @@ public class AddFullSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-			FullSubscription c = new FullSubscription(customerId, null, vehicleNumber, sqlStartDate,email, sqlStartDate,
+			String subsId=da.getSaltString();
+			FullSubscription c = new FullSubscription(customerId, subsId, vehicleNumber, sqlStartDate,email, sqlStartDate,
 					subscriptionType.fullSubscription);
 			try {
 				res = da.addFullSubscription(c);
+				if(res) {
+					cps.getSubscriptions().add(c);
+				}
+				PrintWriter out=response.getWriter();
+				out.println(res);
+			
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,14 +94,20 @@ public class AddFullSubscription extends HttpServlet {
 
 			Vehicle v = new Vehicle(vehicleNumber, customerId);
 			try {
-				da.addVehicle(v);
+				res=da.addVehicle(v);
+				if(res) {
+					cps.getVehicles().add(v);
+				}
+				PrintWriter out1=response.getWriter();
+				out1.println(res);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			System.out.println("res is" + res);
-
+			PrintWriter out2=response.getWriter();
+			out2.println(subsId);
 		}
 	}
 

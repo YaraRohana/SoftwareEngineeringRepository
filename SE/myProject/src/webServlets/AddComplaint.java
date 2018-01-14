@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.CPS;
 import allClasses.Complaint;
 import da.DataAccess;
 
@@ -40,6 +41,7 @@ public class AddComplaint extends HttpServlet {
 		String text = request.getParameter("text");
 		DataAccess da = new DataAccess();
 		boolean res = false;
+		CPS cps = CPS.getInstance();
 		if (parkingLot != null && customerId!=null) {
 			try {
 				res=da.checkIfCustomerExistsById(customerId);
@@ -54,6 +56,10 @@ public class AddComplaint extends HttpServlet {
 			
 			try {
 				res = da.addComplaint(c);
+				if(res) {
+					cps.getComplaints().add(c);
+				}
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
