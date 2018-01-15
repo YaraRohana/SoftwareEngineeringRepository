@@ -50,12 +50,10 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String num = request.getParameter("num");
 		int numOfVehicles = 0;
 		if (num != null) {
-			// System.out.println("we are here");
 			numOfVehicles = Integer.parseInt(num);
 			String customerId = request.getParameter("customerId");
 			String email = request.getParameter("email");
 			String startDate = request.getParameter("date");
-			// String subsId = request.getParameter("subscriptionId");
 			Date date1 = null;
 			try {
 				date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
@@ -67,7 +65,13 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 			DataAccess da = new DataAccess();
 			OneCarBusinessSubscription tmp = null;
 			boolean res = false;
-			CPS cps = CPS.getInstance();
+			CPS cps=null;
+			try {
+				cps = CPS.getInstance();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			String subsId = da.getSaltString();
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);

@@ -49,7 +49,13 @@ public class AddFullSubscription extends HttpServlet {
 		String startDate = request.getParameter("startDate");
 		String email=request.getParameter("email");
 		//System.out.println(startDate);
-		CPS cps = CPS.getInstance();
+		CPS cps=null;
+		try {
+			cps = CPS.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;

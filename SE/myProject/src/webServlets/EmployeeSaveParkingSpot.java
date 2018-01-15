@@ -42,15 +42,20 @@ public class EmployeeSaveParkingSpot extends HttpServlet {
 		String row = request.getParameter("row");
 		String column = request.getParameter("column");
 		String width = request.getParameter("width");
-
 		DataAccess da = new DataAccess();
 		if (parkingLot != null && column != null && row != null && width != null) {
+			System.out.println("we're here");
 			int realRow = Integer.parseInt(row);
 			int realCol = Integer.parseInt(column);
 			int realWidth = Integer.parseInt(width);
-			// System.out.println("*******************"+"row="+realRow+"col="+realCol+"width="+realWidth);
 			boolean res = false;
-			res = da.saveParkingSpot(parkingLot, realRow, realCol, realWidth);
+			try {
+				res = da.saveParkingSpot(parkingLot, realRow, realCol, realWidth);
+				da.printParkingSpots(parkingLot);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			PrintWriter out = response.getWriter();
 			out.println(res);
 		}

@@ -1,6 +1,9 @@
 package allClasses;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import da.DataAccess;
 
 public class CPS {
 
@@ -11,10 +14,12 @@ public class CPS {
 	ArrayList<Complaint> complaints;
 	ArrayList<Subscription> subscriptions;
 	ArrayList<Vehicle> vehicles;
+	DataAccess da=new DataAccess();
 	
 	private static CPS single_instance = null;
-	private CPS(){
+	private CPS() throws SQLException{
 		CPS.parkingLots=new ArrayList<ParkingLot>();
+		CPS.parkingLots=da.GetAllParkingLots();
 		this.orders=new ArrayList<Order>();
 		this.customers=new ArrayList<Customer>();
 		this.complaints=new ArrayList<Complaint>();
@@ -38,7 +43,7 @@ public class CPS {
 		CPS.single_instance = single_instance;
 	}
 
-	public static CPS getInstance()
+	public static CPS getInstance() throws SQLException
 	    {
 	        if (single_instance == null)
 	            single_instance = new CPS();
@@ -46,12 +51,12 @@ public class CPS {
 	        return single_instance;
 	    }
 
-	public ArrayList<ParkingLot> getParkingLots() {
+	public ArrayList<ParkingLot> getParkingLots() throws SQLException {
 		return parkingLots;
 	}
 
 	public void setParkingLots(ArrayList<ParkingLot> parkingLots) {
-		this.parkingLots = parkingLots;
+		CPS.parkingLots = parkingLots;
 	}
 
 	public ArrayList<Order> getOrders() {

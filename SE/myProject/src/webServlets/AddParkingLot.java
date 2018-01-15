@@ -42,7 +42,13 @@ public class AddParkingLot extends HttpServlet {
 		String location = request.getParameter("location");
 		String manager = request.getParameter("manager");
 		String width = request.getParameter("width");
-		CPS cps = CPS.getInstance();
+		CPS cps=null;
+		try {
+			cps = CPS.getInstance();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if(cps==null) {
 			System.out.println("problem");
 		}

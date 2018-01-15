@@ -23,23 +23,25 @@ import da.DataAccess;
 @WebServlet("/GetAllAvailableParkingLots")
 public class GetAllAvailableParkingLots extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetAllAvailableParkingLots() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public GetAllAvailableParkingLots() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		int size;
-		DataAccess da=new DataAccess();
+		DataAccess da = new DataAccess();
 		ArrayList<ParkingLot> ParkingLots = new ArrayList<ParkingLot>();
 		try {
 			ParkingLots = da.GetAllParkingLots();
@@ -48,13 +50,12 @@ public class GetAllAvailableParkingLots extends HttpServlet {
 		}
 		ParkingLot temp = null;
 		size = ParkingLots.size();
-		
-		while(--size>=0) {
+		while (--size >= 0) {
 			temp = ParkingLots.get(size);
-			if(temp.isActive()==false||temp.isFull()==true) {
+			if (temp.isActive() == false || temp.isFull() == true) {
 				ParkingLots.remove(size);
-				}
 			}
+		}
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 		JSONObject jsonParkingLot;
@@ -63,6 +64,7 @@ public class GetAllAvailableParkingLots extends HttpServlet {
 				jsonParkingLot = new JSONObject();
 				jsonParkingLot.put("name", parkingLot.getName());
 				jsonParkingLot.put("location", parkingLot.getLocation());
+				out.println(jsonParkingLot);
 			} catch (JSONException ex) {
 
 			}
@@ -72,9 +74,11 @@ public class GetAllAvailableParkingLots extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

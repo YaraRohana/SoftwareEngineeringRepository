@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,7 @@ import da.DataAccess;
 /**
  * Servlet implementation class AddPreOrder
  */
-@WebServlet("/AddPreOrder")
+@WebServlet("/AddUponArrivalOrder")
 public class AddUponArrivalOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,13 +43,21 @@ public class AddUponArrivalOrder extends HttpServlet {
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
-		CPS cps=CPS.getInstance();
+		CPS cps=null;
+		try {
+			cps = CPS.getInstance();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		boolean res=false;
+		boolean res1=false;
 		if (customerId != null) {
 				Order o = new Order(0,OrderType.uponArrivalOrder,parkingLot,null,leavingDate,null,leavingAt,customerId,vehicle,false,false,false);
 				try {
-					System.out.println("trying to add order");
-					res=da.addOrder(o);
+					//System.out.println("trying to add order");
+					res1=da.addOrder(o);
+				
 					if(res) {
 						cps.getOrders().add(o);
 					}
@@ -78,7 +87,8 @@ public class AddUponArrivalOrder extends HttpServlet {
 					System.out.println("Unable to add customer");
 					e.printStackTrace();
 				}
-
+				PrintWriter out=response.getWriter();
+				out.println(res1);
 			
 		}
 	}

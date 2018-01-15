@@ -41,7 +41,13 @@ public class AddComplaint extends HttpServlet {
 		String text = request.getParameter("text");
 		DataAccess da = new DataAccess();
 		boolean res = false;
-		CPS cps = CPS.getInstance();
+		CPS cps=null;
+		try {
+			cps = CPS.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		if (parkingLot != null && customerId!=null) {
 			try {
 				res=da.checkIfCustomerExistsById(customerId);

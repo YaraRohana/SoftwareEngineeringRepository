@@ -13,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import da.DataAccess;
 
 /**
- * Servlet implementation class LoginCustomer
+ * Servlet implementation class SetFaultedParkingSpot
  */
-@WebServlet("/LoginCustomer")
-public class LoginCustomer extends HttpServlet {
+@WebServlet("/SetFaultedParkingSpot")
+public class SetFaultedParkingSpot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginCustomer() {
+    public SetFaultedParkingSpot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,31 +30,26 @@ public class LoginCustomer extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
- 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String customerId=request.getParameter("id");
-		DataAccess da=new DataAccess();
-		boolean res=false;
-		if(customerId!=null) {
+		String parkingLot = request.getParameter("parkingLot");
+		String row = request.getParameter("row");
+		String column = request.getParameter("column");
+		String width = request.getParameter("width");
+		DataAccess da = new DataAccess();
+		if (parkingLot != null && column != null && row != null && width != null) {
+			int realRow = Integer.parseInt(row);
+			int realCol = Integer.parseInt(column);
+			int realWidth = Integer.parseInt(width);
+			boolean res = false;
 			try {
-				res=da.checkIfCustomerExistsById(customerId);
+				res = da.setFaultedParkingSpot(parkingLot, realRow, realCol, realWidth);
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(!res) {
-				System.out.println("Customer does not exist!");
-				PrintWriter out=response.getWriter();
-				out.println(res);
-				return;
-			}
-			try {
-				da.loginCustomer(customerId);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			PrintWriter out=response.getWriter();
+			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
 	}

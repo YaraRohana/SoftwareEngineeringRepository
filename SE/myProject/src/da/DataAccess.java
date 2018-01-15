@@ -617,9 +617,7 @@ public class DataAccess implements DataInterface {
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		java.util.Date Arriving = dateFormat.parse(arrivingDate);
 		java.util.Date now = new java.util.Date();
-
 		long diff = Arriving.getTime() - now.getTime();
-
 		long diffHours = diff / (60 * 60 * 1000) % 24;
 		long diffDays = diff / (24 * 60 * 60 * 1000);
 		System.out.println("diff hours " + diffHours);
@@ -652,11 +650,12 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
-	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) {
+	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException {
 		if (parkingLot != null) {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot i : cps.getParkingLots()) {
 				if (i.getName().equals(parkingLot)) {
+					System.out.println("found it,it's "+i.getName());
 					return i;
 				}
 			}
@@ -664,34 +663,104 @@ public class DataAccess implements DataInterface {
 		return null;
 	}
 
-	public boolean saveParkingSpot(String parkingLot, int row, int column, int width){
-		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
-			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
-			ParkingSpot[][][] tmp = pl.getParkingSpots();
-			ParkingSpot ps = tmp[row][column][width];
-			if (ps.isFaulted() == false && ps.isOccupied() == false && ps.isSaved() == false) {
-				tmp[row][column][width].setSaved(true);
+	public void printParkingSpots(String parkingLot) throws SQLException {
+		ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < pl.getWidth(); k++) {
+					System.out.println("is Saved= " + pl.getParkingSpots()[i][j][k].isSaved() + " is Faulted= "
+							+ pl.getParkingSpots()[i][j][k].isFaulted() + " is Occupied= "
+							+ pl.getParkingSpots()[i][j][k].isOccupied());
+				}
 			}
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					for (int k = 0; k < pl.getWidth(); k++) {
-						System.out.println(tmp[i][j][k].isSaved());
+		}
+	}
+
+	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
+		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+			CPS cps = CPS.getInstance();
+			for (ParkingLot parkinglot : cps.getParkingLots()) {
+				System.out.println(parkinglot.getName());
+				if (parkinglot.getName().equals(parkingLot)) {
+					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+					//ParkingSpot ps = tmp[row][column][width];
+					if (parkinglot.getParkingSpots()[row][column][width].isSaved() == false && parkinglot.getParkingSpots()[row][column][width].isFaulted() == false && parkinglot.getParkingSpots()[row][column][width].isOccupied() == false) {
+						//System.out.println("saved= "+ ps.isSaved()+ "faulted= "+ps.isFaulted()+"occupied= "+ps.isFaulted());
+						parkinglot.setSavedParkingSpot(row, column, width);
+						System.out.println("now "+parkinglot.getParkingSpots()[row][column][width].isSaved());
+						System.out.println("*********");
+						for (int i = 0; i < 3; i++) {
+							for (int j = 0; j < 3; j++) {
+								for (int k = 0; k < parkinglot.getWidth(); k++) {
+									System.out.println("is Saved= " + tmp[i][j][k].isSaved() + " is Faulted= "
+											+ tmp[i][j][k].isFaulted() + " is Occupied= "
+											+ tmp[i][j][k].isOccupied());
+								}
+							}
+						}
+						System.out.println("*********");
+						//printParkingSpots(parkingLot);
+						return true;
 					}
 				}
 			}
-			return true;
+			
 		}
 		return false;
 	}
 
-	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) {
+	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
 		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
-			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
-			ParkingSpot[][][] tmp = pl.getParkingSpots();
-			ParkingSpot ps = tmp[row][column][width];
-			if (ps.isSaved() == true) {
-				ps.setSaved(false);
-				return true;
+			CPS cps = CPS.getInstance();
+			for (ParkingLot parkinglot : cps.getParkingLots()) {
+				if (parkinglot.getName().equals(parkingLot)) {
+					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+					ParkingSpot ps = tmp[row][column][width];
+					if (ps.isSaved() == true) {
+						parkinglot.unsaveParkingSpot(row, column, width);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean setFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
+		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+			CPS cps = CPS.getInstance();
+			for (ParkingLot parkinglot : cps.getParkingLots()) {
+				if (parkinglot.getName().equals(parkingLot)) {
+					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+					ParkingSpot ps = tmp[row][column][width];
+					if (ps.isFaulted() == false) {
+						parkinglot.unsetFaultedParkingSpot(row, column, width);
+						if (ps.isOccupied() == true) {
+							parkinglot.unsetOccupiedParkingSpot(row, column, width);
+						}
+						if (ps.isSaved() == true) {
+							parkinglot.unsaveParkingSpot(row, column, width);
+						}
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean unsetFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
+		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+			CPS cps = CPS.getInstance();
+			for (ParkingLot parkinglot : cps.getParkingLots()) {
+				if (parkinglot.getName().equals(parkingLot)) {
+					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+					ParkingSpot ps = tmp[row][column][width];
+					if (ps.isFaulted() == true) {
+						parkinglot.unsetFaultedParkingSpot(row, column, width);
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -810,7 +879,7 @@ public class DataAccess implements DataInterface {
 		return subs;
 	}
 
-	public ParkingSpot[][][] getParkingLotImage(String parkingLot) {
+	public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws SQLException {
 		if (parkingLot != null) {
 			System.out.println("not null, we're okay");
 			CPS cps = CPS.getInstance();
@@ -829,7 +898,7 @@ public class DataAccess implements DataInterface {
 		return null;
 	}
 
-	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() {
+	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws SQLException {
 		CPS cps = CPS.getInstance();
 		ArrayList<ParkingSpot[][][]> parkingSpots = new ArrayList<ParkingSpot[][][]>();
 		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
@@ -839,7 +908,7 @@ public class DataAccess implements DataInterface {
 		return parkingSpots;
 	}
 
-	public void printAllParkingLots() {
+	public void printAllParkingLots() throws SQLException {
 		CPS cps = CPS.getInstance();
 		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
 		for (ParkingLot parkingLot : parkingLots) {

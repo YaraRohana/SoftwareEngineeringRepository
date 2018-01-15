@@ -54,7 +54,13 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 		String parkingLot = request.getParameter("parkingLot");
 		String leavingAt = request.getParameter("leavingAt");
 		String email = request.getParameter("email");
-		CPS cps = CPS.getInstance();
+		CPS cps=null;
+		try {
+			cps = CPS.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;

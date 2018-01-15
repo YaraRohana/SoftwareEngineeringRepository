@@ -46,7 +46,13 @@ public class AddPreOrder extends HttpServlet {
 			String vehicle = request.getParameter("vehicle");
 			String email = request.getParameter("email");
 			DataAccess da = new DataAccess();
-			CPS cps=CPS.getInstance();
+			CPS cps=null;
+			try {
+				cps = CPS.getInstance();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			boolean res=false;
 			if (customerId != null) {
 					Order o = new Order(0,OrderType.preOrder,parkingLot,arrivingDate,leavingDate,arrivingTime,leavingTime,customerId,vehicle,false,false,false);

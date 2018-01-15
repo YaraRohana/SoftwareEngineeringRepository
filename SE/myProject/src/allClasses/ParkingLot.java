@@ -1,8 +1,6 @@
 package allClasses;
 
-import java.util.ArrayList;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 
 public class ParkingLot {
 
@@ -14,7 +12,7 @@ public class ParkingLot {
 	String manager;
 	int width;
 	int canceledOrders;
-	ParkingSpot[][][] ParkingSpots;
+	 ParkingSpot[][][] ParkingSpots;
 	
 	
 	
@@ -39,7 +37,7 @@ public class ParkingLot {
 		for(int i=0;i<3;i++) {
 			for(int j=0;j<3;j++) {
 				for(int k=0;k<this.width;k++) {
-					this.ParkingSpots[i][j][k]=new ParkingSpot(false,false,false);
+					ParkingSpots[i][j][k]=new ParkingSpot(false,false,false);
 				}
 			}
 		}
@@ -115,7 +113,45 @@ public class ParkingLot {
 				+ ", isFull=" + isFull + ", manager=" + manager + ", width=" + width + ", canceledOrders="
 				+ canceledOrders + "]";
 	}
+	
+	void setFaultedParkingSpot(int row,int col,int width) {
+		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
+			ParkingSpots[row][col][width].setFaulted(true);
+		}
+	}
 
-
+	public void unsetFaultedParkingSpot(int row,int col,int width) {
+		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
+			ParkingSpots[row][col][width].setFaulted(false);
+		}
+	}
+	
+	public void setOccupiedParkingSpot(int row,int col,int width) {
+		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
+			ParkingSpots[row][col][width].setOccupied(true);
+		}
+	}
+	
+	public void unsetOccupiedParkingSpot(int row,int col,int width) {
+		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
+			ParkingSpots[row][col][width].setOccupied(false);
+		}
+	}
+	
+	public  void setSavedParkingSpot(int row,int col,int width) {
+		System.out.println("fotna 3l function");
+		if(row>=0 && row<3 && col>=0 && col<3 && width<this.width) {
+			System.out.println("fotna 3l if");
+			System.out.println("in parkingLot");
+			this.ParkingSpots[row][col][width].setSaved(true);
+			System.out.println("here" +ParkingSpots[row][col][width].isSaved);
+		}	
+	}
+	
+	public void unsaveParkingSpot(int row,int col,int width) {
+		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
+			ParkingSpots[row][col][width].setSaved(false);
+		}
+	}
 
 }

@@ -54,16 +54,19 @@ public interface  DataInterface {
 	public String getEmployeeParkingLot(String name)throws SQLException;
 	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception;
 	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
-	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width); 
+	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
 	public String getSaltString();
 	public String getCustomerMailById(String customerId) throws SQLException;
 	public ArrayList<Subscription> getAllRegSubsByStartingDate(Date startDate) throws SQLException;
 	public ArrayList<FullSubscription> getAllFullSubsByArrivedSince(Date arriveDate) throws SQLException;
 	public ArrayList<FullSubscription> getAllFullSubsByStartingDate(Date startDate) throws SQLException;
 	public ArrayList<Order> getAllPreOrdersByArrivingDate(String arriveDate, String arrivingAt) throws SQLException;
-	public ParkingSpot[][][] getParkingLotImage(String parkingLot);
-	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages();
+	public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws SQLException;
+	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws SQLException;
 	public boolean insertCarIntoParkingLot(String parkingLot,String vehicleNumber) throws SQLException;
-	public void printAllParkingLots();
-	public ParkingLot getParkingLotByNameFromCPS(String parkingLot);
+	public void printAllParkingLots() throws SQLException;
+	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException;
+	public void printParkingSpots(String parkingLot) throws SQLException;
+	public boolean setFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
+	public boolean unsetFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
 }

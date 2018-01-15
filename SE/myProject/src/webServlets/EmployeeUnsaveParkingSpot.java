@@ -2,6 +2,7 @@ package webServlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,7 +43,12 @@ public class EmployeeUnsaveParkingSpot extends HttpServlet {
 			int realRow = Integer.parseInt(row);
 			int realCol = Integer.parseInt(column);
 			int realWidth = Integer.parseInt(width);
-			res=da.unsaveParkingSpot(parkingLot, realRow, realCol, realWidth);
+			try {
+				res=da.unsaveParkingSpot(parkingLot, realRow, realCol, realWidth);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
