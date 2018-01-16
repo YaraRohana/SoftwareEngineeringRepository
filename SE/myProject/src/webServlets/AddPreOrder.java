@@ -46,22 +46,12 @@ public class AddPreOrder extends HttpServlet {
 			String vehicle = request.getParameter("vehicle");
 			String email = request.getParameter("email");
 			DataAccess da = new DataAccess();
-			CPS cps=null;
-			try {
-				cps = CPS.getInstance();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			boolean res=false;
 			if (customerId != null) {
 					Order o = new Order(0,OrderType.preOrder,parkingLot,arrivingDate,leavingDate,arrivingTime,leavingTime,customerId,vehicle,false,false,false);
 					try {
 						System.out.println("trying to add order");
 						res=da.addOrder(o);
-						if(res) {
-							cps.getOrders().add(o);
-						}
 					} catch (SQLException e) {
 						System.out.println("Unable to add order");
 						e.printStackTrace();
@@ -71,9 +61,6 @@ public class AddPreOrder extends HttpServlet {
 					Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
 					try {
 						res=da.addVehicle(v);
-						if(res) {
-							cps.getVehicles().add(v);
-						}
 					} catch (SQLException e) {
 						System.out.println("Unable to add vehicle");
 						e.printStackTrace();
@@ -81,9 +68,6 @@ public class AddPreOrder extends HttpServlet {
 					Customer c = new Customer(customerId, email);
 					try {
 						res=da.addCustomer(c);
-						if(res) {
-							cps.getCustomers().add(c);
-						}
 					} catch (SQLException e) {
 						System.out.println("Unable to add customer");
 						e.printStackTrace();

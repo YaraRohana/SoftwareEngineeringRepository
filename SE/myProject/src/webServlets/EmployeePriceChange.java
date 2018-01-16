@@ -31,7 +31,7 @@ public class EmployeePriceChange extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		int uponArrival=0 , preOrder=0;
 		String name = request.getParameter("Username");
 		String preorder = request.getParameter("preOrder");

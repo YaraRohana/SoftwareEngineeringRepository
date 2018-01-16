@@ -38,7 +38,7 @@ public class CancelOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String customerId=request.getParameter("customerId");
 		String vehicleNumber=request.getParameter("vehicle");
 		String type=request.getParameter("type");

@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.mysql.fabric.xmlrpc.base.Param;
 
-import allClasses.CPS;
 import allClasses.Customer;
 import allClasses.OneCarBusinessSubscription;
 import allClasses.OneCarRegularSubscription;
@@ -47,75 +49,68 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String num = request.getParameter("num");
-		int numOfVehicles = 0;
-		if (num != null) {
-			numOfVehicles = Integer.parseInt(num);
-			String customerId = request.getParameter("customerId");
-			String email = request.getParameter("email");
-			String startDate = request.getParameter("date");
-			Date date1 = null;
-			try {
-				date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
-			DataAccess da = new DataAccess();
-			OneCarBusinessSubscription tmp = null;
-			boolean res = false;
-			CPS cps=null;
-			try {
-				cps = CPS.getInstance();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			String subsId = da.getSaltString();
-			Customer customer = new Customer(customerId, email);
-			customer.setCredit(0);
-			try {
-				res = da.addCustomer(customer);
-				if (res) {
-					cps.getCustomers().add(customer);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			for (int i = 0; i < numOfVehicles; i++) {
-				// System.out.println("we're inside the for");
-				String vehicleNum = request.getParameter("vehicleNum");
-				String parkingLot = request.getParameter("parkingLot");
-				String leavingAt = request.getParameter("leavingAt");
+		int i = 0, price = 0;
+		String pl = null;
+		DataAccess da = new DataAccess();
+		OneCarBusinessSubscription tmp = null;
+		String customerId = request.getParameter("customerId");
+		String email = request.getParameter("email");
+		String startDate = request.getParameter("date");
+		Date date1 = null;
+		if(customerId!=null && email!=null && startDate!=null ) {
+		try {
+			date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
+		String vehicles = request.getParameter("vehicles");
+		if(vehicles==null) {
+			System.out.println("it's null");
+		}
+		JSONArray v = new JSONArray();
+		try {
+			v = new JSONArray(vehicles);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		i = 0;
+		try {
+			while (v.getJSONObject(i) != null) {
+				String vehicleNum = v.getJSONObject(i).getString("vehicleNum");
+				String parkingLot = v.getJSONObject(i).getString("parkingLot");
+				String leavingAt = v.getJSONObject(i).getString("leavingAt");
+				String subsId = da.getSaltString();
+				pl = parkingLot;
 				tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
 						subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 				try {
-					res = da.addBuisnessRegularSubscription(tmp);
-					if (res) {
-						cps.getSubscriptions().add(tmp);
-					}
-
+					da.addBuisnessRegularSubscription(tmp);
 				} catch (SQLException e) {
 					System.out.println("Unable to add business subscription");
 					e.printStackTrace();
 				}
-				Vehicle v = new Vehicle(vehicleNum, customerId);
-				try {
-					res = da.addVehicle(v);
-					if (res) {
-						cps.getVehicles().add(v);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				i++;
 			}
-
-			PrintWriter out = response.getWriter();
-			out.println(res);
-			PrintWriter out1 = response.getWriter();
-			out1.println(subsId);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		if (customerId != null && pl != null) {
+			try {
+				price = da.getBusinessRegularSubscriptionCost(customerId, pl);
+			} catch (NumberFormatException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			PrintWriter out = response.getWriter();
+			out.println(price);
+		}
+		}
+
 	}
 
 	/**

@@ -114,7 +114,7 @@ public class ParkingLot {
 				+ canceledOrders + "]";
 	}
 	
-	void setFaultedParkingSpot(int row,int col,int width) {
+	public void setFaultedParkingSpot(int row,int col,int width) {
 		if(row>=0 && row<3 && col>=0 && row<3 && width<this.width) {
 			ParkingSpots[row][col][width].setFaulted(true);
 		}

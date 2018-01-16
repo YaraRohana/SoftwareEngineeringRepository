@@ -43,13 +43,6 @@ public class AddUponArrivalOrder extends HttpServlet {
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		boolean res=false;
 		boolean res1=false;
 		if (customerId != null) {
@@ -57,10 +50,6 @@ public class AddUponArrivalOrder extends HttpServlet {
 				try {
 					//System.out.println("trying to add order");
 					res1=da.addOrder(o);
-				
-					if(res) {
-						cps.getOrders().add(o);
-					}
 				} catch (SQLException e) {
 					System.out.println("Unable to add order");
 					e.printStackTrace();
@@ -70,19 +59,13 @@ public class AddUponArrivalOrder extends HttpServlet {
 				Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
 				try {
 					res=da.addVehicle(v);
-					if(res) {
-						cps.getVehicles().add(v);
-					}
-				} catch (SQLException e) {
+					} catch (SQLException e) {
 					System.out.println("Unable to add vehicle");
 					e.printStackTrace();
 				}
 				Customer c = new Customer(customerId, email);
 				try {
 					res=da.addCustomer(c);
-					if(res) {
-						cps.getCustomers().add(c);
-					}
 				} catch (SQLException e) {
 					System.out.println("Unable to add customer");
 					e.printStackTrace();

@@ -47,32 +47,21 @@ public class AddFullSubscription extends HttpServlet {
 		String customerId = request.getParameter("customerId");
 		String vehicleNumber = request.getParameter("vehicleNumber");
 		String startDate = request.getParameter("startDate");
-		String email=request.getParameter("email");
-		//System.out.println(startDate);
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;
 		if (vehicleNumber != null && customerId != null) {
 
-				Customer customer = new Customer(customerId, email);
-				customer.setCredit(0);
-				customer.setConnected(false);
-				try {
-					res = da.addCustomer(customer);
-					if(res) {
-						cps.getCustomers().add(customer);
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			Customer customer = new Customer(customerId, email);
+			customer.setCredit(0);
+			customer.setConnected(false);
+			try {
+				res = da.addCustomer(customer);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date = null;
 			try {
@@ -83,17 +72,14 @@ public class AddFullSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-			String subsId=da.getSaltString();
-			FullSubscription c = new FullSubscription(customerId, subsId, vehicleNumber, sqlStartDate,email, sqlStartDate,
-					subscriptionType.fullSubscription);
+			String subsId = da.getSaltString();
+			FullSubscription c = new FullSubscription(customerId, subsId, vehicleNumber, sqlStartDate, email,
+					sqlStartDate, subscriptionType.fullSubscription);
 			try {
 				res1 = da.addFullSubscription(c);
-				if(res1) {
-					cps.getSubscriptions().add(c);
-				}
-				PrintWriter out=response.getWriter();
+				PrintWriter out = response.getWriter();
 				out.println(res);
-			
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,20 +87,17 @@ public class AddFullSubscription extends HttpServlet {
 
 			Vehicle v = new Vehicle(vehicleNumber, customerId);
 			try {
-				res=da.addVehicle(v);
-				if(res) {
-					cps.getVehicles().add(v);
-				}
-				PrintWriter out1=response.getWriter();
+				res = da.addVehicle(v);
+				PrintWriter out1 = response.getWriter();
 				out1.println(res);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			PrintWriter out=response.getWriter();
+			PrintWriter out = response.getWriter();
 			out.println(res1);
-			PrintWriter out2=response.getWriter();
+			PrintWriter out2 = response.getWriter();
 			out2.println(subsId);
 		}
 	}

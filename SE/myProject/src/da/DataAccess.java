@@ -203,7 +203,8 @@ public class DataAccess implements DataInterface {
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
 			if (res.getBoolean("canceled") == false) {
-				OrderType type = (OrderType) res.getObject("type");
+				String type1 = res.getString("type");
+				OrderType type = OrderType.valueOf(type1);
 				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
 						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
 						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
@@ -226,7 +227,8 @@ public class DataAccess implements DataInterface {
 		Order o = null;
 		while (res.next()) {
 			if (res.getBoolean("canceled") == false) {
-				OrderType type = (OrderType) res.getObject("type");
+				String type1 = res.getString("type");
+				OrderType type = OrderType.valueOf(type1);
 				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
 						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
 						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
@@ -249,7 +251,8 @@ public class DataAccess implements DataInterface {
 		Order o = null;
 		while (res.next()) {
 			if (res.getBoolean("canceled") == false) {
-				OrderType type = (OrderType) res.getObject("type");
+				String type1 = res.getString("type");
+				OrderType type = OrderType.valueOf(type1);
 				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
 						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
 						res.getString("customerId"), res.getString("vehicleNumber"), res.getBoolean("arrivingLate"),
@@ -274,25 +277,28 @@ public class DataAccess implements DataInterface {
 					res.getDate("startingDate"), res.getString("email"), res.getDate("arrivedSince"),
 					subscriptionType.fullSubscription);
 			subs.add(s);
+			// System.out.println(s.toString());
 		}
 		stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
 		stm.setString(1, customerId);
 		res = stm.executeQuery();
 		while (res.next()) {
-			Object type = res.getObject("type");
-			if (type.equals("oneCar")) {
+			String type1 = res.getString("type");
+			// OrderType type = OrderType.valueOf(type1);
+			if (type1.equals("oneCar")) {
 				OneCarRegularSubscription oc = new OneCarRegularSubscription(customerId,
 						res.getString("subscriptionId"), res.getString("vehicleNumber"), res.getDate("startDate"),
 						res.getString("email"), subscriptionType.oneCarRegularSubscription, res.getString("parkingLot"),
 						res.getString("leavingAt"));
 				subs.add(oc);
+				// System.out.println(oc.toString());
 			}
-			if (type.equals("business")) {
+			if (type1.equals("business")) {
 				OneCarBusinessSubscription bs = new OneCarBusinessSubscription(customerId,
 						res.getString("subscriptionId"), res.getString("vehicleNumber"), res.getDate("startDate"),
 						res.getString("email"), subscriptionType.regularBusinessSubscription,
 						res.getString("parkingLot"), res.getString("leavingAt"));
-				subs.add(bs);
+				 subs.add(bs);
 			}
 		}
 		return subs;
@@ -655,7 +661,7 @@ public class DataAccess implements DataInterface {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot i : cps.getParkingLots()) {
 				if (i.getName().equals(parkingLot)) {
-					System.out.println("found it,it's "+i.getName());
+					System.out.println("found it,it's " + i.getName());
 					return i;
 				}
 			}
@@ -677,40 +683,27 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot parkinglot : cps.getParkingLots()) {
 				System.out.println(parkinglot.getName());
 				if (parkinglot.getName().equals(parkingLot)) {
 					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-					//ParkingSpot ps = tmp[row][column][width];
-					if (parkinglot.getParkingSpots()[row][column][width].isSaved() == false && parkinglot.getParkingSpots()[row][column][width].isFaulted() == false && parkinglot.getParkingSpots()[row][column][width].isOccupied() == false) {
-						//System.out.println("saved= "+ ps.isSaved()+ "faulted= "+ps.isFaulted()+"occupied= "+ps.isFaulted());
+					ParkingSpot ps = tmp[row][column][width];
+					if (ps.isSaved() == false && ps.isFaulted() == false && ps.isOccupied() == false) {
 						parkinglot.setSavedParkingSpot(row, column, width);
-						System.out.println("now "+parkinglot.getParkingSpots()[row][column][width].isSaved());
-						System.out.println("*********");
-						for (int i = 0; i < 3; i++) {
-							for (int j = 0; j < 3; j++) {
-								for (int k = 0; k < parkinglot.getWidth(); k++) {
-									System.out.println("is Saved= " + tmp[i][j][k].isSaved() + " is Faulted= "
-											+ tmp[i][j][k].isFaulted() + " is Occupied= "
-											+ tmp[i][j][k].isOccupied());
-								}
-							}
-						}
-						System.out.println("*********");
-						//printParkingSpots(parkingLot);
+						printParkingSpots(parkingLot);
 						return true;
 					}
 				}
 			}
-			
+
 		}
 		return false;
 	}
 
 	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot parkinglot : cps.getParkingLots()) {
 				if (parkinglot.getName().equals(parkingLot)) {
@@ -727,14 +720,14 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean setFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot parkinglot : cps.getParkingLots()) {
 				if (parkinglot.getName().equals(parkingLot)) {
 					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
 					ParkingSpot ps = tmp[row][column][width];
 					if (ps.isFaulted() == false) {
-						parkinglot.unsetFaultedParkingSpot(row, column, width);
+						parkinglot.setFaultedParkingSpot(row, column, width);
 						if (ps.isOccupied() == true) {
 							parkinglot.unsetOccupiedParkingSpot(row, column, width);
 						}
@@ -750,7 +743,7 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean unsetFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-		if (row >= 1 && row <= 3 && column >= 1 && column <= 3) {
+		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
 			CPS cps = CPS.getInstance();
 			for (ParkingLot parkinglot : cps.getParkingLots()) {
 				if (parkinglot.getName().equals(parkingLot)) {

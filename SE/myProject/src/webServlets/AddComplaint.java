@@ -62,9 +62,6 @@ public class AddComplaint extends HttpServlet {
 			
 			try {
 				res = da.addComplaint(c);
-				if(res) {
-					cps.getComplaints().add(c);
-				}
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

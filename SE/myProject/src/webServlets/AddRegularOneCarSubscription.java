@@ -54,13 +54,6 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 		String parkingLot = request.getParameter("parkingLot");
 		String leavingAt = request.getParameter("leavingAt");
 		String email = request.getParameter("email");
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;
@@ -69,9 +62,6 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 			customer.setCredit(0);
 			try {
 				res = da.addCustomer(customer);
-				if (res) {
-					cps.getCustomers().add(customer);
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -90,9 +80,6 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 					email, subscriptionType.oneCarRegularSubscription, parkingLot, leavingAt);
 			try {
 				res1 = da.addOneCarRegularSubscription(c);
-				if (res1) {
-					cps.getSubscriptions().add(c);
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -100,9 +87,6 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 			Vehicle v = new Vehicle(vehicleNumber, customerId);
 			try {
 				res = da.addVehicle(v);
-				if (res) {
-					cps.getVehicles().add(v);
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

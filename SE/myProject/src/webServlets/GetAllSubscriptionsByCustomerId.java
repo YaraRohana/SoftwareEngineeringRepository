@@ -14,8 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import allClasses.FullSubscription;
+import allClasses.OneCarBusinessSubscription;
+import allClasses.OneCarRegularSubscription;
 import allClasses.Order;
 import allClasses.Subscription;
+import allClasses.Subscription.subscriptionType;
 import da.DataAccess;
 
 /**
@@ -41,11 +45,16 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		FullSubscription fs = null;
+		OneCarRegularSubscription oc = null;
+		OneCarBusinessSubscription bs = null;
+		
 		String id = request.getParameter("customerId");
 		System.out.println("here");
 		ArrayList<Subscription> subs = new ArrayList<Subscription>();
 		DataAccess da = new DataAccess();
 		if (id != null) {
+			System.out.println("fotna 3l if");
 			try {
 				subs = da.getAllSubsByCustomerId(id);
 			} catch (SQLException e) {
@@ -59,18 +68,37 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 			for (Subscription subscription : subs) {
 				jsonSub=new JSONObject();
 				try {
-					jsonSub.put("customerId", subscription.getCustomerId());
-					jsonSub.put("subscriptionId", subscription.getSubsciptionId());
+					//jsonSub.put("subscriptionId", subscription.getSubsciptionId());
 					jsonSub.put("vehicleNumber", subscription.getVehicleNumber());
 					jsonSub.put("startingDate", subscription.getStartDate());
 					jsonSub.put("email", subscription.getEmail());
+					if(subscription instanceof FullSubscription){
+						//System.out.println("yes");
+						fs = (FullSubscription) subscription;
+						jsonSub.put("type", "fullSubscription");
+						jsonSub.put("arrivedSince", fs.getArrivedSince());
+					}
+					if(subscription instanceof OneCarRegularSubscription){
+						oc = (OneCarRegularSubscription) subscription;
+						jsonSub.put("type", oc.getType());
+						jsonSub.put("parkingLot", oc.getParkingLot());
+						jsonSub.put("leavingTime", oc.getLeavingAt());
+					}
+					if(subscription instanceof OneCarBusinessSubscription){
+						bs = (OneCarBusinessSubscription) subscription;
+						jsonSub.put("type", bs.getType());
+						jsonSub.put("parkingLot", bs.getParkingLot());
+						jsonSub.put("leavingTime", bs.getLeavingAt());
+					}
+					
 					out.println(jsonSub);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				
 				out.flush();
-				System.out.println(subscription.toString());
+				//System.out.println(subscription.toString());
+				System.out.println(jsonSub.toString());
 			}
 		}
 
