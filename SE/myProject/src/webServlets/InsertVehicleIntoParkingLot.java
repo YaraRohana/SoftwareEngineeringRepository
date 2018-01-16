@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -44,6 +45,8 @@ public class InsertVehicleIntoParkingLot extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		PrintWriter out=response.getWriter();
+		out.println(res);
 	}
 
 	/**

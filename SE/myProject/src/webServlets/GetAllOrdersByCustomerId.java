@@ -47,7 +47,8 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at:
+		// ").append(request.getContextPath());
 		String id = request.getParameter("customerId");
 		ArrayList<Order> orders = new ArrayList<Order>();
 		DataAccess da = new DataAccess();
@@ -96,7 +97,6 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 							iter.remove();
 						}
 					}
-					
 				}
 				for (Order order : orders) {
 					System.out.println(order.toString());
@@ -106,19 +106,29 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 				e.printStackTrace();
 			}
 			PrintWriter out = response.getWriter();
-			/*
-			 * response.setContentType("application/json"); JSONObject jsonOrder; for (Order
-			 * order : orders) { try { jsonOrder = new JSONObject();
-			 * jsonOrder.put("order ID", order.getOrderId()); jsonOrder.put("type",
-			 * order.getType()); jsonOrder.put("parking lot", order.getParkingLot());
-			 * jsonOrder.put("arriving at", order.getArrivingAt());
-			 * jsonOrder.put("leaving at", order.getLeavingAt());
-			 * jsonOrder.put("customer Id", order.getCustomerId());
-			 * jsonOrder.put("vehicle number", order.getVehicleNum());
-			 * out.println(jsonOrder); } catch (JSONException e) { // TODO Auto-generated
-			 * catch block e.printStackTrace(); } out.flush();
-			 * System.out.println(order.toString()); }
-			 */
+
+			response.setContentType("application/json");
+			JSONObject jsonOrder;
+			for (Order order : orders) {
+				try {
+					jsonOrder = new JSONObject();
+					jsonOrder.put("vehicle", order.getVehicleNum());
+					jsonOrder.put("type", order.getType());
+					jsonOrder.put("parkingLot", order.getParkingLot());
+					jsonOrder.put("arrivingAt", order.getArrivingAt());
+					jsonOrder.put("leavingAt", order.getLeavingAt());
+					jsonOrder.put("arrivingDate", order.getArrivingDate());
+					jsonOrder.put("leavingDate", order.getLeavingDate());
+					jsonOrder.put("customerId", order.getCustomerId());
+					out.println(jsonOrder);
+				} catch (JSONException e) {
+					// TODO Auto-generated
+					e.printStackTrace();
+				}
+				out.flush();
+				System.out.println(order.toString());
+			}
+
 		}
 	}
 

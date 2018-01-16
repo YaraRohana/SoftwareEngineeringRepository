@@ -20,7 +20,7 @@ import da.DataAccess;
 /**
  * Servlet implementation class AddOrder
  */
-@WebServlet("/AddOrder")
+@WebServlet("/AddPreOrder")
 public class AddPreOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

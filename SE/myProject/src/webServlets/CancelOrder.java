@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,52 +25,78 @@ import da.DataAccess;
 @WebServlet("/CancelOrder")
 public class CancelOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CancelOrder() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public CancelOrder() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String customerId=request.getParameter("customerId");
-		String vehicleNumber=request.getParameter("vehicle");
-		String type=request.getParameter("type");
-		OrderType type1=type.equals("uponArrivalOrder")? OrderType.uponArrivalOrder: OrderType.preOrder;
-		String parkingLot=request.getParameter("parkingLot");
-		String arrivingAt=request.getParameter("arrivingAt");
-		String leavingAt=request.getParameter("leavingAt");
-		String arrivingDate=request.getParameter("arrivingDate");
-		String leavingDate=request.getParameter("leavingDate");
-		Order res=null;
-		DataAccess da=new DataAccess();
-		if(customerId!=null & vehicleNumber!=null & parkingLot!=null) {
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		String customerId = request.getParameter("customerId");
+		String vehicleNumber = request.getParameter("vehicle");
+		// String type = request.getParameter("type");
+		// OrderType type1 = type.equals("uponArrivalOrder") ?
+		// OrderType.uponArrivalOrder : OrderType.preOrder;
+		String parkingLot = request.getParameter("parkingLot");
+		String arrivingAt = request.getParameter("arrivingAt");
+		String leavingAt = request.getParameter("leavingAt");
+		String arrivingDate = request.getParameter("arrivingDate");
+		String leavingDate = request.getParameter("leavingDate");
+		Order res = null;
+		int finalCredit=0;
+		int changedCredit=0;
+		// boolean result=false;
+		DataAccess da = new DataAccess();
+		if (customerId != null & vehicleNumber != null & parkingLot != null && arrivingAt != null
+				&& leavingAt != null & leavingDate != null && arrivingDate != null) {
+			System.out.println("we're in");
 			try {
-				res=da.checkIfOrderExistsByAllParameters(customerId, vehicleNumber, arrivingDate, arrivingAt, leavingDate, leavingAt, parkingLot);
+				res = da.checkIfOrderExistsByAllParameters(customerId, vehicleNumber, arrivingDate, arrivingAt,
+						leavingDate, leavingAt, parkingLot);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			if(res!=null) {
-				try {
-					da.cancelOrder(res);
-				} catch (SQLException e) {
-					e.printStackTrace();
+			if (res != null) {
+				if (res.isCanceled() == false) {
+					try {
+						da.cancelOrder(res);
+						changedCredit=da.getCancelOrderCredit(res);
+						finalCredit=da.getCreditByCustomerId(customerId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				else {
+					System.out.println("Order already canceled,cannot cancel again");
+				}
+
 			}
+			PrintWriter out=response.getWriter();
+			out.println(changedCredit);
+			//PrintWriter out=response.getWriter();
+			out.println(finalCredit);
 		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
