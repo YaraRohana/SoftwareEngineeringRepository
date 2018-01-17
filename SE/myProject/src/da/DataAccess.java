@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -537,8 +538,8 @@ public class DataAccess implements DataInterface {
 	}
 
 	@SuppressWarnings("deprecation")
-	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, String arrivingDate,
-			String leavingDate, OrderType type) throws SQLException, Exception {
+	public double getOrderCost(String arrivingAt, String leavingAt, String arrivingDate, String leavingDate,
+			OrderType type) throws SQLException, Exception {
 		// int h = 0;
 		double preOrderPrice = 0.0, uponArrivalPrice = 0.0;
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
@@ -547,8 +548,8 @@ public class DataAccess implements DataInterface {
 		java.util.Date LeavingAt = dateFormat.parse(leavingAt);
 		java.util.Date ArrivingDate = dateFormat1.parse(arrivingDate);
 		java.util.Date LeavingDate = dateFormat1.parse(leavingDate);
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
-		stm.setString(1, parkingLot);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
+		// stm.setString(1, parkingLot);
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
 			preOrderPrice = Integer.parseInt(res.getString("preOrderPrice"));
@@ -584,9 +585,9 @@ public class DataAccess implements DataInterface {
 		return -1;
 	}
 
-	public int getFullSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
-		stm.setString(1, parkingLot);
+	public int getFullSubscriptionCost() throws NumberFormatException, SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
+		// stm.setString(1, parkingLot);
 		ResultSet res = stm.executeQuery();
 		int price1 = 0, price2 = 0;
 		while (res.next()) {
@@ -596,9 +597,9 @@ public class DataAccess implements DataInterface {
 		return price1 * price2;
 	}
 
-	public int getOneCarRegularSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
-		stm.setString(1, parkingLot);
+	public int getOneCarRegularSubscriptionCost() throws NumberFormatException, SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
+		// stm.setString(1, parkingLot);
 		ResultSet res = stm.executeQuery();
 		int price1 = 0, price2 = 0;
 		while (res.next()) {
@@ -608,10 +609,9 @@ public class DataAccess implements DataInterface {
 		return price1 * price2;
 	}
 
-	public int getBusinessRegularSubscriptionCost(String customerId, String parkingLot)
-			throws NumberFormatException, SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPriceByParkingLot);
-		stm.setString(1, parkingLot);
+	public int getBusinessRegularSubscriptionCost(String customerId) throws NumberFormatException, SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
+		// stm.setString(1, parkingLot);
 		ResultSet res = stm.executeQuery();
 		int price1 = 0, price2 = 0;
 		while (res.next()) {
@@ -676,44 +676,40 @@ public class DataAccess implements DataInterface {
 		System.out.println("diff days " + diffDays);
 		if (diffDays > 0 || diffHours > 3) {
 			System.out.println("first if");
-			credit = -(1 / 10) * getOrderCost(order.getParkingLot(), arrivingAt, order.getLeavingAt(), arrivingDate,
-					order.getLeavingDate(), order.getType());
+			credit = -(1 / 10) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
+					order.getType());
 		}
 
 		else if (diffHours >= 1 && diffHours <= 3) {
 			System.out.println("second if");
-			System.out.println(
-					"price is" +getOrderCost(order.getParkingLot(), arrivingAt, order.getLeavingAt(), arrivingDate,
-							order.getLeavingDate(), order.getType()));
-			credit = -(1 / 2) * getOrderCost(order.getParkingLot(), arrivingAt, order.getLeavingAt(), arrivingDate,
-					order.getLeavingDate(), order.getType());
+			System.out.println("price is" + getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate,
+					order.getLeavingDate(), order.getType()));
+			credit = -(1 / 2) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
+					order.getType());
 		} else {
 			System.out.println("third if");
-			credit = -getOrderCost(order.getParkingLot(), arrivingAt, order.getLeavingAt(), arrivingDate,
-					order.getLeavingDate(), order.getType());
+			credit = -getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
+					order.getType());
 		}
 		updateCreditByCustomerId(order.getCustomerId(), credit);
-		Credit=(int) credit;
+		Credit = (int) credit;
 		return Credit;
-		//return true;
+		// return true;
 	}
 
-	
-	
 	public int getCreditByCustomerId(String customerId) throws SQLException {
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
-		int credit=0;
-		ResultSet res=stm.executeQuery();
-		while(res.next()) {
-			credit= res.getInt("credit");
+		int credit = 0;
+		ResultSet res = stm.executeQuery();
+		while (res.next()) {
+			credit = res.getInt("credit");
 		}
 		return credit;
 	}
-	
-	
-	public void updateCreditByCustomerId(String customerId,double newCredit) throws SQLException {
-		if(customerId!=null) {
+
+	public void updateCreditByCustomerId(String customerId, double newCredit) throws SQLException {
+		if (customerId != null) {
 			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 			stm.setString(1, customerId);
 			ResultSet res = stm.executeQuery();
@@ -728,8 +724,7 @@ public class DataAccess implements DataInterface {
 			stm.executeUpdate();
 		}
 	}
-	
-	
+
 	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException {
 		if (parkingLot != null) {
 			CPS cps = CPS.getInstance();
@@ -1018,4 +1013,26 @@ public class DataAccess implements DataInterface {
 		}
 		return false;
 	}
+
+	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException {
+		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		java.util.Date submissionDate = null;
+		try {
+			submissionDate = fullDateFormat.parse(SubDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (submissionDate != null) {
+			java.util.Date now = new java.util.Date();
+			long diff = 0;
+			diff =  now.getTime()-submissionDate.getTime();
+			double diffDays = (int) (diff / (1000 * 60 * 60 * 24));
+			System.out.println("diff days"+diffDays);
+			if (isChecked==false && (diffDays > 1 ))
+				return true;
+		}
+		return false;
+	}
+
 }

@@ -83,7 +83,7 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 				String parkingLot = v.getJSONObject(i).getString("parkingLot");
 				String leavingAt = v.getJSONObject(i).getString("leavingAt");
 				String subsId = da.getSaltString();
-				pl = parkingLot;
+				//pl = parkingLot;
 				tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
 						subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 				try {
@@ -99,9 +99,9 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		if (customerId != null && pl != null) {
+		if (customerId != null) {
 			try {
-				price = da.getBusinessRegularSubscriptionCost(customerId, pl);
+				price = da.getBusinessRegularSubscriptionCost(customerId);
 			} catch (NumberFormatException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -23,64 +23,69 @@ import da.DataAccess;
 @WebServlet("/AddUponArrivalOrder")
 public class AddUponArrivalOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AddUponArrivalOrder() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public AddUponArrivalOrder() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String parkingLot = request.getParameter("parkingLot");
-		String leavingDate=request.getParameter("leavingDate");
+		String leavingDate = request.getParameter("leavingDate");
 		String leavingAt = request.getParameter("leavingAt");
 		String customerId = request.getParameter("id");
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
-		boolean res=false;
-		boolean res1=false;
+		boolean res = false;
+		boolean res1 = false;
 		if (customerId != null) {
-				Order o = new Order(0,OrderType.uponArrivalOrder,parkingLot,null,leavingDate,null,leavingAt,customerId,vehicle,false,false,false);
-				try {
-					//System.out.println("trying to add order");
-					res1=da.addOrder(o);
-				} catch (SQLException e) {
-					System.out.println("Unable to add order");
-					e.printStackTrace();
-					return;
-				}
+			Order o = new Order(0, OrderType.uponArrivalOrder, parkingLot, null, leavingDate, null, leavingAt,
+					customerId, vehicle, false, false, false);
+			Customer c = new Customer(customerId, email);
+			try {
+				res = da.addCustomer(c);
+			} catch (SQLException e) {
+				System.out.println("Unable to add customer");
+				e.printStackTrace();
+			}
 
-				Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
-				try {
-					res=da.addVehicle(v);
-					} catch (SQLException e) {
-					System.out.println("Unable to add vehicle");
-					e.printStackTrace();
-				}
-				Customer c = new Customer(customerId, email);
-				try {
-					res=da.addCustomer(c);
-				} catch (SQLException e) {
-					System.out.println("Unable to add customer");
-					e.printStackTrace();
-				}
-				PrintWriter out=response.getWriter();
-				out.println(res1);
-			
+			Vehicle v = new Vehicle(vehicle, customerId, -1, -1, -1);
+			try {
+				res = da.addVehicle(v);
+			} catch (SQLException e) {
+				System.out.println("Unable to add vehicle");
+				e.printStackTrace();
+			}
+			try {
+				// System.out.println("trying to add order");
+				res1 = da.addOrder(o);
+			} catch (SQLException e) {
+				System.out.println("Unable to add order");
+				e.printStackTrace();
+				return;
+			}
+
+			PrintWriter out = response.getWriter();
+			out.println(res1);
+
 		}
 	}
-	
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

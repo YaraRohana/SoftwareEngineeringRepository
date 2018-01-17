@@ -14,7 +14,7 @@ import da.DataAccess;
 /**
  * Servlet implementation class UpdateComplaintCompensation
  */
-@WebServlet("/UpdateComplaintCompensation")
+@WebServlet("/UpdateComplaintCompensationAndReply")
 public class UpdateComplaintCompensationAndReply extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,6 @@ public class UpdateComplaintCompensationAndReply extends HttpServlet {
 				String mail=da.getCustomerMailById(customerId);
 				da.sendComplaintReplyToMail(mail, reply);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

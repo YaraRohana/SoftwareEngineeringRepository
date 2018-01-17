@@ -36,12 +36,12 @@ public class BusinessRegularSubscriptionPayment extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String customerId = request.getParameter("customerId");
-		String parkingLot = request.getParameter("parkingLot");
+		//String parkingLot = request.getParameter("parkingLot");
 		DataAccess da = new DataAccess();
 		int price = 0;
-		if (customerId != null && parkingLot != null) {
+		if (customerId != null) {
 			try {
-				price = da.getBusinessRegularSubscriptionCost(customerId, parkingLot);
+				price = da.getBusinessRegularSubscriptionCost(customerId);
 			} catch (NumberFormatException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

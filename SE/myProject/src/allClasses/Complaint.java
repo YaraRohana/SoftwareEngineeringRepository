@@ -16,7 +16,7 @@ public class Complaint {
 	String customerId;
 	String complaintText;
 	boolean isChecked;
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 	String submissionDate;
 
 

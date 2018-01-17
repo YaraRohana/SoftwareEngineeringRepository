@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -48,7 +49,7 @@ public class AddComplaint extends HttpServlet {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		if (parkingLot != null && customerId!=null) {
+		if (customerId!=null) {
 			try {
 				res=da.checkIfCustomerExistsById(customerId);
 			} catch (SQLException e1) {
@@ -68,7 +69,7 @@ public class AddComplaint extends HttpServlet {
 				e.printStackTrace();
 			}
 			System.out.println("res is" + res);
-
+			//PrintWriter out=PrintWriter
 		}
 	}
 

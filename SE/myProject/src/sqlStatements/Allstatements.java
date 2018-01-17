@@ -48,7 +48,7 @@ public class Allstatements {
 	public final static String logInCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
 	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
 
-	public final static String getPriceByParkingLot="select * from fur_seal_schema.prices where parkingLot=?;";
+	public final static String getPrices="select * from fur_seal_schema.prices where ID='1';";
 	public final static String updatePrices="UPDATE `fur_seal_schema`.`prices` SET `preOrderPrice`=?, `uponArrivalPrice`=? WHERE `parkingLot`=?;";
 	
 	public final static String getAllOrdersByArrivingDate = "select * from fur_seal_schema.orders where arrivingDate=? AND arrivingAt=? AND canceled='0';";

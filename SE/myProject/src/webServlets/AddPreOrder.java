@@ -37,45 +37,46 @@ public class AddPreOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-			String arrivingTime=request.getParameter("arrivingTime");
-			String leavingTime=request.getParameter("leavingTime");
-			String leavingDate=request.getParameter("leavingDate");
-			String arrivingDate=request.getParameter("arrivingDate");
-			String parkingLot = request.getParameter("parkingLot");
-			String customerId = request.getParameter("id");
-			String vehicle = request.getParameter("vehicle");
-			String email = request.getParameter("email");
-			DataAccess da = new DataAccess();
-			boolean res=false;
-			if (customerId != null) {
-					Order o = new Order(0,OrderType.preOrder,parkingLot,arrivingDate,leavingDate,arrivingTime,leavingTime,customerId,vehicle,false,false,false);
-					try {
-						System.out.println("trying to add order");
-						res=da.addOrder(o);
-					} catch (SQLException e) {
-						System.out.println("Unable to add order");
-						e.printStackTrace();
-						return;
-					}
+		String arrivingTime = request.getParameter("arrivingTime");
+		String leavingTime = request.getParameter("leavingTime");
+		String leavingDate = request.getParameter("leavingDate");
+		String arrivingDate = request.getParameter("arrivingDate");
+		String parkingLot = request.getParameter("parkingLot");
+		String customerId = request.getParameter("id");
+		String vehicle = request.getParameter("vehicle");
+		String email = request.getParameter("email");
+		DataAccess da = new DataAccess();
+		boolean res = false;
+		if (customerId != null) {
+			Order o = new Order(0, OrderType.preOrder, parkingLot, arrivingDate, leavingDate, arrivingTime, leavingTime,
+					customerId, vehicle, false, false, false);
 
-					Vehicle v = new Vehicle(vehicle, customerId,-1,-1,-1);
-					try {
-						res=da.addVehicle(v);
-					} catch (SQLException e) {
-						System.out.println("Unable to add vehicle");
-						e.printStackTrace();
-					}
-					Customer c = new Customer(customerId, email);
-					try {
-						res=da.addCustomer(c);
-					} catch (SQLException e) {
-						System.out.println("Unable to add customer");
-						e.printStackTrace();
-					}
-
-				
+			Customer c = new Customer(customerId, email);
+			try {
+				res = da.addCustomer(c);
+			} catch (SQLException e) {
+				System.out.println("Unable to add customer");
+				e.printStackTrace();
 			}
+
+			Vehicle v = new Vehicle(vehicle, customerId, -1, -1, -1);
+			try {
+				res = da.addVehicle(v);
+			} catch (SQLException e) {
+				System.out.println("Unable to add vehicle");
+				e.printStackTrace();
+			}
+			System.out.println("trying to add order");
+			try {
+				res = da.addOrder(o);
+			} catch (SQLException e) {
+				System.out.println("Unable to add order");
+				e.printStackTrace();
+				return;
+			}
+
 		}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

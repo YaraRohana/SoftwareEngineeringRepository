@@ -23,54 +23,72 @@ import da.DataAccess;
 @WebServlet("/GetAllComplaints")
 public class GetAllComplaints extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetAllComplaints() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		ArrayList<Complaint> complaints=new ArrayList<Complaint>();
-		DataAccess da=new DataAccess();
+	public GetAllComplaints() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		boolean complaintStatus = false;
+		ArrayList<Complaint> complaints = new ArrayList<Complaint>();
+		DataAccess da = new DataAccess();
 		try {
-			complaints=da.getAllComplaints();
+			complaints = da.getAllComplaints();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		PrintWriter out = response.getWriter();
+	//	PrintWriter outt = response.getWriter();
 		response.setContentType("application/json");
 		JSONObject jsonComplaint;
 		for (Complaint complaint : complaints) {
-			jsonComplaint=new JSONObject();
 			try {
-				//jsonComplaint.put("parking lot", complaint.getParkingLot());
+				boolean res=da.getComplaintStatus(complaint.getSubmissionDate(), complaint.isChecked());
+				if (complaintStatus==false && res==true) {
+					complaintStatus = true;
+					System.out.println("complaint status changed to true");
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		out.println(complaintStatus);
+		PrintWriter out2=response.getWriter();
+		out2.println(complaintStatus);
+		System.out.println("complaint status is"+complaintStatus);
+		for (Complaint complaint : complaints) {
+			System.out.println("**");
+			jsonComplaint = new JSONObject();
+			try {
+				jsonComplaint.put("parking lot", complaint.getParkingLot());
 				jsonComplaint.put("customerId", complaint.getCustomerId());
 				jsonComplaint.put("submissionDate", complaint.getSubmissionDate());
 				jsonComplaint.put("text", complaint.getComplaintText());
-				//jsonComplaint.put("is checked", complaint.isChecked());
-				out.println(jsonComplaint);
+				// out.println(jsonComplaint);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			out.flush();
 			System.out.println(complaint.toString());
 		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

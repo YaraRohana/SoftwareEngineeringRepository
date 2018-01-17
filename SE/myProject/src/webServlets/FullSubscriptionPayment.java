@@ -33,11 +33,11 @@ public class FullSubscriptionPayment extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String parkingLot=request.getParameter("parkingLot");
+		//String parkingLot=request.getParameter("parkingLot");
 		DataAccess da=new DataAccess();
 		int price=0;
 		try {
-			 price=da.getFullSubscriptionCost(parkingLot);
+			 price=da.getFullSubscriptionCost();
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

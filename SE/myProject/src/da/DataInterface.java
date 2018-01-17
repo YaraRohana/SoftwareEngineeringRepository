@@ -69,6 +69,8 @@ public interface DataInterface {
 
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
 
+	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException;
+
 	public void cancelOrder(Order order) throws SQLException;
 
 	public void setupParkingLot(String parkingLot, int width) throws SQLException;
@@ -85,12 +87,12 @@ public interface DataInterface {
 
 	public void updateCompensationForCustomer(String customerId, int compensation) throws SQLException;
 
-	public double getOrderCost(String parkingLot, String arrivingAt, String leavingAt, String arrivingDate,
+	public double getOrderCost( String arrivingAt, String leavingAt, String arrivingDate,
 			String leavingDate, OrderType type) throws SQLException, Exception;
 
-	public int getFullSubscriptionCost(String parkingLot) throws NumberFormatException, SQLException;
+	public int getFullSubscriptionCost() throws NumberFormatException, SQLException;
 
-	public int getBusinessRegularSubscriptionCost(String customerId, String parkingLot)
+	public int getBusinessRegularSubscriptionCost(String customerId)
 			throws NumberFormatException, SQLException;
 
 	// public boolean getCancelOrderCredit(Order order) throws SQLException,
