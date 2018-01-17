@@ -18,34 +18,48 @@ import da.DataAccess;
 @WebServlet("/LoginCustomer")
 public class LoginCustomer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public LoginCustomer() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
- 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public LoginCustomer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String customerId=request.getParameter("id");
-		DataAccess da=new DataAccess();
-		boolean res=false;
-		if(customerId!=null) {
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		String customerId = request.getParameter("id");
+		DataAccess da = new DataAccess();
+		boolean res = false;
+		if (customerId != null) {
 			try {
-				res=da.checkIfCustomerExistsById(customerId);
+				res = da.checkIfCustomerExistsById(customerId);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			if(!res) {
+			if (!res) {
 				System.out.println("Customer does not exist!");
-				PrintWriter out=response.getWriter();
+				PrintWriter out = response.getWriter();
+				out.println(res);
+				return;
+			}
+			try {
+				res = da.getCustomerConnectionStatus(customerId);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (!res) {
+				System.out.println("Customer already connected");
+				PrintWriter out = response.getWriter();
 				out.println(res);
 				return;
 			}
@@ -54,15 +68,17 @@ public class LoginCustomer extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			PrintWriter out=response.getWriter();
+			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

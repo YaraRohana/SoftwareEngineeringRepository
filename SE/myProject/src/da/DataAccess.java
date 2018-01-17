@@ -129,7 +129,17 @@ public class DataAccess implements DataInterface {
 		}
 		return true;
 	}
-
+	
+	public boolean getCustomerConnectionStatus(String customerId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
+		stm.setString(1, customerId);
+		ResultSet rs = stm.executeQuery();
+		boolean isConnected=false;
+		while(rs.next()) {
+			isConnected= rs.getBoolean("isConnected");
+		}
+		return isConnected;
+	}
 	public boolean addCustomer(Customer customer) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customer.getId());
@@ -1038,7 +1048,7 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 	
-	ArrayList<Order> getAllVehiclesCurrentlyInParkingLot(String parkingLot) throws SQLException{
+	/*ArrayList<Order> getAllVehiclesCurrentlyInParkingLot(String parkingLot) throws SQLException{
 		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getAllVehiclesCurrentlyInParkingLot);
 		stm.setString(1, parkingLot);
 		ResultSet res=stm.executeQuery();
@@ -1047,5 +1057,18 @@ public class DataAccess implements DataInterface {
 			Order o=new Order(res.get, type, parkingLot, arrivingDate, leavingDate, arrivingAt, leavingAt, customerId, vehicleNum, arrivingLate, leavingLate, isCanceled)
 		}
 	}
+*/
+	public void setComplaintAsCheckedByCustomerId(String customerId) throws SQLException {
+		PreparedStatement a=c.prepareStatement(sqlStatements.Allstatements.getComplaintByCustomerId);
+				a.setString(1, customerId);
+				ResultSet res1=a.executeQuery();
+						while(res1.next()) {
+							System.out.println(res1.getString("customerID")+" "+res1.getString("text"));
+						}
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.setComplaintAsChecked);
+		stm.setString(1, customerId);
+		stm.executeUpdate();
+	}
+	
 
 }

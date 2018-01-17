@@ -45,7 +45,7 @@ public class Allstatements {
 	public final static String logOutEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='0' WHERE `name`=?"; 
 	public final static String logOutCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;"; 
 	public final static String logInEmployee="UPDATE `fur_seal_schema`.`employees` SET `isConnected`='1' WHERE `name`=? and `password`=?"; 
-	public final static String logInCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
+	public final static String logInCustomer="UPDATE `fur_seal_schema`.`customers` SET `isConnected`='1' WHERE `customerID`=?;";
 	public final static String updateCreditByCustomerId="UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
 
 	public final static String getPrices="select * from fur_seal_schema.prices where ID='1';";
@@ -57,6 +57,6 @@ public class Allstatements {
 	public final static String getAllFullSubsByArrivedSince = "select * from fur_seal_schema.fullSubscriptions where arrivedSince=?;";
 	//public final static String enterVehicleIntoParkingLot="UPDATE `fur_seal_schema`.`vehicles` SET `row`=?, `column`=? , `width`=?,`parkingLot`=? WHERE vehicleNumber=?";
 	public final static String getAllVehiclesCurrentlyInParkingLot="select * from fur_seal_schema.vehiclesInParkingLots where parkingLot=?";
-	
-	
+	public final static String setComplaintAsChecked="UPDATE `fur_seal_schema`.`complaints` SET `isChecked`='1' WHERE `customerID`=?";
+//	public final static String getCustomerByIdFromComplaints="select * from `fur_seal_schema`.complaints where customerId=?";
 }

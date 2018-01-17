@@ -47,13 +47,13 @@ public class GetAllComplaints extends HttpServlet {
 			e.printStackTrace();
 		}
 		PrintWriter out = response.getWriter();
-	//	PrintWriter outt = response.getWriter();
+		// PrintWriter outt = response.getWriter();
 		response.setContentType("application/json");
 		JSONObject jsonComplaint;
 		for (Complaint complaint : complaints) {
 			try {
-				boolean res=da.getComplaintStatus(complaint.getSubmissionDate(), complaint.isChecked());
-				if (complaintStatus==false && res==true) {
+				boolean res = da.getComplaintStatus(complaint.getSubmissionDate(), complaint.isChecked());
+				if (complaintStatus == false && res == true) {
 					complaintStatus = true;
 					System.out.println("complaint status changed to true");
 				}
@@ -62,9 +62,7 @@ public class GetAllComplaints extends HttpServlet {
 			}
 		}
 		out.println(complaintStatus);
-		PrintWriter out2=response.getWriter();
-		out2.println(complaintStatus);
-		System.out.println("complaint status is"+complaintStatus);
+		System.out.println("complaint status is" + complaintStatus);
 		for (Complaint complaint : complaints) {
 			System.out.println("**");
 			jsonComplaint = new JSONObject();
@@ -73,7 +71,7 @@ public class GetAllComplaints extends HttpServlet {
 				jsonComplaint.put("customerId", complaint.getCustomerId());
 				jsonComplaint.put("submissionDate", complaint.getSubmissionDate());
 				jsonComplaint.put("text", complaint.getComplaintText());
-				// out.println(jsonComplaint);
+				out.println(jsonComplaint);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

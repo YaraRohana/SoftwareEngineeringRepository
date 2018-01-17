@@ -38,10 +38,12 @@ public class UpdateComplaintCompensationAndReply extends HttpServlet {
 		String compensation = request.getParameter("compensation");
 		String reply = request.getParameter("reply");
 		if (customerId != null && reply != null && compensation != null) {
+			System.out.println("here");
 			int compensation1 = Integer.parseInt(compensation);
 			DataAccess da = new DataAccess();
 			try {
 				da.updateCompensationForCustomer(customerId, compensation1);
+				da.setComplaintAsCheckedByCustomerId(customerId);
 				String mail=da.getCustomerMailById(customerId);
 				da.sendComplaintReplyToMail(mail, reply);
 			} catch (SQLException e) {
