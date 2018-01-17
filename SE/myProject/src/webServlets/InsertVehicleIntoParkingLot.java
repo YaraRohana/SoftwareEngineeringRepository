@@ -34,17 +34,20 @@ public class InsertVehicleIntoParkingLot extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String parkingLot=request.getParameter("parkingLot");
+		System.out.println(parkingLot);
 		String vehicleNumber=request.getParameter("vehicleNumber");
+		System.out.println(vehicleNumber);
 		DataAccess da=new DataAccess();
 		boolean res=false;
-		if(parkingLot!=null && vehicleNumber!=null) {
+	/*	if(parkingLot!=null && vehicleNumber!=null) {
+			System.out.println("we're in");
 			try {
 				res=da.insertCarIntoParkingLot(parkingLot, vehicleNumber);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		PrintWriter out=response.getWriter();
 		out.println(res);
 	}

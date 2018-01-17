@@ -18,6 +18,7 @@ public class Complaint {
 	boolean isChecked;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 	String submissionDate;
+	String parkingLot;
 
 
 	@SuppressWarnings("deprecation")

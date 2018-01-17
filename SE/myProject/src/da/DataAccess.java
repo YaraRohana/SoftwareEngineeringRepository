@@ -359,7 +359,7 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
-		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleExists);
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByVehicleNum);
 		stm.setString(1, vehicleNum);
 		ResultSet res = stm.executeQuery();
 		if (res.next()) {
@@ -942,20 +942,13 @@ public class DataAccess implements DataInterface {
 	}
 
 	public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws SQLException {
+		CPS cps = CPS.getInstance();
 		if (parkingLot != null) {
-			System.out.println("not null, we're okay");
-			CPS cps = CPS.getInstance();
-			if (cps == null) {
-				System.out.println("cps null");
-			}
-			ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
-			for (ParkingLot i : parkingLots) {
+			for (ParkingLot i : cps.getParkingLots()) {
 				if (i.getName().equals(parkingLot)) {
-					System.out.println("found at location " + i);
 					return i.getParkingSpots();
 				}
 			}
-
 		}
 		return null;
 	}
@@ -978,41 +971,51 @@ public class DataAccess implements DataInterface {
 		}
 	}
 
-	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException {
+	/*public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException {
 		if (parkingLot != null && vehicleNumber != null) {
-			ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+			// ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+			CPS cps = CPS.getInstance();
 			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByVehicleNum);
 			stm.setString(1, vehicleNumber);
 			ResultSet res = stm.executeQuery();
 			while (res.next()) {
 				if (res.getInt("row") == -1 && res.getInt("column") == -1 && res.getInt("width") == -1) {
-					ParkingSpot[][][] currentImage = getParkingLotImage(parkingLot);
-					if (currentImage == null) {
-						System.out.println("it's null");
-						return false;
-					}
-					for (int i = 0; i < 3; i++) {
-						for (int j = 0; j < 3; j++) {
-							for (int k = 0; k < pl.getWidth(); k++) {
-								ParkingSpot tmp = currentImage[i][j][k];
-								if (tmp.isFaulted() == false && tmp.isOccupied() == false && tmp.isSaved() == false) {
-									tmp.setOccupied(true);
-									stm = c.prepareStatement(sqlStatements.Allstatements.enterVehicleIntoParkingLot);
-									stm.setInt(1, i);
-									stm.setInt(2, j);
-									stm.setInt(3, k);
-									stm.setString(4, vehicleNumber);
-									stm.executeUpdate();
-									return true;
+					for (ParkingLot currParkingLot : cps.getParkingLots()) {
+						if (currParkingLot.getName().equals(parkingLot)) {
+							for (int i = 0; i < 3; i++) {
+								for (int j = 0; j < 3; j++) {
+									for (int k = 0; k < currParkingLot.getWidth(); k++) {
+										ParkingSpot tmp = currParkingLot.getParkingSpots()[i][j][k];
+										if (tmp.isFaulted() == false && tmp.isOccupied() == false
+												&& tmp.isSaved() == false) {
+											tmp.setOccupied(true);
+											setParkingSpotAsOccupied(parkingLot, vehicleNumber, i, j, k);
+											return true;
+										}
+									}
 								}
 							}
+
 						}
 					}
+
 				}
 			}
 		}
 		return false;
 	}
+*/
+/*	public void setParkingSpotAsOccupied(String parkingLot, String vehicleNumber, int row, int column, int width)
+			throws SQLException {
+	//	TODO: THIS
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.enterVehicleIntoParkingLot);
+		stm.setInt(1, row);
+		stm.setInt(2, column);
+		stm.setInt(3, width);
+		stm.setString(4, parkingLot);
+		stm.setString(5, vehicleNumber);
+		stm.executeUpdate();
+	}*/
 
 	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException {
 		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -1026,13 +1029,23 @@ public class DataAccess implements DataInterface {
 		if (submissionDate != null) {
 			java.util.Date now = new java.util.Date();
 			long diff = 0;
-			diff =  now.getTime()-submissionDate.getTime();
+			diff = now.getTime() - submissionDate.getTime();
 			double diffDays = (int) (diff / (1000 * 60 * 60 * 24));
-			System.out.println("diff days"+diffDays);
-			if (isChecked==false && (diffDays > 1 ))
+			System.out.println("diff days" + diffDays);
+			if (isChecked == false && (diffDays > 1))
 				return true;
 		}
 		return false;
+	}
+	
+	ArrayList<Order> getAllVehiclesCurrentlyInParkingLot(String parkingLot) throws SQLException{
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getAllVehiclesCurrentlyInParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res=stm.executeQuery();
+		ArrayList<Order> orders=new ArrayList<Order>();
+		while(res.next()) {
+			Order o=new Order(res.get, type, parkingLot, arrivingDate, leavingDate, arrivingAt, leavingAt, customerId, vehicleNum, arrivingLate, leavingLate, isCanceled)
+		}
 	}
 
 }

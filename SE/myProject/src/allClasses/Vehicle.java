@@ -7,6 +7,7 @@ public class Vehicle {
 	int row;
 	int column;
 	int width;
+	String parkingLot;
 	
 	public Vehicle(String vehicleNumber, String customerId) {
 		super();
@@ -23,6 +24,7 @@ public class Vehicle {
 		this.row = row;
 		this.column = column;
 		this.width = width;
+		this.parkingLot=null;
 	}
 
 

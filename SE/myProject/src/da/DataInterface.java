@@ -44,6 +44,9 @@ public interface DataInterface {
 
 	public boolean addVehicle(Vehicle v) throws SQLException;
 
+//	public void setParkingSpotAsOccupied(String parkingLot, String vehicleNumber, int row, int column, int width)
+//			throws SQLException;
+
 	public ArrayList<Vehicle> getAllVehicles() throws SQLException;
 
 	public boolean addComplaint(Complaint c) throws SQLException;
@@ -87,13 +90,12 @@ public interface DataInterface {
 
 	public void updateCompensationForCustomer(String customerId, int compensation) throws SQLException;
 
-	public double getOrderCost( String arrivingAt, String leavingAt, String arrivingDate,
-			String leavingDate, OrderType type) throws SQLException, Exception;
+	public double getOrderCost(String arrivingAt, String leavingAt, String arrivingDate, String leavingDate,
+			OrderType type) throws SQLException, Exception;
 
 	public int getFullSubscriptionCost() throws NumberFormatException, SQLException;
 
-	public int getBusinessRegularSubscriptionCost(String customerId)
-			throws NumberFormatException, SQLException;
+	public int getBusinessRegularSubscriptionCost(String customerId) throws NumberFormatException, SQLException;
 
 	// public boolean getCancelOrderCredit(Order order) throws SQLException,
 	// Exception;
@@ -127,7 +129,7 @@ public interface DataInterface {
 
 	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws SQLException;
 
-	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException;
+	//public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException;
 
 	public void printAllParkingLots() throws SQLException;
 

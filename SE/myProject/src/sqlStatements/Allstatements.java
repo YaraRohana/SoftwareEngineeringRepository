@@ -9,7 +9,7 @@ public class Allstatements {
 	public final static String selectParkingLotByName = "SELECT * from fur_seal_schema.parkingLots where name=?;";
 
 	public final static String checkIfOrderExists = "select * from fur_seal_schema.orders where parkingLot=? AND vehicleNumber=? AND customerId=?";
-	public final static String checkIfVehicleExists="select * from fur_seal_schema.vehicles where vehicleNumber=?";
+	//public final static String checkIfVehicleExists="select * from fur_seal_schema.vehicles where vehicleNumber=?";
 	public final static String checkIfEmployeeExists="select * from fur_seal_schema.employees where name=? AND password=?";
 	public final static String getEmployeeByName="select * from fur_seal_schema.employees where name=?";
 	public final static String addNewParkingLot = "INSERT INTO fur_seal_schema.parkingLots (name,location,isActive,isFull,manager,width)"
@@ -55,8 +55,8 @@ public class Allstatements {
 	public final static String getAllRegularSubsByStartingDate = "select * from fur_seal_schema.regularSubscriptions where startDate=?;";
 	public final static String getAllFullSubsByStartingDate = "select * from fur_seal_schema.fullSubscriptions where startingDate=?;";
 	public final static String getAllFullSubsByArrivedSince = "select * from fur_seal_schema.fullSubscriptions where arrivedSince=?;";
-	public final static String enterVehicleIntoParkingLot="UPDATE `fur_seal_schema`.`vehicles` SET `row`=?, `column`=? , `width`=? WHERE vehicleNumber=?";
-
+	//public final static String enterVehicleIntoParkingLot="UPDATE `fur_seal_schema`.`vehicles` SET `row`=?, `column`=? , `width`=?,`parkingLot`=? WHERE vehicleNumber=?";
+	public final static String getAllVehiclesCurrentlyInParkingLot="select * from fur_seal_schema.vehiclesInParkingLots where parkingLot=?";
 	
 	
 }

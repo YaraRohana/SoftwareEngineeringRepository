@@ -42,35 +42,30 @@ public class AddComplaint extends HttpServlet {
 		String text = request.getParameter("text");
 		DataAccess da = new DataAccess();
 		boolean res = false;
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		if (customerId!=null) {
+		if (customerId != null) {
 			try {
-				res=da.checkIfCustomerExistsById(customerId);
+				res = da.checkIfCustomerExistsById(customerId);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			if(!res) {
+			if (!res) {
 				System.out.println("Unable to add complaint");
 				return;
 			}
 			Complaint c = new Complaint(parkingLot, customerId, text);
-			
 			try {
 				res = da.addComplaint(c);
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println("res is" + res);
-			//PrintWriter out=PrintWriter
+			// PrintWriter out=PrintWriter
+			PrintWriter out = response.getWriter();
+			out.println(res);
 		}
+
 	}
 
 	/**
