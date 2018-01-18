@@ -43,8 +43,10 @@ public class AddComplaint extends HttpServlet {
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		if (customerId != null) {
+			System.out.println("we're in");
 			try {
 				res = da.checkIfCustomerExistsById(customerId);
+				
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}

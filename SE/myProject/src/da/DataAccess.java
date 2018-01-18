@@ -123,11 +123,11 @@ public class DataAccess implements DataInterface {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
 		ResultSet rs = stm.executeQuery();
-		if (!rs.next()) {
-			System.out.println("User does not exist in CPS");
-			return false;
+		if (rs.next()) {
+			//System.out.println("User does not exist in CPS");
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	public boolean getCustomerConnectionStatus(String customerId) throws SQLException {
@@ -1070,5 +1070,36 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 	}
 	
-
+	public int getNumberOfExecutedOrdersByParkingLot(String parkingLot) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getNumberOfExecutedOrdersByParkingLot);
+		stm.setString(1, parkingLot);
+		int sum=0;
+		ResultSet res=stm.executeQuery();
+		while(res.next()) {
+			sum++;
+		}
+		return sum;
+	}
+	
+	public int getNumberOfCanceledOrdersByParkingLot(String parkingLot) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getNumberOfCanceledOrdersByParkingLot);
+		stm.setString(1, parkingLot);
+		int sum=0;
+		ResultSet res=stm.executeQuery();
+		while(res.next()) {
+			sum++;
+		}
+		return sum;
+	}
+	
+	public int getNumberOfLateArrivalOrdersByParkingLot(String parkingLot) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getNumberOfLateArrivalOrdersByParkingLot);
+		stm.setString(1, parkingLot);
+		int sum=0;
+		ResultSet res=stm.executeQuery();
+		while(res.next()) {
+			sum++;
+		}
+		return sum;
+	}
 }

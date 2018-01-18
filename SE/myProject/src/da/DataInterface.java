@@ -44,10 +44,13 @@ public interface DataInterface {
 
 	public boolean addVehicle(Vehicle v) throws SQLException;
 
-//	public void setParkingSpotAsOccupied(String parkingLot, String vehicleNumber, int row, int column, int width)
-//			throws SQLException;
+	// public void setParkingSpotAsOccupied(String parkingLot, String vehicleNumber,
+	// int row, int column, int width)
+	// throws SQLException;
 
 	public ArrayList<Vehicle> getAllVehicles() throws SQLException;
+
+	public int getNumberOfExecutedOrdersByParkingLot(String parkingLot) throws SQLException;
 
 	public boolean addComplaint(Complaint c) throws SQLException;
 
@@ -129,7 +132,8 @@ public interface DataInterface {
 
 	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws SQLException;
 
-	//public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber) throws SQLException;
+	// public boolean insertCarIntoParkingLot(String parkingLot, String
+	// vehicleNumber) throws SQLException;
 
 	public void printAllParkingLots() throws SQLException;
 
@@ -140,4 +144,8 @@ public interface DataInterface {
 	public boolean setFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
 
 	public boolean unsetFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException;
+
+	public int getNumberOfCanceledOrdersByParkingLot(String parkingLot) throws SQLException;
+
+	public int getNumberOfLateArrivalOrdersByParkingLot(String parkingLot) throws SQLException;
 }

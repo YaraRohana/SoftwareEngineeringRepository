@@ -39,15 +39,24 @@ public class AddUponArrivalOrder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String parkingLot = request.getParameter("parkingLot");
+		System.out.println("parkingLot"+parkingLot);
 		String leavingDate = request.getParameter("leavingDate");
+		System.out.println("leavingDate"+leavingDate);
 		String leavingAt = request.getParameter("leavingAt");
+		System.out.println(leavingAt);
 		String customerId = request.getParameter("id");
+		System.out.println(customerId);
 		String vehicle = request.getParameter("vehicle");
+		System.out.println(vehicle);
 		String email = request.getParameter("email");
+		System.out.println(email);
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;
-		if (customerId != null) {
+		if (customerId != null && leavingAt != null && leavingDate != null && vehicle != null && email != null
+				&& parkingLot != null) {
+			System.out.println("we're in");
+			//String orderId=da.getSaltString();
 			Order o = new Order(0, OrderType.uponArrivalOrder, parkingLot, null, leavingDate, null, leavingAt,
 					customerId, vehicle, false, false, false);
 			Customer c = new Customer(customerId, email);

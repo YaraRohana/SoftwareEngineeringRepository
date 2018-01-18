@@ -16,7 +16,7 @@ public class Allstatements {
 			+ "values(?,?,?,?,?,?);";
 	public final static String addNewOrder = "INSERT INTO `fur_seal_schema`.`orders` (`type`,`parkingLot`, `arrivingDate`, `arrivingAt`, `leavingDate`, `leavingAt`, `customerId`, `vehicleNumber`, `arrivingLate`, `leavingLate`, `canceled`) VALUES (?,?, ?, ?, ?, ?, ?, ?, '0', '0', '0')";
 	public final static String addNewCustomer = "INSERT INTO `fur_seal_schema`.`customers` (`customerID`, `email`,`credit`,`isConnected`) VALUES (?,?,?,?);";
-	public final static String addNewVehicle = "INSERT INTO `fur_seal_schema`.`vehicles` (`vehicleNumber`, `customerID`,`row`,`column`,`width`) VALUES (?,?,'-1','-1','-1');";
+	public final static String addNewVehicle = "INSERT INTO `fur_seal_schema`.`vehicles` (`vehicleNumber`, `customerID`) VALUES (?,?);";
 	public final static String addNewComplaint = "INSERT INTO `fur_seal_schema`.`complaints` (`parkingLot`, `customerID`, `submissionDate`, `isChecked`, `text`) VALUES (?,?,?,?,?);";
 	public final static String deleteParkingLot = "DELETE FROM `fur_seal_schema`.`parkingLots` WHERE `name`=?;";
 
@@ -59,4 +59,9 @@ public class Allstatements {
 	public final static String getAllVehiclesCurrentlyInParkingLot="select * from fur_seal_schema.vehiclesInParkingLots where parkingLot=?";
 	public final static String setComplaintAsChecked="UPDATE `fur_seal_schema`.`complaints` SET `isChecked`='1' WHERE `customerID`=?";
 //	public final static String getCustomerByIdFromComplaints="select * from `fur_seal_schema`.complaints where customerId=?";
+	public final static String getNumberOfExecutedOrdersByParkingLot="select * from `fur_seal_schema`.`orders` where parkingLot=? and canceled='0'";
+	public final static String getNumberOfCanceledOrdersByParkingLot="select * from `fur_seal_schema`.`orders` where parkingLot=? and canceled='1'";
+	public final static String getNumberOfLateArrivalOrdersByParkingLot="select * from `fur_seal_schema`.`orders` where parkingLot=? and arrivingLate='1'";
+
+
 }
