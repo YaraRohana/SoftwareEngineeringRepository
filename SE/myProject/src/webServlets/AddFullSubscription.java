@@ -2,7 +2,6 @@ package webServlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.CPS;
-import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.FullSubscription;
 import allClasses.Subscription.subscriptionType;
@@ -50,9 +47,9 @@ public class AddFullSubscription extends HttpServlet {
 		String email = request.getParameter("email");
 		DataAccess da = new DataAccess();
 		boolean res = false;
-		boolean res1 = false;
+		//boolean res1 = false;
 		if (vehicleNumber != null && customerId != null) {
-
+			PrintWriter out = response.getWriter();
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			customer.setConnected(false);
@@ -62,6 +59,7 @@ public class AddFullSubscription extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date = null;
 			try {
@@ -76,9 +74,9 @@ public class AddFullSubscription extends HttpServlet {
 			FullSubscription c = new FullSubscription(customerId, subsId, vehicleNumber, sqlStartDate, email,
 					sqlStartDate, subscriptionType.fullSubscription);
 			try {
-				res1 = da.addFullSubscription(c);
-				PrintWriter out = response.getWriter();
-				out.println(res);
+				res = da.addFullSubscription(c);
+				//PrintWriter out = response.getWriter();
+				//out.println(res);
 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -88,17 +86,15 @@ public class AddFullSubscription extends HttpServlet {
 			Vehicle v = new Vehicle(vehicleNumber, customerId);
 			try {
 				res = da.addVehicle(v);
-				PrintWriter out1 = response.getWriter();
-				out1.println(res);
+				//PrintWriter out1 = response.getWriter();
+				//out1.println(res);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			PrintWriter out = response.getWriter();
-			out.println(res1);
-			PrintWriter out2 = response.getWriter();
-			out2.println(subsId);
+			out.println(res);
+			//PrintWriter out2 = response.getWriter();
+			out.println(subsId);
 		}
 	}
 

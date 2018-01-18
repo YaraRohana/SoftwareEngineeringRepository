@@ -140,6 +140,17 @@ public class DataAccess implements DataInterface {
 		}
 		return isConnected;
 	}
+	
+	public boolean getEmployeeConnectionStatus(String name) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
+		stm.setString(1, name);
+		ResultSet rs = stm.executeQuery();
+		boolean isConnected = false;
+		while (rs.next()) {
+			isConnected = rs.getBoolean("isConnected");
+		}
+		return isConnected;
+	}
 
 	public boolean addCustomer(Customer customer) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
@@ -359,11 +370,12 @@ public class DataAccess implements DataInterface {
 			throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addOneCarRegularSubscription);
 		stm.setString(1, oneCarRegularSubscription.getCustomerId());
-		stm.setString(2, oneCarRegularSubscription.getVehicleNumber());
-		stm.setDate(3, oneCarRegularSubscription.getStartDate());
-		stm.setString(4, oneCarRegularSubscription.getParkingLot());
-		stm.setString(5, oneCarRegularSubscription.getLeavingAt());
-		stm.setString(6, oneCarRegularSubscription.getEmail());
+		stm.setString(2,oneCarRegularSubscription.getSubsciptionId());
+		stm.setString(3, oneCarRegularSubscription.getVehicleNumber());
+		stm.setDate(4, oneCarRegularSubscription.getStartDate());
+		stm.setString(5, oneCarRegularSubscription.getParkingLot());
+		stm.setString(6, oneCarRegularSubscription.getLeavingAt());
+		stm.setString(7, oneCarRegularSubscription.getEmail());
 		stm.executeUpdate();
 		System.out.println("One Car Regular Subscription Added Successfully");
 		return true;
@@ -629,7 +641,7 @@ public class DataAccess implements DataInterface {
 			price1 = Integer.parseInt(res.getString("preOrderPrice"));
 			price2 = Integer.parseInt(res.getString("regularSubsForMulCars"));
 		}
-	
+
 		return price1 * price2 * numOfCars;
 	}
 
@@ -681,7 +693,7 @@ public class DataAccess implements DataInterface {
 		System.out.println("diff days " + diffDays);
 		if (diffDays > 0 || diffHours > 3) {
 			System.out.println("first if");
-			credit = -(1 / 10) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
+			credit = (9 / 10) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
 					order.getType());
 		}
 
@@ -689,12 +701,11 @@ public class DataAccess implements DataInterface {
 			System.out.println("second if");
 			System.out.println("price is" + getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate,
 					order.getLeavingDate(), order.getType()));
-			credit = -(1 / 2) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
+			credit = (1 / 2) * getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
 					order.getType());
 		} else {
 			System.out.println("third if");
-			credit = -getOrderCost(arrivingAt, order.getLeavingAt(), arrivingDate, order.getLeavingDate(),
-					order.getType());
+			credit = 0;
 		}
 		updateCreditByCustomerId(order.getCustomerId(), credit);
 		Credit = (int) credit;
@@ -756,82 +767,87 @@ public class DataAccess implements DataInterface {
 		}
 	}
 
-//	public boolean saveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-//		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-//			CPS cps = CPS.getInstance();
-//			for (ParkingLot parkinglot : cps.getParkingLots()) {
-//				System.out.println(parkinglot.getName());
-//				if (parkinglot.getName().equals(parkingLot)) {
-//					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-//					ParkingSpot ps = tmp[row][column][width];
-//					if (ps.isSaved() == false && ps.isFaulted() == false && ps.isOccupied() == false) {
-//						parkinglot.setSavedParkingSpot(row, column, width);
-//						printParkingSpots(parkingLot);
-//						return true;
-//					}
-//				}
-//			}
-//
-//		}
-//		return false;
-//	}
-//
-//	public boolean unsaveParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-//		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-//			CPS cps = CPS.getInstance();
-//			for (ParkingLot parkinglot : cps.getParkingLots()) {
-//				if (parkinglot.getName().equals(parkingLot)) {
-//					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-//					ParkingSpot ps = tmp[row][column][width];
-//					if (ps.isSaved() == true) {
-//						parkinglot.unsaveParkingSpot(row, column, width);
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	// public boolean saveParkingSpot(String parkingLot, int row, int column, int
+	// width) throws SQLException {
+	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
+	// CPS cps = CPS.getInstance();
+	// for (ParkingLot parkinglot : cps.getParkingLots()) {
+	// System.out.println(parkinglot.getName());
+	// if (parkinglot.getName().equals(parkingLot)) {
+	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+	// ParkingSpot ps = tmp[row][column][width];
+	// if (ps.isSaved() == false && ps.isFaulted() == false && ps.isOccupied() ==
+	// false) {
+	// parkinglot.setSavedParkingSpot(row, column, width);
+	// printParkingSpots(parkingLot);
+	// return true;
+	// }
+	// }
+	// }
+	//
+	// }
+	// return false;
+	// }
+	//
+	// public boolean unsaveParkingSpot(String parkingLot, int row, int column, int
+	// width) throws SQLException {
+	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
+	// CPS cps = CPS.getInstance();
+	// for (ParkingLot parkinglot : cps.getParkingLots()) {
+	// if (parkinglot.getName().equals(parkingLot)) {
+	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+	// ParkingSpot ps = tmp[row][column][width];
+	// if (ps.isSaved() == true) {
+	// parkinglot.unsaveParkingSpot(row, column, width);
+	// return true;
+	// }
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
-//	public boolean setFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-//		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-//			CPS cps = CPS.getInstance();
-//			for (ParkingLot parkinglot : cps.getParkingLots()) {
-//				if (parkinglot.getName().equals(parkingLot)) {
-//					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-//					ParkingSpot ps = tmp[row][column][width];
-//					if (ps.isFaulted() == false) {
-//						parkinglot.setFaultedParkingSpot(row, column, width);
-//						if (ps.isOccupied() == true) {
-//							parkinglot.unsetOccupiedParkingSpot(row, column, width);
-//						}
-//						if (ps.isSaved() == true) {
-//							parkinglot.unsaveParkingSpot(row, column, width);
-//						}
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	// public boolean setFaultedParkingSpot(String parkingLot, int row, int column,
+	// int width) throws SQLException {
+	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
+	// CPS cps = CPS.getInstance();
+	// for (ParkingLot parkinglot : cps.getParkingLots()) {
+	// if (parkinglot.getName().equals(parkingLot)) {
+	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+	// ParkingSpot ps = tmp[row][column][width];
+	// if (ps.isFaulted() == false) {
+	// parkinglot.setFaultedParkingSpot(row, column, width);
+	// if (ps.isOccupied() == true) {
+	// parkinglot.unsetOccupiedParkingSpot(row, column, width);
+	// }
+	// if (ps.isSaved() == true) {
+	// parkinglot.unsaveParkingSpot(row, column, width);
+	// }
+	// return true;
+	// }
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
-//	public boolean unsetFaultedParkingSpot(String parkingLot, int row, int column, int width) throws SQLException {
-//		if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-//			CPS cps = CPS.getInstance();
-//			for (ParkingLot parkinglot : cps.getParkingLots()) {
-//				if (parkinglot.getName().equals(parkingLot)) {
-//					ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-//					ParkingSpot ps = tmp[row][column][width];
-//					if (ps.isFaulted() == true) {
-//						parkinglot.unsetFaultedParkingSpot(row, column, width);
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	// public boolean unsetFaultedParkingSpot(String parkingLot, int row, int
+	// column, int width) throws SQLException {
+	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
+	// CPS cps = CPS.getInstance();
+	// for (ParkingLot parkinglot : cps.getParkingLots()) {
+	// if (parkinglot.getName().equals(parkingLot)) {
+	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+	// ParkingSpot ps = tmp[row][column][width];
+	// if (ps.isFaulted() == true) {
+	// parkinglot.unsetFaultedParkingSpot(row, column, width);
+	// return true;
+	// }
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
 	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception {
 		String parkingLot = getEmployeeParkingLot(name);
@@ -945,28 +961,31 @@ public class DataAccess implements DataInterface {
 		}
 		return subs;
 	}
-//
-//	public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws SQLException {
-//		CPS cps = CPS.getInstance();
-//		if (parkingLot != null) {
-//			for (ParkingLot i : cps.getParkingLots()) {
-//				if (i.getName().equals(parkingLot)) {
-//					return i.getParkingSpots();
-//				}
-//			}
-//		}
-//		return null;
-//	}
+	//
+	// public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws
+	// SQLException {
+	// CPS cps = CPS.getInstance();
+	// if (parkingLot != null) {
+	// for (ParkingLot i : cps.getParkingLots()) {
+	// if (i.getName().equals(parkingLot)) {
+	// return i.getParkingSpots();
+	// }
+	// }
+	// }
+	// return null;
+	// }
 
-//	public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws SQLException {
-//		CPS cps = CPS.getInstance();
-//		ArrayList<ParkingSpot[][][]> parkingSpots = new ArrayList<ParkingSpot[][][]>();
-//		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
-//		for (ParkingLot parkingLot : parkingLots) {
-//			parkingSpots.add(getParkingLotImage(parkingLot.getName()));
-//		}
-//		return parkingSpots;
-//	}
+	// public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws
+	// SQLException {
+	// CPS cps = CPS.getInstance();
+	// ArrayList<ParkingSpot[][][]> parkingSpots = new
+	// ArrayList<ParkingSpot[][][]>();
+	// ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
+	// for (ParkingLot parkingLot : parkingLots) {
+	// parkingSpots.add(getParkingLotImage(parkingLot.getName()));
+	// }
+	// return parkingSpots;
+	// }
 
 	public void printAllParkingLots() throws SQLException {
 		CPS cps = CPS.getInstance();
@@ -1054,9 +1073,9 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean setParkingSpotAsFaulted(String parkingLot, int row, int col, int width) throws SQLException {
-		ParkingSpot tmp=getParkingSpotStatus(parkingLot,row,col,width);
-		if(tmp.isFaulted()==true) {
-			System.out.println("Parking Spot "+row+" "+col+" "+width+" is already faulted");
+		ParkingSpot tmp = getParkingSpotStatus(parkingLot, row, col, width);
+		if (tmp.isFaulted() == true) {
+			System.out.println("Parking Spot " + row + " " + col + " " + width + " is already faulted");
 			return false;
 		}
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.setParkingSpotAsFaulted);
@@ -1069,9 +1088,9 @@ public class DataAccess implements DataInterface {
 	}
 
 	public boolean setParkingSpotAsSaved(String parkingLot, int row, int col, int width) throws SQLException {
-		ParkingSpot tmp=getParkingSpotStatus(parkingLot,row,col,width);
-		if(tmp.isSaved()==true) {
-			System.out.println("Parking Spot "+row+" "+col+" "+width+" is already saved");
+		ParkingSpot tmp = getParkingSpotStatus(parkingLot, row, col, width);
+		if (tmp.isSaved() == true) {
+			System.out.println("Parking Spot " + row + " " + col + " " + width + " is already saved");
 			return false;
 		}
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.setParkingSpotAsSaved);
@@ -1083,8 +1102,7 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
-	public void unsetParkingSpotAsSavedOrFaulted(String parkingLot, int row, int col, int width)
-			throws SQLException {
+	public void unsetParkingSpotAsSavedOrFaulted(String parkingLot, int row, int col, int width) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getParkingSpotStatusFaultedOrSaved);
 		stm.setString(1, parkingLot);
 		stm.setInt(2, row);
@@ -1111,52 +1129,640 @@ public class DataAccess implements DataInterface {
 		while (res.next()) {
 			tmp = new ParkingSpot(false, res.getBoolean("isFaulted"), res.getBoolean("isSaved"));
 		}
-		if(tmp==null) {
+		if (tmp == null) {
 			System.out.println("null");
-			//stm=c.prepareStatement(sqlStatements.Allstatements.)
-			stm=c.prepareStatement(sqlStatements.Allstatements.getParkingSpotStatusOccupuied);
+			// stm=c.prepareStatement(sqlStatements.Allstatements.)
+			stm = c.prepareStatement(sqlStatements.Allstatements.getParkingSpotStatusOccupuied);
 			stm.setString(1, parkingLot);
 			stm.setInt(2, row);
 			stm.setInt(3, col);
 			stm.setInt(4, width);
-			res=stm.executeQuery();
-			while(res.next()) {
-				tmp=new ParkingSpot(true, false, false);
+			res = stm.executeQuery();
+			while (res.next()) {
+				tmp = new ParkingSpot(true, false, false);
 			}
 		}
-		if(tmp==null) {
-			tmp=new ParkingSpot(false, false, false);
+		if (tmp == null) {
+			tmp = new ParkingSpot(false, false, false);
 		}
-		System.out.println("isOccupied= "+tmp.isOccupied());
-		System.out.println("isOFaulted= "+tmp.isFaulted());
-		System.out.println("isSaved= "+tmp.isSaved());
+		System.out.println("isOccupied= " + tmp.isOccupied());
+		System.out.println("isOFaulted= " + tmp.isFaulted());
+		System.out.println("isSaved= " + tmp.isSaved());
 		return tmp;
 	}
 
-	public ParkingSpot[][][] getParkingLotImageNew(String parkingLot) throws SQLException{
-		
-		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
-		stm.setString(1, parkingLot);
-		ResultSet res=stm.executeQuery();
-		int currWidth=0;
-		while(res.next()) {
-			currWidth=res.getInt("width");
-		}
-		ParkingSpot[][][] currImage=new ParkingSpot[3][3][currWidth];
-		for(int i=0;i<3;i++) {
-			for(int j=0;j<3;j++) {
-				for(int k=0;k<currWidth;k++) {
-					currImage[i][j][k]=getParkingSpotStatus(parkingLot, i, j, k);/*parking spot is either faulted,occupied or saved*/
-					if(currImage[i][j][k]==null) {/*else if it's none of the above, it's empty*/
-						currImage[i][j][k]=new ParkingSpot(false, false, false);
-						System.out.println("isOccupied= "+currImage[i][j][k]);
-						System.out.println("isOFaulted= "+currImage[i][j][k]);
-						System.out.println("isSaved= "+currImage[i][j][k]);
+	public ParkingSpot[][][] getParkingLotImageNew(String parkingLot) throws SQLException {
+		int currWidth = getWidthByParkingLot(parkingLot);
+		ParkingSpot[][][] currImage = new ParkingSpot[3][3][currWidth];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < currWidth; k++) {
+					currImage[i][j][k] = getParkingSpotStatus(parkingLot, i, j,
+							k);/* parking spot is either faulted,occupied or saved */
+					if (currImage[i][j][k] == null) {/* else if it's none of the above, it's empty */
+						currImage[i][j][k] = new ParkingSpot(false, false, false);
+						System.out.println("isOccupied= " + currImage[i][j][k]);
+						System.out.println("isOFaulted= " + currImage[i][j][k]);
+						System.out.println("isSaved= " + currImage[i][j][k]);
 					}
 				}
 			}
 		}
 		return currImage;
+	}
+
+	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber, String type) throws SQLException, ParseException {
+		if (parkingLot != null && vehicleNumber != null) {
+			long diff, diff1;
+			boolean canEnter = false;
+			String arrivingDate = null;
+			String arrivingAt = null;
+			String leavingDate = null;
+			String leavingAt = null;
+			String customerId = null;
+			String arrivedSince = null;
+			int orderId = 0;
+			int[] ps = new int[3];
+			DateFormat fulldateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+			DateFormat startingDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date now = new java.util.Date();
+			java.util.Date arriving = null;
+			java.util.Date leaving = null;
+			java.util.Date startingDate = null;
+
+			if (type.equals("preOrder") || type.equals("uponArrivalOrder")) {
+				System.out.println("first if");
+				PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByLess);
+				stm.setString(1, parkingLot);
+				stm.setString(2, vehicleNumber);
+				ResultSet res = stm.executeQuery();
+				while (res.next()) {
+					customerId = res.getString("customerId");
+					arrivingDate = res.getString("arrivingDate");
+					arrivingAt = res.getString("arrivingAt");
+					leavingDate = res.getString("leavingDate");
+					leavingAt = res.getString("leavingAt");
+					orderId = res.getInt("orderID");
+					arrivingDate = arrivingDate + " " + arrivingAt;
+					try {
+						arriving = fulldateFormat.parse(arrivingDate);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					arrivingDate = leavingDate + " " + leavingAt;
+					try {
+						leaving = fulldateFormat.parse(arrivingDate);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					diff = arriving.getTime() - now.getTime();
+					diff /= 60000;
+					diff1 = leaving.getTime() - now.getTime();
+					diff1 /= 60000;
+
+					if (diff1 > 0 && diff < -3) {
+						PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.setArrivingLate);
+						stmm.setInt(1, orderId);
+						stmm.setString(2, customerId);
+						stmm.setString(3, vehicleNumber);
+						stmm.executeUpdate();
+						diff = 0;
+					}
+					if (diff < 3 || diff > -3) {
+						System.out.println("can enter is true");
+						canEnter = true;
+						break;
+					}
+				}
+				System.out.println("Order does not exist!");
+				return false;
+			}
+
+			if (!canEnter && type.equals("regularSubscription")) {
+				PreparedStatement stm = c
+						.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByVehicleNumber);
+				stm.setString(1, vehicleNumber);
+				ResultSet res = stm.executeQuery();
+				while (res.next()) {
+					if (res.getString("parkingLot").equals(parkingLot)) {
+						customerId = res.getString("customerId");
+						leavingAt = res.getString("leavingAt");
+						leavingDate = dateFormat.format(now);
+						int day = now.getDay();
+						if (day == 5 || day == 6) {
+							System.out.println(
+									"Regular Subscriptions can't get in on weekends, come on a different Day:)");
+							return false;
+						}
+						canEnter = true;
+						break;
+					}
+				}
+			}
+
+			if (!canEnter && type.equals("fullSubscription")) {
+				PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByVehicleNumber);
+				stm.setString(1, vehicleNumber);
+				ResultSet res = stm.executeQuery();
+				while (res.next()) {
+					customerId = res.getString("customerId");
+					java.util.Date now1 = new java.util.Date();
+					java.util.Calendar calenedar = java.util.Calendar.getInstance();
+					calenedar.setTime(now1);
+					calenedar.add(java.util.Calendar.DATE, 14);
+					now1 = calenedar.getTime();
+					leavingAt = timeFormat.format(now1);
+					leavingDate = dateFormat.format(now1);
+					arrivedSince = dateFormat.format(now);
+					arriving = startingDateFormat.parse(res.getString("startingDate"));
+					//startingDate = dateFormat.format(arriving);
+					
+					if((arriving.getTime()/(1000*60*60*24))<28) {
+						canEnter = true;
+						PreparedStatement stmm = c
+								.prepareStatement(sqlStatements.Allstatements.setFullSubscripsionArrivedSince);
+						stmm.setString(1, arrivedSince);
+						stmm.setString(2, customerId);
+						stmm.setString(3, vehicleNumber);
+						break;
+					}
+				}
+				if(canEnter == false) System.out.println("You have no Full Subscription!");
+			}
+
+			if (canEnter) {
+				System.out.println("going to the other function");
+				try {
+					ps = getOptemalParkingSpot(parkingLot, leavingDate, leavingAt);
+					System.out.println("back from calculating optimal");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				setParkingSpotAsOccupied(parkingLot, customerId, vehicleNumber, ps[0], ps[1], ps[2], leavingDate,
+						leavingAt, type);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public double removeCarFromParkingLot(String vehicleNumber, String parkingLot) throws SQLException, Exception {
+		String customerId = null;
+		String leavingDate = null;
+		String leavingAt = null;
+		String arrivingDate = null;
+		String arrivingAt = null;
+		String temp = null;
+		java.util.Date leaving = null;
+		java.util.Date now = new java.util.Date();
+		String type = null;
+		int row = -1, column = -1, width = -1;
+		long diff;
+
+		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
+		if (vehicleNumber != null && parkingLot != null) {
+			double cost = 0;
+			PreparedStatement stm = c
+					.prepareStatement(sqlStatements.Allstatements.getVehicleByVehicleNumberAndParkingLot);
+			stm.setString(1, vehicleNumber);
+			stm.setString(2, parkingLot);
+			ResultSet res = stm.executeQuery();
+			while (res.next()) {
+				row = res.getInt("row");
+				column = res.getInt("column");
+				width = res.getInt("width");
+				leavingDate = res.getString("leavingDate");
+				leavingAt = res.getString("leavingAt");
+				type = res.getString("type");
+				customerId = res.getString("customerId");
+			}
+			temp = leavingDate + " " + leavingAt;
+			leaving = fullDateFormat.parse(temp);
+			diff = now.getTime() - leaving.getTime();
+			diff /= 60000;
+			if (diff > 3) {
+				PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.setLeavingLate);
+				stmm.setString(1, customerId);
+				stmm.setString(2, vehicleNumber);
+				stmm.setString(3, parkingLot);
+				stmm.setString(4, leavingDate);
+				stmm.setString(5, leavingAt);
+				stmm.executeQuery();
+			}
+			if (type.equals("uponArrivalOrder")) {
+				OrderType uponArrival = OrderType.uponArrivalOrder;
+				PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.getOrderByNotArriving);
+				stmm.setString(1, parkingLot);
+				stmm.setString(2, vehicleNumber);
+				stmm.setString(3, customerId);
+				stmm.setString(4, leavingDate);
+				stmm.setString(5, leavingAt);
+				ResultSet ress = stmm.executeQuery();
+				while (ress.next()) {
+					arrivingDate = res.getString("arrivingDate");
+					arrivingAt = res.getString("arrivingAt");
+				}
+				cost = getOrderCost(arrivingAt, leavingAt, arrivingDate, leavingDate, uponArrival);
+			}
+
+			unsetParkingSpotAsOccupied(parkingLot, customerId, vehicleNumber, row, column, width, leavingDate,
+					leavingAt);
+			rearrangeParkingLot(parkingLot, row, column, width);
+
+			return cost;
+		}
+		return -1;
+	}
+
+	public boolean setParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
+			int column, int width, String leavingDate, String leavingAt, String type) throws SQLException {
+		// CPS cps = CPS.getInstance();
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
+		stm.setString(1, parkingLot);
+		stm.setInt(2, row);
+		stm.setInt(3, column);
+		stm.setInt(4, width);
+		ResultSet res = stm.executeQuery();
+		while (res.next()) {
+			System.out.println("There is a car in that Parking Spot! , try a different one :)");
+			return false;
+		}
+
+		stm = c.prepareStatement(sqlStatements.Allstatements.enterVehicleIntoParkingLot);
+		stm.setString(1, vehicleNumber);
+		stm.setString(2, customerId);
+		stm.setString(3, parkingLot);
+		stm.setInt(4, row);
+		stm.setInt(5, column);
+		stm.setInt(6, width);
+		stm.setString(7, leavingDate);
+		stm.setString(8, leavingAt);
+		stm.setString(9, type);
+		stm.executeUpdate();
+		return true;
+		// for (ParkingLot parkinglot : cps.getParkingLots()) {
+		// if (parkinglot.getName().equals(parkingLot)) {
+		// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+		// ParkingSpot ps = tmp[row][column][width];
+		// if (ps.isOccupied() == false) {
+		// parkinglot.setOccupiedParkingSpot(row, column, width);
+		// if (ps.isSaved() == true) {
+		// parkinglot.unsaveParkingSpot(row, column, width);
+		// }
+		// }
+		// }
+		// }
+
+	}
+
+	public void unsetParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
+			int column, int width, String leavingDate, String leavingAt) throws SQLException {
+		CPS cps = CPS.getInstance();
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
+		stm.setString(1, parkingLot);
+		stm.setInt(2, row);
+		stm.setInt(3, column);
+		stm.setInt(4, width);
+		ResultSet res = stm.executeQuery();
+		while (!res.next()) {
+			System.out.println("There is NO car in that Parking Spot! , try a different one :)");
+			return;
+		}
+
+		stm = c.prepareStatement(sqlStatements.Allstatements.removeVehicleFromParkingLot);
+		stm.setString(1, vehicleNumber);
+		stm.setString(2, customerId);
+		stm.setString(3, parkingLot);
+		stm.setInt(4, row);
+		stm.setInt(5, column);
+		stm.setInt(6, width);
+		stm.executeUpdate();
+
+		for (ParkingLot parkinglot : cps.getParkingLots()) {
+			if (parkinglot.getName().equals(parkingLot)) {
+				ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+				ParkingSpot ps = tmp[row][column][width];
+				if (ps.isOccupied() == true) {
+					parkinglot.unsetOccupiedParkingSpot(row, column, width);
+				}
+			}
+		}
+	}
+
+	public Order getVehicleOrderByParkinLotAndSpot(String parkingLot, int row, int column, int width)
+			throws SQLException {
+		Order o = null;
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
+		stm.setString(1, parkingLot);
+		stm.setInt(2, row);
+		stm.setInt(3, column);
+		stm.setInt(4, width);
+		ResultSet res = stm.executeQuery();
+		while (res.next()) {
+			o = new Order(0, OrderType.preOrder, res.getString("parkingLot"), "null", res.getString("leavingDate"),
+					"null", res.getString("leavingAt"), "null", "null", false, false, false);
+		}
+
+		return o;
+	}
+
+	public int getWidthByParkingLot(String parkingLot) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
+		stm.setString(1, parkingLot);
+		ResultSet res = stm.executeQuery();
+		int currWidth = 0;
+		while (res.next()) {
+			currWidth = res.getInt("width");
+		}
+		return currWidth;
+	}
+
+	public int[] getOptemalParkingSpot(String parkingLot, String ThisLeavingDate, String ThisLeavingAt)
+			throws SQLException, Exception {
+		System.out.println("calculating optimal");
+		int[] optemalps = new int[3];
+		Order order;
+		boolean optemal = false;
+		// ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+		int currWidth = getWidthByParkingLot(parkingLot);
+		ParkingSpot[][][] currentImage = getParkingLotImageNew(parkingLot);
+		boolean set = false;
+		String LeavingDate = null;
+		String LeavingAt = null;
+		ThisLeavingDate = ThisLeavingDate + " " + ThisLeavingAt;
+		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		java.util.Date thisDate = fullDateFormat.parse(ThisLeavingDate);
+		java.util.Date Date = null;
+		long diff = -1;
+
+		if (currentImage == null) {
+			System.out.println("it's null");
+			return optemalps;
+		}
+
+		for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < currWidth; k++) {
+				ParkingSpot tmp = currentImage[0][i][k];
+				if (tmp.isFaulted() == false && tmp.isOccupied() == false && tmp.isSaved() == false) {
+					optemal = true;
+					optemalps[0] = 0;
+					optemalps[1] = i;
+					optemalps[2] = k;
+					System.out.println("Row" + optemalps[0]);
+					System.out.println("Column" + optemalps[1]);
+					System.out.println("Width" + optemalps[2]);
+					return optemalps;
+				}
+			}
+		}
+//		if (optemal == true) {
+//
+//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//			System.out.println("Row" + optemalps[0]);
+//			System.out.println("Column" + optemalps[1]);
+//			System.out.println("Width" + optemalps[2]);
+//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//
+//			return optemalps;
+//		}
+
+		for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < currWidth; k++) {
+				ParkingSpot tmp = currentImage[1][i][k];
+				if (tmp.isFaulted() == false && tmp.isOccupied() == false && tmp.isSaved() == false) {
+					if (!set) {
+						optemal = true;
+						optemalps[0] = 1;
+						optemalps[1] = i;
+						optemalps[2] = k;
+						set = true;
+						tmp = currentImage[0][i][k];
+						if (tmp.isOccupied() == true) {
+							order = getVehicleOrderByParkinLotAndSpot(parkingLot, 0, i, k);
+							if (order != null) {
+								LeavingDate = order.getLeavingDate();
+								LeavingAt = order.getArrivingAt();
+								LeavingDate = LeavingDate + " " + LeavingAt;
+								Date = fullDateFormat.parse(LeavingDate);
+								diff = Date.getTime() - thisDate.getTime();
+							}
+						} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
+							diff = 0;
+							System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							System.out.println("Row" + optemalps[0]);
+							System.out.println("Column" + optemalps[1]);
+							System.out.println("Width" + optemalps[2]);
+							System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							return optemalps;
+						}
+					} else {
+						ParkingSpot tmp1 = currentImage[0][i][k];
+						if (diff != 0 && (tmp1.isFaulted() == true || tmp1.isSaved() == true)) {
+							optemal = true;
+							optemalps[0] = 1;
+							optemalps[1] = i;
+							optemalps[2] = k;
+							diff = 0;
+							return optemalps;
+						} else if (tmp1.isOccupied() == true) {
+							order = getVehicleOrderByParkinLotAndSpot(parkingLot, 0, i, k);
+							if (order != null) {
+								LeavingDate = order.getLeavingDate();
+								LeavingAt = order.getArrivingAt();
+								LeavingDate = LeavingDate + " " + LeavingAt;
+								Date = fullDateFormat.parse(LeavingDate);
+								long diff1 = Date.getTime() - thisDate.getTime();
+								if (diff != 0 && diff1 < diff) {
+									optemal = true;
+									optemalps[0] = 1;
+									optemalps[1] = i;
+									optemalps[2] = k;
+									diff = diff1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (optemal == true) {
+
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			System.out.println("Row" + optemalps[0]);
+			System.out.println("Column" + optemalps[1]);
+			System.out.println("Width" + optemalps[2]);
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			return optemalps;
+		}
+		set = false;
+		diff = -1;
+
+		for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < currWidth; k++) {
+				ParkingSpot tmp = currentImage[2][i][k];
+				if (tmp.isFaulted() == false && tmp.isOccupied() == false && tmp.isSaved() == false) {
+					if (!set) {
+						optemal = true;
+						optemalps[0] = 2;
+						optemalps[1] = i;
+						optemalps[2] = k;
+						set = true;
+						tmp = currentImage[1][i][k];
+						if (tmp.isOccupied() == true) {
+							order = getVehicleOrderByParkinLotAndSpot(parkingLot, 1, i, k);
+							if (order != null) {
+								LeavingDate = order.getLeavingDate();
+								LeavingAt = order.getArrivingAt();
+								LeavingDate = LeavingDate + " " + LeavingAt;
+								Date = fullDateFormat.parse(LeavingDate);
+								diff = Date.getTime() - thisDate.getTime();
+							}
+						} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
+							tmp = currentImage[0][i][k];
+							if (tmp.isOccupied() == true) {
+								order = getVehicleOrderByParkinLotAndSpot(parkingLot, 0, i, k);
+								if (order != null) {
+									LeavingDate = order.getLeavingDate();
+									LeavingAt = order.getArrivingAt();
+									LeavingDate = LeavingDate + " " + LeavingAt;
+									Date = fullDateFormat.parse(LeavingDate);
+									diff = Date.getTime() - thisDate.getTime();
+								}
+							} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
+								diff = 0;
+
+								System.out.println(
+										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								System.out.println("Row" + optemalps[0]);
+								System.out.println("Column" + optemalps[1]);
+								System.out.println("Width" + optemalps[2]);
+								System.out.println(
+										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								return optemalps;
+							}
+						}
+					} else {
+						ParkingSpot tmp1 = currentImage[1][i][k];
+						if (tmp1.isFaulted() == true || tmp1.isSaved() == true) {
+							ParkingSpot tmp2 = currentImage[0][i][k];
+							if (tmp2.isOccupied() == true) {
+								order = getVehicleOrderByParkinLotAndSpot(parkingLot, 0, i, k);
+								if (order != null) {
+									LeavingDate = order.getLeavingDate();
+									LeavingAt = order.getArrivingAt();
+									LeavingDate = LeavingDate + " " + LeavingAt;
+									Date = fullDateFormat.parse(LeavingDate);
+									long diff1 = Date.getTime() - thisDate.getTime();
+									if (diff1 < diff) {
+										optemal = true;
+										optemalps[0] = 2;
+										optemalps[1] = i;
+										optemalps[2] = k;
+										diff = diff1;
+									}
+								}
+							} else if (tmp2.isFaulted() == true || tmp2.isSaved() == true) {
+								diff = 0;
+
+								System.out.println(
+										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								System.out.println("Row" + optemalps[0]);
+								System.out.println("Column" + optemalps[1]);
+								System.out.println("Width" + optemalps[2]);
+								System.out.println(
+										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								return optemalps;
+							}
+						} else if (tmp1.isOccupied() == true) {
+							order = getVehicleOrderByParkinLotAndSpot(parkingLot, 0, i, k);
+							if (order != null) {
+								LeavingDate = order.getLeavingDate();
+								LeavingAt = order.getArrivingAt();
+								LeavingDate = LeavingDate + " " + LeavingAt;
+								Date = fullDateFormat.parse(LeavingDate);
+								long diff1 = Date.getTime() - thisDate.getTime();
+								if (diff1 < diff) {
+									optemal = true;
+									optemalps[0] = 0;
+									optemalps[1] = i;
+									optemalps[2] = k;
+									diff = diff1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("Row" + optemalps[0]);
+		System.out.println("Column" + optemalps[1]);
+		System.out.println("Width" + optemalps[2]);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		return optemalps;
+	}
+
+	public void rearrangeParkingLot(String parkingSpot, int row, int column, int width) throws SQLException, Exception {
+		String vehicleNumber = null;
+		String parkingLot = null;
+		boolean RowOneMoved = false;
+		boolean RowIsZero = true;
+		if (row == 1)
+			RowIsZero = false;
+
+		if (row == 0 || row == 1) {
+			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
+			stm.setString(1, parkingSpot);
+			stm.setInt(2, row + 1);
+			stm.setInt(3, column);
+			stm.setInt(4, width);
+			ResultSet res = stm.executeQuery();
+			while (res.next()) {
+				RowOneMoved = true;
+				vehicleNumber = res.getString("vehicle");
+				parkingLot = res.getString("parkingLot");
+			}
+			stm = c.prepareStatement(sqlStatements.Allstatements.updateRowByRestAndVehicle);
+			stm.setInt(1, row);
+			stm.setString(2, vehicleNumber);
+			stm.setString(2, parkingLot);
+			stm.setInt(4, column);
+			stm.setInt(5, width);
+			stm.executeQuery();
+
+			if (RowIsZero) {
+
+				stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
+				stm.setString(1, parkingSpot);
+				stm.setInt(2, row + 2);
+				stm.setInt(3, column);
+				stm.setInt(4, width);
+				res = stm.executeQuery();
+				while (res.next()) {
+					vehicleNumber = res.getString("vehicle");
+					parkingLot = res.getString("parkingLot");
+				}
+				stm = c.prepareStatement(sqlStatements.Allstatements.updateRowByRestAndVehicle);
+				if (RowOneMoved == false)
+					stm.setInt(1, row);
+				else
+					stm.setInt(1, row + 1);
+				stm.setString(2, vehicleNumber);
+				stm.setString(2, parkingLot);
+				stm.setInt(4, column);
+				stm.setInt(5, width);
+				stm.executeQuery();
+			}
+		}
 	}
 
 }

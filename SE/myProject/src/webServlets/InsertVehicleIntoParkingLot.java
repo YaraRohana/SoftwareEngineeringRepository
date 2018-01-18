@@ -3,6 +3,7 @@ package webServlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,6 +46,9 @@ public class InsertVehicleIntoParkingLot extends HttpServlet {
 			try {
 				res=da.insertCarIntoParkingLot(parkingLot, vehicleNumber, type);
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

@@ -2,7 +2,6 @@ package webServlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,13 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.CPS;
 import allClasses.Customer;
-import allClasses.FullSubscription;
 import allClasses.OneCarRegularSubscription;
-import allClasses.Order;
 import allClasses.Vehicle;
-import allClasses.Order.OrderType;
 import allClasses.Subscription.subscriptionType;
 import da.DataAccess;
 
@@ -57,6 +52,7 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		boolean res1 = false;
+		PrintWriter out = response.getWriter();
 		if (vehicleNumber != null && customerId != null) {
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
@@ -91,10 +87,8 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 				e.printStackTrace();
 			}
 
-			PrintWriter out = response.getWriter();
-			out.println(res1);
-			PrintWriter out1 = response.getWriter();
-			out1.println(subsId);
+			out.println(res);
+			out.println(subsId);
 		}
 
 	}

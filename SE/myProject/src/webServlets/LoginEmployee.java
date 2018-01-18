@@ -40,6 +40,7 @@ public class LoginEmployee extends HttpServlet {
 		String pass = request.getParameter("password");
 		DataAccess da = new DataAccess();
 		boolean res = false;
+		PrintWriter out=response.getWriter();
 		if (name != null & pass != null) {
 			try {
 				res = da.checkIfEmployeeExists(name, pass);
@@ -48,28 +49,38 @@ public class LoginEmployee extends HttpServlet {
 			}
 			if (!res) {
 				System.out.println("Employee does not exist!");
-				PrintWriter out=response.getWriter();
+				//PrintWriter out=response.getWriter();
 				out.println(res);
+				out.println("Employee does not exist!");
 				return;
 			} else {
-				String type=null;
+				try {
+					res=da.getEmployeeConnectionStatus(name);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if(res==true) {
+					out.println(res);
+					out.println("Employee already connected");
+					System.out.println("Employee already connected");
+					return;
+				}
 				String parkingLot=null;
 				try {
 					da.loginEmployee(name,pass);
-					type=da.getEmployeeType(name);
+					String type=da.getEmployeeType(name);
 					parkingLot=da.getEmployeeParkingLot(name);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
-			PrintWriter out=response.getWriter();
-			out.println(res);
-			PrintWriter out1=response.getWriter();
-			out1.println(type);
+				res=true;
+				out.println(res);
+				out.println("Employee logged in successfully");
 			if(parkingLot!=null) {
-				PrintWriter out2=response.getWriter();
-				out2.println(parkingLot);
+				//PrintWriter out2=response.getWriter();
+				out.println(parkingLot);
 			}
 			
 			}	

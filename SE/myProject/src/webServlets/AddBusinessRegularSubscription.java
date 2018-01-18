@@ -59,7 +59,18 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String vehicles = request.getParameter("vehicles");
 		Date date1 = null;
 		if (customerId != null && email != null && startDate != null && vehicles != null) {
-			int realVehicles = Integer.parseInt(vehicles);
+	//		int realVehicles = Integer.parseInt(vehicles);
+			boolean res=false;
+			Customer customer = new Customer(customerId, email);
+			customer.setCredit(0);
+			customer.setConnected(false);
+			try {
+				res = da.addCustomer(customer);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			try {
 				date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
 			} catch (ParseException e) {
@@ -75,12 +86,13 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 				e1.printStackTrace();
 			}
 			i = 0;
+			String subsId = da.getSaltString();
+
 			try {
-				while (v.getJSONObject(i) != null) {
+				for (i=0 ; i<v.length();i++) {
 					String vehicleNum = v.getJSONObject(i).getString("vehicleNum");
 					String parkingLot = v.getJSONObject(i).getString("parkingLot");
 					String leavingAt = v.getJSONObject(i).getString("leavingAt");
-					String subsId = da.getSaltString();
 					// pl = parkingLot;
 					tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
 							subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
@@ -90,12 +102,15 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 						System.out.println("Unable to add business subscription");
 						e.printStackTrace();
 					}
-					i++;
+
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+			PrintWriter out = response.getWriter();
+			out.println(subsId);
 		}
 
 	}

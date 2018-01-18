@@ -57,7 +57,7 @@ public class LoginCustomer extends HttpServlet {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			if (!res) {
+			if (res) {
 				System.out.println("Customer already connected");
 				PrintWriter out = response.getWriter();
 				out.println(res);

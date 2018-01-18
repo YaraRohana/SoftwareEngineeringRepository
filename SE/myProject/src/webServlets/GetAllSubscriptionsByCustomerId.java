@@ -72,6 +72,7 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 					jsonSub.put("vehicleNumber", subscription.getVehicleNumber());
 					jsonSub.put("startingDate", subscription.getStartDate());
 					jsonSub.put("email", subscription.getEmail());
+					jsonSub.put("subsId", subscription.getSubsciptionId());
 					if(subscription instanceof FullSubscription){
 						//System.out.println("yes");
 						fs = (FullSubscription) subscription;
@@ -90,7 +91,6 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 						jsonSub.put("parkingLot", bs.getParkingLot());
 						jsonSub.put("leavingTime", bs.getLeavingAt());
 					}
-					
 					out.println(jsonSub);
 				} catch (JSONException e) {
 					e.printStackTrace();
