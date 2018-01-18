@@ -13,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import da.DataAccess;
 
 /**
- * Servlet implementation class SetFaultedParkingSpot
+ * Servlet implementation class ExitVehicleFromParkingLot
  */
-@WebServlet("/SetFaultedParkingSpot")
-public class SetFaultedParkingSpot extends HttpServlet {
+@WebServlet("/ExitVehicleFromParkingLot")
+public class ExitVehicleFromParkingLot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SetFaultedParkingSpot() {
+    public ExitVehicleFromParkingLot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,25 +33,24 @@ public class SetFaultedParkingSpot extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String parkingLot = request.getParameter("parkingLot");
-		String row = request.getParameter("row");
-		String column = request.getParameter("column");
-		String width = request.getParameter("width");
-		DataAccess da = new DataAccess();
-		if (parkingLot != null && column != null && row != null && width != null) {
-			int realRow = Integer.parseInt(row);
-			int realCol = Integer.parseInt(column);
-			int realWidth = Integer.parseInt(width);
-			boolean res = false;
+		String parkingLot=request.getParameter("parkingLot");
+		System.out.println(parkingLot);
+		String vehicleNumber=request.getParameter("vehicleNumber");
+		System.out.println(vehicleNumber);
+		DataAccess da=new DataAccess();
+		double res = -1;
+		if(parkingLot != null && vehicleNumber != null) {
+			System.out.println("we're in");
 			try {
-				res=da.setParkingSpotAsFaulted(parkingLot, realRow, realCol, realWidth);
-			} catch (SQLException e) {
+				res = da.removeCarFromParkingLot(vehicleNumber, parkingLot);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			PrintWriter out = response.getWriter();
-			out.println(res);
 		}
+		if(res>=0) System.out.println("res is" + res);
+		PrintWriter out=response.getWriter();
+		out.println(res);
 	}
 
 	/**

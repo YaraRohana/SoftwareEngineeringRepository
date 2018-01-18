@@ -24,7 +24,7 @@ import da.DataAccess;
 /**
  * Servlet implementation class FullSubscription
  */
-@WebServlet("/FullSubscription")
+@WebServlet("/AddFullSubscription")
 public class AddFullSubscription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

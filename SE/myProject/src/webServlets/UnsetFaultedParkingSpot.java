@@ -44,7 +44,7 @@ public class UnsetFaultedParkingSpot extends HttpServlet {
 			int realWidth = Integer.parseInt(width);
 			boolean res = false;
 			try {
-				res = da.unsetFaultedParkingSpot(parkingLot, realRow, realCol, realWidth);
+				da.unsetParkingSpotAsSavedOrFaulted(parkingLot, realRow, realCol, realWidth);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

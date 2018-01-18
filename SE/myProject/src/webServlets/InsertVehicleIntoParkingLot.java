@@ -37,17 +37,18 @@ public class InsertVehicleIntoParkingLot extends HttpServlet {
 		System.out.println(parkingLot);
 		String vehicleNumber=request.getParameter("vehicleNumber");
 		System.out.println(vehicleNumber);
+		String type = request.getParameter("type");
 		DataAccess da=new DataAccess();
 		boolean res=false;
-	/*	if(parkingLot!=null && vehicleNumber!=null) {
+		if(parkingLot != null && vehicleNumber != null && type != null) {
 			System.out.println("we're in");
 			try {
-				res=da.insertCarIntoParkingLot(parkingLot, vehicleNumber);
+				res=da.insertCarIntoParkingLot(parkingLot, vehicleNumber, type);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}*/
+		}
 		PrintWriter out=response.getWriter();
 		out.println(res);
 	}

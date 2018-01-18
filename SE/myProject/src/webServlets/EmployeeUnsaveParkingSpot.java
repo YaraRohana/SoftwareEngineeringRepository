@@ -44,13 +44,13 @@ public class EmployeeUnsaveParkingSpot extends HttpServlet {
 			int realCol = Integer.parseInt(column);
 			int realWidth = Integer.parseInt(width);
 			try {
-				res=da.unsaveParkingSpot(parkingLot, realRow, realCol, realWidth);
+				da.unsetParkingSpotAsSavedOrFaulted(parkingLot, realRow, realCol, realWidth);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			PrintWriter out = response.getWriter();
-			out.println(res);
+//			 PrintWriter out = response.getWriter();
+//			 out.println(res);
 		}
 	}
 

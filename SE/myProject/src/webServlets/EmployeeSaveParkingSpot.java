@@ -50,8 +50,8 @@ public class EmployeeSaveParkingSpot extends HttpServlet {
 			int realWidth = Integer.parseInt(width);
 			boolean res = false;
 			try {
-				res = da.saveParkingSpot(parkingLot, realRow, realCol, realWidth);
-				da.printParkingSpots(parkingLot);
+				res = da.setParkingSpotAsSaved(parkingLot, realRow, realCol, realWidth);
+				// da.printParkingSpots(parkingLot);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

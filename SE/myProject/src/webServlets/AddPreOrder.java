@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -37,14 +38,17 @@ public class AddPreOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String arrivingTime = request.getParameter("arrivingTime");
-		String leavingTime = request.getParameter("leavingTime");
-		String leavingDate = request.getParameter("leavingDate");
-		String arrivingDate = request.getParameter("arrivingDate");
-		String parkingLot = request.getParameter("parkingLot");
+	
 		String customerId = request.getParameter("id");
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
+		String parkingLot = request.getParameter("parkingLot");
+
+		String arrivingTime = request.getParameter("arrivingTime");
+		String leavingTime = request.getParameter("leavingTime");
+		String arrivingDate = request.getParameter("arrivingDate");
+		String leavingDate = request.getParameter("leavingDate");
+
 		DataAccess da = new DataAccess();
 		boolean res = false;
 		if (customerId != null) {
@@ -74,7 +78,8 @@ public class AddPreOrder extends HttpServlet {
 				e.printStackTrace();
 				return;
 			}
-
+			PrintWriter out=response.getWriter();
+			out.println(res);
 		}
 	}
 
@@ -84,7 +89,7 @@ public class AddPreOrder extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		doGet(request,response);
 	}
 
 }

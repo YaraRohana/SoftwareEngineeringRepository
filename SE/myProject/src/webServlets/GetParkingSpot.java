@@ -10,19 +10,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import allClasses.ParkingSpot;
 import da.DataAccess;
 
 /**
- * Servlet implementation class SetFaultedParkingSpot
+ * Servlet implementation class GetParkingSpot
  */
-@WebServlet("/SetFaultedParkingSpot")
-public class SetFaultedParkingSpot extends HttpServlet {
+@WebServlet("/GetParkingSpot")
+public class GetParkingSpot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SetFaultedParkingSpot() {
+    public GetParkingSpot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,15 +43,17 @@ public class SetFaultedParkingSpot extends HttpServlet {
 			int realRow = Integer.parseInt(row);
 			int realCol = Integer.parseInt(column);
 			int realWidth = Integer.parseInt(width);
-			boolean res = false;
+			ParkingSpot res = null;
 			try {
-				res=da.setParkingSpotAsFaulted(parkingLot, realRow, realCol, realWidth);
+				res=da.getParkingSpotStatus(parkingLot, realRow, realCol, realWidth);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			PrintWriter out = response.getWriter();
-			out.println(res);
+			out.println(res.isFaulted());
+			out.println(res.isOccupied());
+			out.println(res.isSaved());
 		}
 	}
 

@@ -56,59 +56,46 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String customerId = request.getParameter("customerId");
 		String email = request.getParameter("email");
 		String startDate = request.getParameter("date");
-		Date date1 = null;
-		if(customerId!=null && email!=null && startDate!=null ) {
-		try {
-			date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
 		String vehicles = request.getParameter("vehicles");
-		if(vehicles==null) {
-			System.out.println("it's null");
-		}
-		JSONArray v = new JSONArray();
-		try {
-			v = new JSONArray(vehicles);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		i = 0;
-		try {
-			while (v.getJSONObject(i) != null) {
-				String vehicleNum = v.getJSONObject(i).getString("vehicleNum");
-				String parkingLot = v.getJSONObject(i).getString("parkingLot");
-				String leavingAt = v.getJSONObject(i).getString("leavingAt");
-				String subsId = da.getSaltString();
-				//pl = parkingLot;
-				tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
-						subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
-				try {
-					da.addBuisnessRegularSubscription(tmp);
-				} catch (SQLException e) {
-					System.out.println("Unable to add business subscription");
-					e.printStackTrace();
-				}
-				i++;
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if (customerId != null) {
+		Date date1 = null;
+		if (customerId != null && email != null && startDate != null && vehicles != null) {
+			int realVehicles = Integer.parseInt(vehicles);
 			try {
-				price = da.getBusinessRegularSubscriptionCost(customerId);
-			} catch (NumberFormatException | SQLException e) {
+				date1 = new SimpleDateFormat("dd-MM-yyyy").parse(startDate);
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			PrintWriter out = response.getWriter();
-			out.println(price);
-		}
+			java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
+			JSONArray v = new JSONArray();
+			try {
+				v = new JSONArray(vehicles);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			i = 0;
+			try {
+				while (v.getJSONObject(i) != null) {
+					String vehicleNum = v.getJSONObject(i).getString("vehicleNum");
+					String parkingLot = v.getJSONObject(i).getString("parkingLot");
+					String leavingAt = v.getJSONObject(i).getString("leavingAt");
+					String subsId = da.getSaltString();
+					// pl = parkingLot;
+					tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
+							subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
+					try {
+						da.addBuisnessRegularSubscription(tmp);
+					} catch (SQLException e) {
+						System.out.println("Unable to add business subscription");
+						e.printStackTrace();
+					}
+					i++;
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
