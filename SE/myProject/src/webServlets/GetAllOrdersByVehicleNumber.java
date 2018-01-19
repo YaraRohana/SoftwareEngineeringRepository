@@ -23,61 +23,70 @@ import da.DataAccess;
 @WebServlet("/GetAllOrdersByVehicleNumber")
 public class GetAllOrdersByVehicleNumber extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetAllOrdersByVehicleNumber() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String vehicle=request.getParameter("vehicleNumber");
-		ArrayList<Order> orders=new ArrayList<Order>();
-		DataAccess da=new DataAccess();
-		try {
-			orders=da.getAllOrdersByVehicleNumber(vehicle);
-		} catch (SQLException e) {
-			System.out.println("Unable to retrieve orders for vehicle " +vehicle);
-			e.printStackTrace();
-		}
-		System.out.println("Orders of vehicle number: "+vehicle+":");
-		PrintWriter out = response.getWriter();
-		response.setContentType("application/json");
-		JSONObject jsonOrder;
-		for (Order order : orders) {
-			jsonOrder=new JSONObject();
-			try {
-				jsonOrder.put("order ID", order.getOrderId());
-				jsonOrder.put("type", order.getType());
-				jsonOrder.put("parking lot", order.getParkingLot());
-				jsonOrder.put("arriving at", order.getArrivingAt());
-				jsonOrder.put("leaving at", order.getLeavingAt());
-				jsonOrder.put("customer Id", order.getCustomerId());
-				jsonOrder.put("vehicle number", order.getVehicleNum());
-				out.println(jsonOrder);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			out.flush();
-			System.out.println(order.toString());
-		}
-		
-		
-		
+	public GetAllOrdersByVehicleNumber() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		String vehicle = request.getParameter("vehicleNumber");
+		ArrayList<Order> orders = new ArrayList<Order>();
+		DataAccess da = new DataAccess();
+		if (vehicle != null) {
+			PrintWriter out = response.getWriter();
+			try {
+				boolean result = da.checkIfVehicleExistsByNumber(vehicle);
+				if (result == false) {
+					out.println(result);
+					out.println("No orders found for vehicle number " + vehicle);
+					return;
+				}
+				orders = da.getAllOrdersByVehicleNumber(vehicle);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Orders of vehicle number: " + vehicle + ":");
+			response.setContentType("application/json");
+			JSONObject jsonOrder;
+			for (Order order : orders) {
+				jsonOrder = new JSONObject();
+				try {
+					jsonOrder.put("order ID", order.getOrderId());
+					jsonOrder.put("type", order.getType());
+					jsonOrder.put("parking lot", order.getParkingLot());
+					jsonOrder.put("arriving at", order.getArrivingAt());
+					jsonOrder.put("leaving at", order.getLeavingAt());
+					jsonOrder.put("customer Id", order.getCustomerId());
+					jsonOrder.put("vehicle number", order.getVehicleNum());
+					out.println(jsonOrder);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				out.flush();
+				System.out.println(order.toString());
+			}
+		}
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

@@ -38,23 +38,20 @@ public class AddPreOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-	
+
 		String customerId = request.getParameter("id");
 		String vehicle = request.getParameter("vehicle");
 		String email = request.getParameter("email");
 		String parkingLot = request.getParameter("parkingLot");
-
 		String arrivingTime = request.getParameter("arrivingTime");
 		String leavingTime = request.getParameter("leavingTime");
 		String arrivingDate = request.getParameter("arrivingDate");
 		String leavingDate = request.getParameter("leavingDate");
-
 		DataAccess da = new DataAccess();
 		boolean res = false;
-		if (customerId != null) {
-			Order o = new Order(0, OrderType.preOrder, parkingLot, arrivingDate, leavingDate, arrivingTime, leavingTime,
-					customerId, vehicle, false, false, false);
-
+		if (customerId != null && vehicle != null && email != null && parkingLot != null && leavingDate != null
+				&& leavingTime != null && arrivingDate != null && arrivingTime != null) {
+			
 			Customer c = new Customer(customerId, email);
 			try {
 				res = da.addCustomer(c);
@@ -62,14 +59,16 @@ public class AddPreOrder extends HttpServlet {
 				System.out.println("Unable to add customer");
 				e.printStackTrace();
 			}
-
-			Vehicle v = new Vehicle(vehicle, customerId, -1, -1, -1);
+			
+			Vehicle v = new Vehicle(vehicle, customerId);
 			try {
 				res = da.addVehicle(v);
 			} catch (SQLException e) {
 				System.out.println("Unable to add vehicle");
 				e.printStackTrace();
 			}
+			Order o = new Order(0, OrderType.preOrder, parkingLot, arrivingDate, leavingDate, arrivingTime, leavingTime,
+					customerId, vehicle, false, false, false);
 			System.out.println("trying to add order");
 			try {
 				res = da.addOrder(o);
@@ -78,7 +77,7 @@ public class AddPreOrder extends HttpServlet {
 				e.printStackTrace();
 				return;
 			}
-			PrintWriter out=response.getWriter();
+			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
 	}
@@ -89,7 +88,7 @@ public class AddPreOrder extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request,response);
+		doGet(request, response);
 	}
 
 }

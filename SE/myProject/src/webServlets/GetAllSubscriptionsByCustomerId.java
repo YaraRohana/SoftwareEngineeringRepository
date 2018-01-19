@@ -48,13 +48,24 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 		FullSubscription fs = null;
 		OneCarRegularSubscription oc = null;
 		OneCarBusinessSubscription bs = null;
-		
 		String id = request.getParameter("customerId");
-		System.out.println("here");
+		//System.out.println("here");
 		ArrayList<Subscription> subs = new ArrayList<Subscription>();
 		DataAccess da = new DataAccess();
+		boolean res=false;
+		PrintWriter out = response.getWriter();
 		if (id != null) {
-			System.out.println("fotna 3l if");
+			try {
+				res=da.checkIfCustomerExistsById(id);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(res==false) {
+				out.println(res);
+				out.print("User does not exist in CPS");
+				return;
+			}
 			try {
 				subs = da.getAllSubsByCustomerId(id);
 			} catch (SQLException e) {
@@ -62,7 +73,7 @@ public class GetAllSubscriptionsByCustomerId extends HttpServlet {
 				e.printStackTrace();
 			}
 			System.out.println("Subscriptions of customer " + id + ":");
-			PrintWriter out = response.getWriter();
+			
 			response.setContentType("application/json");
 			JSONObject jsonSub;
 			for (Subscription subscription : subs) {

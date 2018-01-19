@@ -50,8 +50,8 @@ public class AddComplaint extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			if (!res) {
-				System.out.println("Unable to add complaint");
+			if (res==false) {
+				System.out.println("Unable to add complaint,user does not exist in CPS");
 				return;
 			}
 			Complaint c = new Complaint(parkingLot, customerId, text);
@@ -77,7 +77,7 @@ public class AddComplaint extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
-
+		doGet(request, response);
 	}
 
 }

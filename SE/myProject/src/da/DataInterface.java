@@ -93,9 +93,9 @@ public interface DataInterface {
 
 	public void updateCreditByCustomerId(String customerId, double newCredit) throws SQLException;
 
-	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException;
+	//public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException;
 
-	public void printParkingSpots(String parkingLot) throws SQLException;
+	//public void printParkingSpots(String parkingLot) throws SQLException;
 
 	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception;
 
@@ -113,7 +113,7 @@ public interface DataInterface {
 
 	public ArrayList<Subscription> getAllRegSubsByStartingDate(Date startDate) throws SQLException;
 
-	public void printAllParkingLots() throws SQLException;
+	//public void printAllParkingLots() throws SQLException;
 
 	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException;
 

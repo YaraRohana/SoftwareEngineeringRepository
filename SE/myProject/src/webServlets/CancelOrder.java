@@ -60,13 +60,18 @@ public class CancelOrder extends HttpServlet {
 		if (customerId != null & vehicleNumber != null & parkingLot != null && arrivingAt != null
 				&& leavingAt != null & leavingDate != null && arrivingDate != null) {
 			System.out.println("we're in");
+			PrintWriter out=response.getWriter();
 			try {
 				res = da.checkIfOrderExistsByAllParameters(customerId, vehicleNumber, arrivingDate, arrivingAt,
 						leavingDate, leavingAt, parkingLot);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			if (res != null) {
+			if(res==null) {
+				out.println(false);
+				out.println("Order does not exist!");
+				return;
+			}
 				if (res.isCanceled() == false) {
 					try {
 						da.cancelOrder(res);
@@ -82,11 +87,8 @@ public class CancelOrder extends HttpServlet {
 				else {
 					System.out.println("Order already canceled,cannot cancel again");
 				}
-
-			}
-			PrintWriter out=response.getWriter();
+			
 			out.println(changedCredit);
-			//PrintWriter out=response.getWriter();
 			out.println(finalCredit);
 		}
 	}

@@ -52,8 +52,15 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 		String id = request.getParameter("customerId");
 		ArrayList<Order> orders = new ArrayList<Order>();
 		DataAccess da = new DataAccess();
+		boolean res = false;
 		if (id != null) {
+			PrintWriter out = response.getWriter();
 			try {
+				res = da.checkIfCustomerExistsById(id);
+				if (res == false) {
+					out.println(res);
+					out.println("User does not exist in CPS");
+				}
 				orders = da.getAllOrdersByCustomerId(id);
 				Iterator<Order> iter = orders.iterator();
 				while (iter.hasNext()) {
@@ -105,8 +112,6 @@ public class GetAllOrdersByCustomerId extends HttpServlet {
 				System.out.println("Unable to retrieve orders for customer " + id);
 				e.printStackTrace();
 			}
-			PrintWriter out = response.getWriter();
-
 			response.setContentType("application/json");
 			JSONObject jsonOrder;
 			for (Order order : orders) {

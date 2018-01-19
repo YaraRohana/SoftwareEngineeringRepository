@@ -124,9 +124,9 @@ public class DataAccess implements DataInterface {
 		stm.setString(1, customerId);
 		ResultSet rs = stm.executeQuery();
 		if (rs.next()) {
-			// System.out.println("User does not exist in CPS");
 			return true;
 		}
+		System.out.println("User does not exist in CPS");
 		return false;
 	}
 
@@ -140,7 +140,7 @@ public class DataAccess implements DataInterface {
 		}
 		return isConnected;
 	}
-	
+
 	public boolean getEmployeeConnectionStatus(String name) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
 		stm.setString(1, name);
@@ -212,8 +212,7 @@ public class DataAccess implements DataInterface {
 		stm.setString(1, complaint.getParkingLot());
 		stm.setString(2, complaint.getCustomerId());
 		stm.setString(3, complaint.getSubmissionDate());
-		stm.setBoolean(4, false);
-		stm.setString(5, complaint.getComplaintText());
+		stm.setString(4, complaint.getComplaintText());
 		stm.executeUpdate();
 		System.out.println("Complaint added successfully");
 		return true;
@@ -263,10 +262,7 @@ public class DataAccess implements DataInterface {
 	}
 
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException {
-		boolean result = checkIfVehicleExistsByNumber(vehicleNum);
-		if (!result) {
-			return null;
-		}
+
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByVehicleNum);
 		stm.setString(1, vehicleNum);
 		ResultSet res = stm.executeQuery();
@@ -345,8 +341,7 @@ public class DataAccess implements DataInterface {
 		ResultSet res = stm.executeQuery();
 		Vehicle v = null;
 		while (res.next()) {
-			v = new Vehicle(res.getString("vehicleNumber"), res.getString("customerID"), res.getInt("row"),
-					res.getInt("column"), res.getInt("width"));
+			v = new Vehicle(res.getString("vehicleNumber"), res.getString("customerID"));
 			allVehicles.add(v);
 		}
 		return allVehicles;
@@ -370,7 +365,7 @@ public class DataAccess implements DataInterface {
 			throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addOneCarRegularSubscription);
 		stm.setString(1, oneCarRegularSubscription.getCustomerId());
-		stm.setString(2,oneCarRegularSubscription.getSubsciptionId());
+		stm.setString(2, oneCarRegularSubscription.getSubsciptionId());
 		stm.setString(3, oneCarRegularSubscription.getVehicleNumber());
 		stm.setDate(4, oneCarRegularSubscription.getStartDate());
 		stm.setString(5, oneCarRegularSubscription.getParkingLot());
@@ -386,7 +381,6 @@ public class DataAccess implements DataInterface {
 		stm.setString(1, vehicleNum);
 		ResultSet res = stm.executeQuery();
 		if (res.next()) {
-			System.out.println("Vehicle exists in CPS");
 			return true;
 		}
 		return false;
@@ -563,7 +557,6 @@ public class DataAccess implements DataInterface {
 	@SuppressWarnings("deprecation")
 	public double getOrderCost(String arrivingAt, String leavingAt, String arrivingDate, String leavingDate,
 			OrderType type) throws SQLException, Exception {
-		// int h = 0;
 		double preOrderPrice = 0.0, uponArrivalPrice = 0.0;
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -576,9 +569,7 @@ public class DataAccess implements DataInterface {
 		ResultSet res = stm.executeQuery();
 		while (res.next()) {
 			preOrderPrice = Integer.parseInt(res.getString("preOrderPrice"));
-			// System.out.println("pre order price"+preOrderPrice);
 			uponArrivalPrice = Integer.parseInt(res.getString("uponArrivalPrice"));
-			// System.out.println("upon arrival price"+uporArrivalPrice);
 		}
 
 		long diff = 0;
@@ -591,8 +582,12 @@ public class DataAccess implements DataInterface {
 		double diffHours = diff / (60 * 60 * 1000) % 24;
 		if (diffMinutes != 0)
 			diffHours++;
-		if (LeavingAt.before(ArrivingAt))
+		if (LeavingAt.before(ArrivingAt)) {
 			diffHours = -diffHours;
+			diffHours++;
+		}
+
+		System.out.println("diff Hours: " + diffHours);
 
 		diff = LeavingDate.getTime() - ArrivingDate.getTime();
 		double diffDays = (int) (diff / (1000 * 60 * 60 * 24));
@@ -741,31 +736,33 @@ public class DataAccess implements DataInterface {
 		}
 	}
 
-	public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws SQLException {
-		if (parkingLot != null) {
-			CPS cps = CPS.getInstance();
-			for (ParkingLot i : cps.getParkingLots()) {
-				if (i.getName().equals(parkingLot)) {
-					System.out.println("found it,it's " + i.getName());
-					return i;
-				}
-			}
-		}
-		return null;
-	}
+	// public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws
+	// SQLException {
+	// if (parkingLot != null) {
+	// CPS cps = CPS.getInstance();
+	// for (ParkingLot i : cps.getParkingLots()) {
+	// if (i.getName().equals(parkingLot)) {
+	// System.out.println("found it,it's " + i.getName());
+	// return i;
+	// }
+	// }
+	// }
+	// return null;
+	// }
 
-	public void printParkingSpots(String parkingLot) throws SQLException {
-		ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				for (int k = 0; k < pl.getWidth(); k++) {
-					System.out.println("is Saved= " + pl.getParkingSpots()[i][j][k].isSaved() + " is Faulted= "
-							+ pl.getParkingSpots()[i][j][k].isFaulted() + " is Occupied= "
-							+ pl.getParkingSpots()[i][j][k].isOccupied());
-				}
-			}
-		}
-	}
+	// public void printParkingSpots(String parkingLot) throws SQLException {
+	// ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
+	// for (int i = 0; i < 3; i++) {
+	// for (int j = 0; j < 3; j++) {
+	// for (int k = 0; k < pl.getWidth(); k++) {
+	// System.out.println("is Saved= " + pl.getParkingSpots()[i][j][k].isSaved() + "
+	// is Faulted= "
+	// + pl.getParkingSpots()[i][j][k].isFaulted() + " is Occupied= "
+	// + pl.getParkingSpots()[i][j][k].isOccupied());
+	// }
+	// }
+	// }
+	// }
 
 	// public boolean saveParkingSpot(String parkingLot, int row, int column, int
 	// width) throws SQLException {
@@ -987,13 +984,13 @@ public class DataAccess implements DataInterface {
 	// return parkingSpots;
 	// }
 
-	public void printAllParkingLots() throws SQLException {
-		CPS cps = CPS.getInstance();
-		ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
-		for (ParkingLot parkingLot : parkingLots) {
-			System.out.println(parkingLot.getName());
-		}
-	}
+	// public void printAllParkingLots() throws SQLException {
+	// CPS cps = CPS.getInstance();
+	// ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
+	// for (ParkingLot parkingLot : parkingLots) {
+	// System.out.println(parkingLot.getName());
+	// }
+	// }
 
 	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException {
 		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -1171,8 +1168,10 @@ public class DataAccess implements DataInterface {
 		return currImage;
 	}
 
-	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber, String type) throws SQLException, ParseException {
-		if (parkingLot != null && vehicleNumber != null) {
+	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber, String type)
+			throws SQLException, ParseException {
+		if (parkingLot != null && vehicleNumber != null && type!=null) {
+			System.out.println("order is "+type);
 			long diff, diff1;
 			boolean canEnter = false;
 			String arrivingDate = null;
@@ -1190,8 +1189,7 @@ public class DataAccess implements DataInterface {
 			java.util.Date now = new java.util.Date();
 			java.util.Date arriving = null;
 			java.util.Date leaving = null;
-			java.util.Date startingDate = null;
-
+			 java.util.Date startingDate = null;
 			if (type.equals("preOrder") || type.equals("uponArrivalOrder")) {
 				System.out.println("first if");
 				PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByLess);
@@ -1199,7 +1197,9 @@ public class DataAccess implements DataInterface {
 				stm.setString(2, vehicleNumber);
 				ResultSet res = stm.executeQuery();
 				while (res.next()) {
+					System.out.println("we're in the while");
 					customerId = res.getString("customerId");
+					System.out.println(customerId+"**");
 					arrivingDate = res.getString("arrivingDate");
 					arrivingAt = res.getString("arrivingAt");
 					leavingDate = res.getString("leavingDate");
@@ -1239,8 +1239,6 @@ public class DataAccess implements DataInterface {
 						break;
 					}
 				}
-				System.out.println("Order does not exist!");
-				return false;
 			}
 
 			if (!canEnter && type.equals("regularSubscription")) {
@@ -1265,38 +1263,76 @@ public class DataAccess implements DataInterface {
 				}
 			}
 
-			if (!canEnter && type.equals("fullSubscription")) {
+
+			
+			if(!canEnter && type.equals("fullSubscription")) {
 				PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByVehicleNumber);
 				stm.setString(1, vehicleNumber);
 				ResultSet res = stm.executeQuery();
-				while (res.next()) {
+				while(res.next()) {
 					customerId = res.getString("customerId");
+					startingDate = res.getDate("startingDate");
+					String Starting = dateFormat.format(startingDate);
+					startingDate = dateFormat.parse(Starting);
+					System.out.println("starting Date: " + Starting);
 					java.util.Date now1 = new java.util.Date();
-					java.util.Calendar calenedar = java.util.Calendar.getInstance();
-					calenedar.setTime(now1);
+					java.util.Calendar calenedar = java.util.Calendar.getInstance(); 
+					calenedar.setTime(now1); 
 					calenedar.add(java.util.Calendar.DATE, 14);
 					now1 = calenedar.getTime();
 					leavingAt = timeFormat.format(now1);
 					leavingDate = dateFormat.format(now1);
-					arrivedSince = dateFormat.format(now);
-					arriving = startingDateFormat.parse(res.getString("startingDate"));
-					//startingDate = dateFormat.format(arriving);
 					
-					if((arriving.getTime()/(1000*60*60*24))<28) {
+					diff = now.getTime() - startingDate.getTime();
+					diff/= (60*60*24*1000);
+					System.out.println("days between the start of Full Subscription & today is: " + diff);
+					if(diff > -1 && diff < 29) {
 						canEnter = true;
-						PreparedStatement stmm = c
-								.prepareStatement(sqlStatements.Allstatements.setFullSubscripsionArrivedSince);
-						stmm.setString(1, arrivedSince);
+						PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.setFullSubscripsionArrivedSince);
+						stmm.setString(1, leavingDate);
 						stmm.setString(2, customerId);
 						stmm.setString(3, vehicleNumber);
 						break;
 					}
 				}
-				if(canEnter == false) System.out.println("You have no Full Subscription!");
+				if(canEnter == false)
+					System.out.println("Full Subscription is not valid!");
 			}
+			
+//			 if (!canEnter && type.equals("fullSubscription")) {
+//			 PreparedStatement stm =
+//			 c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByVehicleNumber);
+//			 stm.setString(1, vehicleNumber);
+//			 ResultSet res = stm.executeQuery();
+//			 while (res.next()) {
+//			 customerId = res.getString("customerId");
+//			 java.util.Date now1 = new java.util.Date();
+//			 java.util.Calendar calenedar = java.util.Calendar.getInstance();
+//			 calenedar.setTime(now1);
+//			 calenedar.add(java.util.Calendar.DATE, 14);
+//			 now1 = calenedar.getTime();
+//			 leavingAt = timeFormat.format(now1);
+//			 leavingDate = dateFormat.format(now1);
+//			 arrivedSince = dateFormat.format(now);
+//			 arriving = startingDateFormat.parse(res.getString("startingDate"));
+//			 // startingDate = dateFormat.format(arriving);
+//			
+//			 if ((arriving.getTime() / (1000 * 60 * 60 * 24)) < 28) {
+//			 canEnter = true;
+//			 PreparedStatement stmm = c
+//			 .prepareStatement(sqlStatements.Allstatements.setFullSubscripsionArrivedSince);
+//			 stmm.setString(1, arrivedSince);
+//			 stmm.setString(2, customerId);
+//			 stmm.setString(3, vehicleNumber);
+//			 break;
+//			 }
+//			 }
+//			 if (canEnter == false)
+//			 System.out.println("You have no Full Subscription!");
+//			 }
 
 			if (canEnter) {
-				System.out.println("going to the other function");
+			//System.out.println("going to the other function");
 				try {
 					ps = getOptemalParkingSpot(parkingLot, leavingDate, leavingAt);
 					System.out.println("back from calculating optimal");
@@ -1306,6 +1342,7 @@ public class DataAccess implements DataInterface {
 				}
 				setParkingSpotAsOccupied(parkingLot, customerId, vehicleNumber, ps[0], ps[1], ps[2], leavingDate,
 						leavingAt, type);
+			//	getParkingLotImageNew(parkingLot);
 				return true;
 			}
 		}
@@ -1326,11 +1363,9 @@ public class DataAccess implements DataInterface {
 		long diff;
 
 		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-
 		if (vehicleNumber != null && parkingLot != null) {
 			double cost = 0;
-			PreparedStatement stm = c
-					.prepareStatement(sqlStatements.Allstatements.getVehicleByVehicleNumberAndParkingLot);
+			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleFromOccupiedParkingSpots);
 			stm.setString(1, vehicleNumber);
 			stm.setString(2, parkingLot);
 			ResultSet res = stm.executeQuery();
@@ -1344,19 +1379,22 @@ public class DataAccess implements DataInterface {
 				customerId = res.getString("customerId");
 			}
 			temp = leavingDate + " " + leavingAt;
+			System.out.println("tempis" + temp);
 			leaving = fullDateFormat.parse(temp);
 			diff = now.getTime() - leaving.getTime();
 			diff /= 60000;
 			if (diff > 3) {
+				System.out.println("diff>3");
 				PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.setLeavingLate);
 				stmm.setString(1, customerId);
 				stmm.setString(2, vehicleNumber);
 				stmm.setString(3, parkingLot);
 				stmm.setString(4, leavingDate);
 				stmm.setString(5, leavingAt);
-				stmm.executeQuery();
+				stmm.executeUpdate();
 			}
 			if (type.equals("uponArrivalOrder")) {
+				System.out.println("in upon arrival");
 				OrderType uponArrival = OrderType.uponArrivalOrder;
 				PreparedStatement stmm = c.prepareStatement(sqlStatements.Allstatements.getOrderByNotArriving);
 				stmm.setString(1, parkingLot);
@@ -1366,10 +1404,13 @@ public class DataAccess implements DataInterface {
 				stmm.setString(5, leavingAt);
 				ResultSet ress = stmm.executeQuery();
 				while (ress.next()) {
-					arrivingDate = res.getString("arrivingDate");
-					arrivingAt = res.getString("arrivingAt");
+					// System.out.println("found the order " + ress.getInt("orderID") +
+					// ress.getString("parkingLot"));
+					arrivingDate = ress.getString("arrivingDate");
+					arrivingAt = ress.getString("arrivingAt");
 				}
 				cost = getOrderCost(arrivingAt, leavingAt, arrivingDate, leavingDate, uponArrival);
+				System.out.println("cost is" + cost);
 			}
 
 			unsetParkingSpotAsOccupied(parkingLot, customerId, vehicleNumber, row, column, width, leavingDate,
@@ -1383,7 +1424,6 @@ public class DataAccess implements DataInterface {
 
 	public boolean setParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
 			int column, int width, String leavingDate, String leavingAt, String type) throws SQLException {
-		// CPS cps = CPS.getInstance();
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
 		stm.setString(1, parkingLot);
 		stm.setInt(2, row);
@@ -1424,7 +1464,7 @@ public class DataAccess implements DataInterface {
 
 	public void unsetParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
 			int column, int width, String leavingDate, String leavingAt) throws SQLException {
-		CPS cps = CPS.getInstance();
+		// CPS cps = CPS.getInstance();
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
 		stm.setString(1, parkingLot);
 		stm.setInt(2, row);
@@ -1443,17 +1483,17 @@ public class DataAccess implements DataInterface {
 		stm.setInt(4, row);
 		stm.setInt(5, column);
 		stm.setInt(6, width);
-		stm.executeUpdate();
+		stm.execute();
 
-		for (ParkingLot parkinglot : cps.getParkingLots()) {
-			if (parkinglot.getName().equals(parkingLot)) {
-				ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-				ParkingSpot ps = tmp[row][column][width];
-				if (ps.isOccupied() == true) {
-					parkinglot.unsetOccupiedParkingSpot(row, column, width);
-				}
-			}
-		}
+		// for (ParkingLot parkinglot : cps.getParkingLots()) {
+		// if (parkinglot.getName().equals(parkingLot)) {
+		// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
+		// ParkingSpot ps = tmp[row][column][width];
+		// if (ps.isOccupied() == true) {
+		// parkinglot.unsetOccupiedParkingSpot(row, column, width);
+		// }
+		// }
+		// }
 	}
 
 	public Order getVehicleOrderByParkinLotAndSpot(String parkingLot, int row, int column, int width)
@@ -1490,7 +1530,6 @@ public class DataAccess implements DataInterface {
 		int[] optemalps = new int[3];
 		Order order;
 		boolean optemal = false;
-		// ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
 		int currWidth = getWidthByParkingLot(parkingLot);
 		ParkingSpot[][][] currentImage = getParkingLotImageNew(parkingLot);
 		boolean set = false;
@@ -1522,16 +1561,16 @@ public class DataAccess implements DataInterface {
 				}
 			}
 		}
-//		if (optemal == true) {
-//
-//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//			System.out.println("Row" + optemalps[0]);
-//			System.out.println("Column" + optemalps[1]);
-//			System.out.println("Width" + optemalps[2]);
-//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//
-//			return optemalps;
-//		}
+		// if (optemal == true) {
+		//
+		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		// System.out.println("Row" + optemalps[0]);
+		// System.out.println("Column" + optemalps[1]);
+		// System.out.println("Width" + optemalps[2]);
+		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		//
+		// return optemalps;
+		// }
 
 		for (int i = 0; i < 3; i++) {
 			for (int k = 0; k < currWidth; k++) {
@@ -1720,9 +1759,10 @@ public class DataAccess implements DataInterface {
 			RowIsZero = false;
 
 		if (row == 0 || row == 1) {
+			int rowPlus1 = row + 1;
 			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
 			stm.setString(1, parkingSpot);
-			stm.setInt(2, row + 1);
+			stm.setInt(2, rowPlus1);
 			stm.setInt(3, column);
 			stm.setInt(4, width);
 			ResultSet res = stm.executeQuery();
@@ -1734,10 +1774,10 @@ public class DataAccess implements DataInterface {
 			stm = c.prepareStatement(sqlStatements.Allstatements.updateRowByRestAndVehicle);
 			stm.setInt(1, row);
 			stm.setString(2, vehicleNumber);
-			stm.setString(2, parkingLot);
+			stm.setString(3, parkingLot);
 			stm.setInt(4, column);
 			stm.setInt(5, width);
-			stm.executeQuery();
+			stm.executeUpdate();
 
 			if (RowIsZero) {
 
@@ -1757,10 +1797,10 @@ public class DataAccess implements DataInterface {
 				else
 					stm.setInt(1, row + 1);
 				stm.setString(2, vehicleNumber);
-				stm.setString(2, parkingLot);
+				stm.setString(3, parkingLot);
 				stm.setInt(4, column);
 				stm.setInt(5, width);
-				stm.executeQuery();
+				stm.executeUpdate();
 			}
 		}
 	}

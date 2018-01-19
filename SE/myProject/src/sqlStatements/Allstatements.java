@@ -19,7 +19,7 @@ public class Allstatements {
 	public final static String addNewOrder = "INSERT INTO `fur_seal_schema`.`orders` (`type`,`parkingLot`, `arrivingDate`, `arrivingAt`, `leavingDate`, `leavingAt`, `customerId`, `vehicleNumber`, `arrivingLate`, `leavingLate`, `canceled`) VALUES (?,?, ?, ?, ?, ?, ?, ?, '0', '0', '0')";
 	public final static String addNewCustomer = "INSERT INTO `fur_seal_schema`.`customers` (`customerID`, `email`,`credit`,`isConnected`) VALUES (?,?,?,?);";
 	public final static String addNewVehicle = "INSERT INTO `fur_seal_schema`.`vehicles` (`vehicleNumber`, `customerID`) VALUES (?,?);";
-	public final static String addNewComplaint = "INSERT INTO `fur_seal_schema`.`complaints` (`parkingLot`, `customerID`, `submissionDate`, `isChecked`, `text`) VALUES (?,?,?,?,?);";
+	public final static String addNewComplaint = "INSERT INTO `fur_seal_schema`.`complaints` (`parkingLot`, `customerID`, `submissionDate`, `isChecked`, `text`) VALUES (?,?,?,'0',?);";
 	public final static String deleteParkingLot = "DELETE FROM `fur_seal_schema`.`parkingLots` WHERE `name`=?;";
 
 	public final static String getAllParkingLots = "SELECT * FROM fur_seal_schema.parkingLots;";
@@ -42,7 +42,7 @@ public class Allstatements {
 	public final static String addOneCarRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'oneCar',?,?,?);";
 	public final static String addBusinessRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'business',?,?,?);";
 	public final static String cancelOrder = "UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' WHERE `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
-	public final static String checkIfOrderExistsByAllParameters = "select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
+	public final static String checkIfOrderExistsByAllParameters = "select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=? and `type`='preOrder'";
 
 	public final static String logOutEmployee = "UPDATE `fur_seal_schema`.`employees` SET `isConnected`='0' WHERE `name`=?";
 	public final static String logOutCustomer = "UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
@@ -83,9 +83,9 @@ public class Allstatements {
 	public final static String getAllRegularSubsByVehicleNumber="select * from fur_seal_schema.regularSubscriptions where vehicleNumber=?";
 	public final static String setArrivingLate="UPDATE `fur_seal_schema`.`orders` SET `arrivingLate`='1' WHERE `orderID`=? and`customerId`=? and`vehicleNumber`=?;";
 	public final static String setLeavingLate="UPDATE `fur_seal_schema`.`orders` SET `leavingLate`='1' WHERE `customerId`=? and`vehicleNumber`=? and`parkingLot`=? and`leavingDate`=? and`leavingAt`=?;";
-	public final static String getVehicleByVehicleNumberAndParkingLot="select * from fur_seal_schema.occupiedParkingSpotsInAllParkingLots where vehicleNumber=? and parkingLot=?;";
+	public final static String getVehicleFromOccupiedParkingSpots="select * from fur_seal_schema.occupiedParkingSpotsInAllParkingLots where vehicle=? and parkingLot=?;";
 	public final static String getOrderByNotArriving="select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `leavingDate`=? and `leavingAt`=?";
-	public final static String updateRowByRestAndVehicle="UPDATE `fur_seal_schema`.`occupiedParkingSpotsInAllParkingLots` SET `row`=? WHERE `vehicle`=? `parkingLot`=? `column`=? `width`=?;";
+	public final static String updateRowByRestAndVehicle="UPDATE `fur_seal_schema`.`occupiedParkingSpotsInAllParkingLots` SET `row`=? WHERE `vehicle`=? and `parkingLot`=? and `column`=? and `width`=?;";
 	
 
 	

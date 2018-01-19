@@ -3,6 +3,9 @@ package webServlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,35 +42,29 @@ public class AddUponArrivalOrder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String parkingLot = request.getParameter("parkingLot");
-		System.out.println("parkingLot"+parkingLot);
 		String leavingDate = request.getParameter("leavingDate");
-		System.out.println("leavingDate"+leavingDate);
 		String leavingAt = request.getParameter("leavingAt");
-		System.out.println(leavingAt);
 		String customerId = request.getParameter("id");
-		System.out.println(customerId);
 		String vehicle = request.getParameter("vehicle");
-		System.out.println(vehicle);
 		String email = request.getParameter("email");
 		System.out.println(email);
 		DataAccess da = new DataAccess();
 		boolean res = false;
-		boolean res1 = false;
 		if (customerId != null && leavingAt != null && leavingDate != null && vehicle != null && email != null
 				&& parkingLot != null) {
-			System.out.println("we're in");
-			//String orderId=da.getSaltString();
-			Order o = new Order(0, OrderType.uponArrivalOrder, parkingLot, null, leavingDate, null, leavingAt,
-					customerId, vehicle, false, false, false);
+			PrintWriter out = response.getWriter();
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+			DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm");
+			LocalDateTime now = LocalDateTime.now();
+			String today = dtf.format(now);
+			String hourNow = dtf2.format(now);
 			Customer c = new Customer(customerId, email);
 			try {
 				res = da.addCustomer(c);
 			} catch (SQLException e) {
-				System.out.println("Unable to add customer");
 				e.printStackTrace();
 			}
-
-			Vehicle v = new Vehicle(vehicle, customerId, -1, -1, -1);
+			Vehicle v = new Vehicle(vehicle, customerId);
 			try {
 				res = da.addVehicle(v);
 			} catch (SQLException e) {
@@ -75,16 +72,16 @@ public class AddUponArrivalOrder extends HttpServlet {
 				e.printStackTrace();
 			}
 			try {
-				// System.out.println("trying to add order");
-				res1 = da.addOrder(o);
+				Order o = new Order(0, OrderType.uponArrivalOrder, parkingLot, today, leavingDate, hourNow, leavingAt,
+						customerId, vehicle, false, false, false);
+				res = da.addOrder(o);
 			} catch (SQLException e) {
 				System.out.println("Unable to add order");
 				e.printStackTrace();
 				return;
 			}
 
-			PrintWriter out = response.getWriter();
-			out.println(res1);
+			out.println(res);
 
 		}
 	}
