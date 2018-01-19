@@ -41,7 +41,7 @@ public class CompanyManagerGetAllParkingLotsInfo extends HttpServlet {
 		// TODO Auto-generated method stub
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		DataAccess da = new DataAccess();
-		ArrayList<ParkingLot> parkingLots = null;
+		ArrayList<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 		try {
 			parkingLots = da.GetAllParkingLots();
 		} catch (SQLException e) {
@@ -52,11 +52,13 @@ public class CompanyManagerGetAllParkingLotsInfo extends HttpServlet {
 		JSONObject parkingLotInfo;
 		PrintWriter out=response.getWriter();
 		for (ParkingLot parkingLot : parkingLots) {
+			System.out.println(parkingLot.getName());
 			parkingLotInfo = new JSONObject();
 			try {
 				parkingLotInfo.put("parking lot", parkingLot.getName());
 				parkingLotInfo.put("manager", parkingLot.getManager());
 				parkingLotInfo.put("width", parkingLot.getWidth());
+				
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -69,7 +71,7 @@ public class CompanyManagerGetAllParkingLotsInfo extends HttpServlet {
 						da.getNumberOfCanceledOrdersByParkingLot(parkingLot.getName()));
 				parkingLotInfo.put("number of late arrival orders",
 						da.getNumberOfLateArrivalOrdersByParkingLot(parkingLot.getName()));
-				
+				out.println(parkingLotInfo);
 			} catch (JSONException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

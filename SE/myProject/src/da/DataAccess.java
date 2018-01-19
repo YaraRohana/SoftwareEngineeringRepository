@@ -2007,5 +2007,46 @@ public class DataAccess implements DataInterface {
 		}
 		return false ;
 	}
+	
+	public int getNumOfSubscriptionsByParkingLot(String parkingLot) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getNumOfSubsByParkingLot);
+		stm.setString(1, parkingLot);
+		ResultSet res=stm.executeQuery();
+		int sum=0;
+		while(res.next()) {
+			//System.out.println(res.getString("customerId"));
+			sum++;
+		}
+		return sum;
+	}
+	
+	public int getNumberOfSubscriptionsByCustomerId(String customerId) throws SQLException {
+		PreparedStatement stm=c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
+		stm.setString(1, customerId);
+		ResultSet res=stm.executeQuery();
+		int sum=0;
+		while(res.next()) {
+			sum++;
+		}
+		stm=c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByCustomerId);
+		stm.setString(1, customerId);
+		res=stm.executeQuery();
+		while(res.next()) {
+			sum++;
+		}
+		return sum;
+	}
+	
+	public int getNumberOfCustomersWithMoreThanOneSubscription() throws SQLException {
+		ArrayList<Customer> allCustomers=new ArrayList<Customer>();
+		allCustomers=getAllCustomers();
+		int sum=0;
+		for (Customer customer : allCustomers) {
+			if(getNumberOfSubscriptionsByCustomerId(customer.getId())>1) {
+				sum++;
+			}
+		}
+		return sum;
+	}
 
 }

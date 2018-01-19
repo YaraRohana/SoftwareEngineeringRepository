@@ -89,5 +89,5 @@ public class Allstatements {
 	public final static String deleteOrder = "DELETE FROM `fur_seal_schema`.`orders` WHERE `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
 	public final static String checkIfVehicleParking="select * from fur_seal_schema.occupiedParkingSpotsInAllParkingLots where vehicle=?";
 	public final static String updateArrivedSinceInFullSub="UPDATE `fur_seal_schema`.`fullSubscriptions` SET `arrivedSince`=? WHERE `subscriptionId`=? and `customerId`=? ;";
-
+	public final static String getNumOfSubsByParkingLot="select * from `fur_seal_schema`.`regularSubscriptions` where parkingLot=?";
 }
