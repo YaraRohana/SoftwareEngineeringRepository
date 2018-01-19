@@ -98,7 +98,7 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 							subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 					try {
 						da.addBuisnessRegularSubscription(tmp);
-					} catch (SQLException e) {
+					} catch (SQLException | ParseException e) {
 						System.out.println("Unable to add business subscription");
 						e.printStackTrace();
 					}

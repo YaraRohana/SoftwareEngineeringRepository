@@ -1,6 +1,7 @@
 package webServlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -33,13 +34,16 @@ public class GetNumOfSubsWithMoreThanOneVehicle extends HttpServlet {
 		// TODO Auto-generated method stub
 		/*response.getWriter().append("Served at: ").append(request.getContextPath());*/
 		DataAccess da=new DataAccess();
+		PrintWriter out=response.getWriter();
+		int res=0;
 		try {
-			int res=da.getNumberOfCustomersWithMoreThanOneSubscription();
+			res=da.getNumberOfCustomersWithMoreThanOneSubscription();
 			System.out.println(res);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		out.println(res);
 	}
 
 	/**

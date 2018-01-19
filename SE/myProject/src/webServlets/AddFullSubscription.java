@@ -78,7 +78,7 @@ public class AddFullSubscription extends HttpServlet {
 				//PrintWriter out = response.getWriter();
 				//out.println(res);
 
-			} catch (SQLException e) {
+			} catch (SQLException | ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

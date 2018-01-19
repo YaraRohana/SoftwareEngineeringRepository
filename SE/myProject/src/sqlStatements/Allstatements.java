@@ -42,7 +42,7 @@ public class Allstatements {
 	public final static String addOneCarRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'oneCar',?,?,?);";
 	public final static String addBusinessRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'business',?,?,?);";
 	public final static String cancelOrder = "UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' WHERE `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
-	public final static String checkIfOrderExistsByAllParameters = "select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=? and `type`='preOrder'";
+	public final static String checkIfOrderExistsByAllParameters = "select * from fur_seal_schema.orders where `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
 
 	public final static String logOutEmployee = "UPDATE `fur_seal_schema`.`employees` SET `isConnected`='0' WHERE `name`=?";
 	public final static String logOutCustomer = "UPDATE `fur_seal_schema`.`customers` SET `isConnected`='0' WHERE `customerID`=?;";
@@ -90,4 +90,13 @@ public class Allstatements {
 	public final static String checkIfVehicleParking="select * from fur_seal_schema.occupiedParkingSpotsInAllParkingLots where vehicle=?";
 	public final static String updateArrivedSinceInFullSub="UPDATE `fur_seal_schema`.`fullSubscriptions` SET `arrivedSince`=? WHERE `subscriptionId`=? and `customerId`=? ;";
 	public final static String getNumOfSubsByParkingLot="select * from `fur_seal_schema`.`regularSubscriptions` where parkingLot=?";
+	public final static String getAllOrdersByParkingLot = "select * from fur_seal_schema.orders where parkingLot=?;";
+	public final static String getAllFullSubsByParkingLot = "select * from fur_seal_schema.fullSubscriptions where customerId=?;";
+	public final static String getAllRegularSubsByParkingLot = "select * from fur_seal_schema.regularSubscriptions where parkingLot=?";
+	public final static String getAllComplaintsByParkingLot = "SELECT * FROM fur_seal_schema.complaints where parkingLot=?;";
+	public final static String addParkingSpotAsFaultedInHistory="INSERT INTO `fur_seal_schema`.`faultedParkingSpotsHistory` (`parkingLot`, `row`, `col`, `width`, `date`) VALUES (?, ?, ?, ?, ?);";
+	public final static String getFaultedParkingSpotsHistoryByParkingLot="select * from `fur_seal_schema`.`faultedParkingSpotsHistory` where parkingLot=?";
+	public final static String getOrderByOrderID="select * from `fur_seal_schema`.`orders` where orderID=?";
+	public final static String cancelOrderByOrderId="UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' where orderId=?";
+
 }

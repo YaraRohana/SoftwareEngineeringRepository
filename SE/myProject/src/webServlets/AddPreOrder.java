@@ -3,6 +3,7 @@ package webServlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,9 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.CPS;
 import allClasses.Customer;
-import allClasses.ParkingLot;
 import allClasses.Vehicle;
 import allClasses.Order;
 import allClasses.Order.OrderType;
@@ -72,7 +71,7 @@ public class AddPreOrder extends HttpServlet {
 			System.out.println("trying to add order");
 			try {
 				res = da.addOrder(o);
-			} catch (SQLException e) {
+			} catch (SQLException | ParseException e) {
 				System.out.println("Unable to add order");
 				e.printStackTrace();
 				return;

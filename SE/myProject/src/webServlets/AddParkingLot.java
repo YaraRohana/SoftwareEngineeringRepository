@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.CPS;
 import allClasses.ParkingLot;
 import da.DataAccess;
 
@@ -42,16 +41,6 @@ public class AddParkingLot extends HttpServlet {
 		String location = request.getParameter("location");
 		String manager = request.getParameter("manager");
 		String width = request.getParameter("width");
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if(cps==null) {
-			System.out.println("problem");
-		}
 		if (name != null && location != null && manager != null && width != null) {
 			System.out.println("we're here");
 			int realWidth = 0;
@@ -61,19 +50,16 @@ public class AddParkingLot extends HttpServlet {
 			boolean res = false;
 			try {
 				res = da.addParkingLot(p);
-				if (res) {
-					if(cps.getParkingLots().add(p)) {
-						System.out.println("added to ParkingLots arraylist in CPS");
-					}
 
 				}
-			} catch (SQLException e) {
+			 catch (SQLException e) {
 				e.printStackTrace();
 			}
 
 			PrintWriter out = response.getWriter();
 			out.println(res);
 		}
+
 	}
 
 	/**

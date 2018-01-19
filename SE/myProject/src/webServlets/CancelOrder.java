@@ -52,42 +52,27 @@ public class CancelOrder extends HttpServlet {
 		String leavingAt = request.getParameter("leavingAt");
 		String arrivingDate = request.getParameter("arrivingDate");
 		String leavingDate = request.getParameter("leavingDate");
-		Order res = null;
-		int finalCredit=0;
-		int changedCredit=0;
+		int finalCredit = 0;
+		int changedCredit = 0;
 		// boolean result=false;
 		DataAccess da = new DataAccess();
 		if (customerId != null & vehicleNumber != null & parkingLot != null && arrivingAt != null
 				&& leavingAt != null & leavingDate != null && arrivingDate != null) {
 			System.out.println("we're in");
-			PrintWriter out=response.getWriter();
+			PrintWriter out = response.getWriter();
 			try {
-				res = da.checkIfOrderExistsByAllParameters(customerId, vehicleNumber, arrivingDate, arrivingAt,
-						leavingDate, leavingAt, parkingLot);
+				Order res = new Order(0, OrderType.preOrder, parkingLot, arrivingDate, leavingDate, arrivingAt,
+						leavingAt, customerId, vehicleNumber, false, false, false);
+				da.cancelOrder(res);
+				changedCredit = da.getCancelOrderCredit(res);
+				finalCredit = da.getCreditByCustomerId(customerId);
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if(res==null) {
-				out.println(false);
-				out.println("Order does not exist!");
-				return;
-			}
-				if (res.isCanceled() == false) {
-					try {
-						da.cancelOrder(res);
-						changedCredit=da.getCancelOrderCredit(res);
-						finalCredit=da.getCreditByCustomerId(customerId);
-					} catch (SQLException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				else {
-					System.out.println("Order already canceled,cannot cancel again");
-				}
-			
+
 			out.println(changedCredit);
 			out.println(finalCredit);
 		}

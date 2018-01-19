@@ -15,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import allClasses.CPS;
 import allClasses.ParkingLot;
 import da.DataAccess;
 
@@ -41,34 +40,15 @@ public class GetAllParkingLots extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-	//	response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		ArrayList<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 		ArrayList<ParkingLot> CPSparkingLots = new ArrayList<ParkingLot>();
-		CPS cps=null;
-		try {
-			cps = CPS.getInstance();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		DataAccess da = new DataAccess();
 		try {
 			parkingLots = da.GetAllParkingLots();
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		try {
-			CPSparkingLots=cps.getParkingLots();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("CPS parkingLots ");
-		for (ParkingLot parkingLot : CPSparkingLots) {
-			System.out.println("here");
-			System.out.println(parkingLot.toString());
 		}
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
@@ -79,7 +59,7 @@ public class GetAllParkingLots extends HttpServlet {
 				jsonParkingLot.put("name", parkingLot.getName());
 				jsonParkingLot.put("location", parkingLot.getLocation());
 				jsonParkingLot.put("manager", parkingLot.getManager());
-				jsonParkingLot.put("width",parkingLot.getWidth());
+				jsonParkingLot.put("width", parkingLot.getWidth());
 				out.println(jsonParkingLot);
 			} catch (JSONException ex) {
 

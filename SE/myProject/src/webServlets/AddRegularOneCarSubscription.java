@@ -76,7 +76,7 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 					email, subscriptionType.oneCarRegularSubscription, parkingLot, leavingAt);
 			try {
 				res1 = da.addOneCarRegularSubscription(c);
-			} catch (SQLException e) {
+			} catch (SQLException | ParseException e) {
 				e.printStackTrace();
 			}
 

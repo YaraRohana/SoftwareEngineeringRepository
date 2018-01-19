@@ -47,7 +47,6 @@ public class GetAllComplaints extends HttpServlet {
 			e.printStackTrace();
 		}
 		PrintWriter out = response.getWriter();
-		// PrintWriter outt = response.getWriter();
 		response.setContentType("application/json");
 		JSONObject jsonComplaint;
 		for (Complaint complaint : complaints) {

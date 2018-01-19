@@ -3,6 +3,7 @@ package webServlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import allClasses.CPS;
 import allClasses.Customer;
 import allClasses.Order;
 import allClasses.Vehicle;
@@ -75,7 +75,7 @@ public class AddUponArrivalOrder extends HttpServlet {
 				Order o = new Order(0, OrderType.uponArrivalOrder, parkingLot, today, leavingDate, hourNow, leavingAt,
 						customerId, vehicle, false, false, false);
 				res = da.addOrder(o);
-			} catch (SQLException e) {
+			} catch (SQLException | ParseException e) {
 				System.out.println("Unable to add order");
 				e.printStackTrace();
 				return;

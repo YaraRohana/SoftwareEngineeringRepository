@@ -30,7 +30,7 @@ public interface DataInterface {
 
 	public ArrayList<Customer> getAllCustomers() throws SQLException;
 
-	public boolean addOrder(Order o) throws SQLException;
+	//public boolean addOrder(Order o) throws SQLException;
 
 	public ArrayList<Order> getAllOrders() throws SQLException;
 
@@ -44,10 +44,10 @@ public interface DataInterface {
 
 	public ArrayList<Vehicle> getAllVehicles() throws SQLException;
 
-	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
+	//public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException;
 
-	public boolean addOneCarRegularSubscription(OneCarRegularSubscription oneCarRegularSubscription)
-			throws SQLException;
+//	public boolean addOneCarRegularSubscription(OneCarRegularSubscription oneCarRegularSubscription)
+//			throws SQLException;
 
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException;
 
@@ -55,7 +55,7 @@ public interface DataInterface {
 
 	public boolean checkIfEmployeeExists(String name, String password) throws SQLException;
 
-	public boolean addBuisnessRegularSubscription(OneCarBusinessSubscription sub) throws SQLException;
+	//public boolean addBuisnessRegularSubscription(OneCarBusinessSubscription sub) throws SQLException;
 
 	public Order checkIfOrderExistsByAllParameters(String customerId, String vehicle, String arrivingDate,
 			String arrivingAt, String leavingDate, String leavingAt, String parkingLot) throws SQLException;
