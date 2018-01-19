@@ -10,6 +10,6 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <listener>
-   <listener-class>listeners.Notifications</listener-class>
-</listener>
+    <listener-class>listeners.Notifications</listener-class>
+  </listener>
 </web-app>

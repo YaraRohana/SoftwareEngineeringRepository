@@ -1108,6 +1108,11 @@ public class DataAccess implements DataInterface {
 			System.out.println("Parking Spot " + row + " " + col + " " + width + " is already faulted");
 			return false;
 		}
+		if(tmp.isSaved()==true) {
+			System.out.println("Parking Spot " + row + " " + col + " " + width + " is saved");
+			unsetParkingSpotAsSavedOrFaulted(parkingLot, row, col, width);
+			System.out.println("parking spot is no longer saved");
+		}
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.setParkingSpotAsFaulted);
 		statement.setString(1, parkingLot);
 		statement.setInt(2, row);
@@ -1121,6 +1126,10 @@ public class DataAccess implements DataInterface {
 		ParkingSpot tmp = getParkingSpotStatus(parkingLot, row, col, width);
 		if (tmp.isSaved() == true) {
 			System.out.println("Parking Spot " + row + " " + col + " " + width + " is already saved");
+			return false;
+		}
+		if(tmp.isFaulted()==true) {
+			System.out.println("Parking Spot " + row  + col +  + width +" is faulted,cannot be saved");
 			return false;
 		}
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.setParkingSpotAsSaved);
@@ -1296,18 +1305,19 @@ public class DataAccess implements DataInterface {
 				}
 			}
 
-
 			
 			if(!canEnter && type.equals("fullSubscription")) {
+				String subId = null;
 				PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByVehicleNumber);
 				stm.setString(1, vehicleNumber);
 				ResultSet res = stm.executeQuery();
 				while(res.next()) {
+					subId = res.getString("subscriptionId");
 					customerId = res.getString("customerId");
 					startingDate = res.getDate("startingDate");
 					String Starting = dateFormat.format(startingDate);
 					startingDate = dateFormat.parse(Starting);
-					//System.out.println("starting Date: " + Starting);
+					System.out.println("starting Date: " + Starting);
 					java.util.Date now1 = new java.util.Date();
 					java.util.Calendar calenedar = java.util.Calendar.getInstance(); 
 					calenedar.setTime(now1); 
@@ -1330,40 +1340,17 @@ public class DataAccess implements DataInterface {
 				}
 				if(canEnter == false)
 					System.out.println("Full Subscription is not valid!");
+				if(canEnter == true && subId != null) {
+					java.sql.Date noww = new java.sql.Date(now.getTime());
+					stm = c.prepareStatement(sqlStatements.Allstatements.updateArrivedSinceInFullSub);
+					stm.setDate(1, noww);
+					stm.setString(2, subId);
+					stm.setString(3, customerId);
+					stm.executeUpdate();
+				}
 			}
 			
-//			 if (!canEnter && type.equals("fullSubscription")) {
-//			 PreparedStatement stm =
-//			 c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByVehicleNumber);
-//			 stm.setString(1, vehicleNumber);
-//			 ResultSet res = stm.executeQuery();
-//			 while (res.next()) {
-//			 customerId = res.getString("customerId");
-//			 java.util.Date now1 = new java.util.Date();
-//			 java.util.Calendar calenedar = java.util.Calendar.getInstance();
-//			 calenedar.setTime(now1);
-//			 calenedar.add(java.util.Calendar.DATE, 14);
-//			 now1 = calenedar.getTime();
-//			 leavingAt = timeFormat.format(now1);
-//			 leavingDate = dateFormat.format(now1);
-//			 arrivedSince = dateFormat.format(now);
-//			 arriving = startingDateFormat.parse(res.getString("startingDate"));
-//			 // startingDate = dateFormat.format(arriving);
-//			
-//			 if ((arriving.getTime() / (1000 * 60 * 60 * 24)) < 28) {
-//			 canEnter = true;
-//			 PreparedStatement stmm = c
-//			 .prepareStatement(sqlStatements.Allstatements.setFullSubscripsionArrivedSince);
-//			 stmm.setString(1, arrivedSince);
-//			 stmm.setString(2, customerId);
-//			 stmm.setString(3, vehicleNumber);
-//			 break;
-//			 }
-//			 }
-//			 if (canEnter == false)
-//			 System.out.println("You have no Full Subscription!");
-//			 }
-
+			
 			if (canEnter) {
 			//System.out.println("going to the other function");
 				try {
@@ -1624,6 +1611,10 @@ public class DataAccess implements DataInterface {
 								LeavingDate = LeavingDate + " " + LeavingAt;
 								Date = fullDateFormat.parse(LeavingDate);
 								diff = Date.getTime() - thisDate.getTime();
+								if(diff < 0) {
+								System.out.println("the car in place: 1 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+								return optemalps;
+							}
 							}
 						} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
 							diff = 0;
@@ -1657,6 +1648,10 @@ public class DataAccess implements DataInterface {
 									optemalps[1] = i;
 									optemalps[2] = k;
 									diff = diff1;
+									if(diff > 0) {
+										System.out.println("the car in place: 0 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+										return optemalps;
+									}
 								}
 							}
 						}
@@ -1696,6 +1691,11 @@ public class DataAccess implements DataInterface {
 								LeavingDate = LeavingDate + " " + LeavingAt;
 								Date = fullDateFormat.parse(LeavingDate);
 								diff = Date.getTime() - thisDate.getTime();
+								if(diff > 0) {
+									System.out.println("the car in place: 1 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+									return optemalps;
+								}
+								
 							}
 						} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
 							tmp = currentImage[0][i][k];
@@ -1707,17 +1707,19 @@ public class DataAccess implements DataInterface {
 									LeavingDate = LeavingDate + " " + LeavingAt;
 									Date = fullDateFormat.parse(LeavingDate);
 									diff = Date.getTime() - thisDate.getTime();
+									if(diff > 0) {
+										System.out.println("the car in place: 0 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+										return optemalps;
+									}
 								}
 							} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
 								diff = 0;
 
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 								System.out.println("Row" + optemalps[0]);
 								System.out.println("Column" + optemalps[1]);
 								System.out.println("Width" + optemalps[2]);
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 								return optemalps;
 							}
 						}
@@ -1733,12 +1735,16 @@ public class DataAccess implements DataInterface {
 									LeavingDate = LeavingDate + " " + LeavingAt;
 									Date = fullDateFormat.parse(LeavingDate);
 									long diff1 = Date.getTime() - thisDate.getTime();
-									if (diff1 < diff) {
+									if (diff1 < 0 || diff1 < diff) {
 										optemal = true;
 										optemalps[0] = 2;
 										optemalps[1] = i;
 										optemalps[2] = k;
 										diff = diff1;
+										if(diff1 < 0) {
+											System.out.println("the car in place: 1 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+											return optemalps;
+										}
 									}
 								}
 							} else if (tmp2.isFaulted() == true || tmp2.isSaved() == true) {
@@ -1761,12 +1767,16 @@ public class DataAccess implements DataInterface {
 								LeavingDate = LeavingDate + " " + LeavingAt;
 								Date = fullDateFormat.parse(LeavingDate);
 								long diff1 = Date.getTime() - thisDate.getTime();
-								if (diff1 < diff) {
+								if (diff1 < 0 || diff > diff1) {
 									optemal = true;
 									optemalps[0] = 0;
 									optemalps[1] = i;
 									optemalps[2] = k;
 									diff = diff1;
+									if(diff1 < 0) {
+										System.out.println("the car in place: 1 , " + optemalps[i] + " , " + optemalps[k] + " leaves the ParkingLot before the car you are entering");
+										return optemalps;
+									}
 								}
 							}
 						}
