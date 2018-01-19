@@ -893,7 +893,10 @@ public class DataAccess implements DataInterface {
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		Order o = null;
 		while (res.next()) {
-			OrderType type = (OrderType) res.getObject("type");
+			String typ = res.getString("type");
+			OrderType type = OrderType.uponArrivalOrder;
+			if(typ.equals("preOrder"))
+				type=OrderType.preOrder;
 			if (type.equals(OrderType.preOrder)) {
 				o = new Order(res.getInt("orderID"), type, res.getString("parkingLot"), res.getString("arrivingDate"),
 						res.getString("leavingDate"), res.getString("arrivingAt"), res.getString("leavingAt"),
@@ -903,6 +906,36 @@ public class DataAccess implements DataInterface {
 			}
 		}
 		return allOrders;
+	}
+	
+
+	public boolean deleteOrder(Order or) throws SQLException {	
+		Order checkOrder = checkIfOrderExistsByAllParameters(or.getCustomerId(), or.getVehicleNum(), or.getArrivingDate(), or.getArrivingAt(), or.getLeavingDate(), or.getLeavingAt(), or.getParkingLot());		
+		if (checkOrder==null) {
+			System.out.println("Order does not exist,try a different Order");
+			return false;
+		}
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.deleteOrder);
+		stm.setString(1, or.getParkingLot());
+		stm.setString(2, or.getVehicleNum());
+		stm.setString(3, or.getCustomerId());
+		stm.setString(4, or.getArrivingDate());
+		stm.setString(5, or.getArrivingAt());
+		stm.setString(6, or.getLeavingDate());
+		stm.setString(7, or.getLeavingAt());
+		stm.executeUpdate();
+		System.out.println("Order deleted successfully");
+		return true;
+	}
+	
+	public boolean isVehicleParking(String vehicleId) throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleParking);
+		stm.setString(1, vehicleId);
+		ResultSet rs = stm.executeQuery();
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
 
 	public ArrayList<FullSubscription> getAllFullSubsByStartingDate(Date startDate) throws SQLException {
@@ -1007,7 +1040,7 @@ public class DataAccess implements DataInterface {
 			diff = now.getTime() - submissionDate.getTime();
 			double diffDays = (int) (diff / (1000 * 60 * 60 * 24));
 			System.out.println("diff days" + diffDays);
-			if (isChecked == false && (diffDays > 1))
+			if (isChecked == false && (diffDays >=1))
 				return true;
 		}
 		return false;
@@ -1185,7 +1218,7 @@ public class DataAccess implements DataInterface {
 			DateFormat fulldateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-			DateFormat startingDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			//DateFormat startingDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			java.util.Date now = new java.util.Date();
 			java.util.Date arriving = null;
 			java.util.Date leaving = null;
@@ -1274,7 +1307,7 @@ public class DataAccess implements DataInterface {
 					startingDate = res.getDate("startingDate");
 					String Starting = dateFormat.format(startingDate);
 					startingDate = dateFormat.parse(Starting);
-					System.out.println("starting Date: " + Starting);
+					//System.out.println("starting Date: " + Starting);
 					java.util.Date now1 = new java.util.Date();
 					java.util.Calendar calenedar = java.util.Calendar.getInstance(); 
 					calenedar.setTime(now1); 

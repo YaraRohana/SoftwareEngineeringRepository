@@ -51,7 +51,7 @@ public class LoginEmployee extends HttpServlet {
 				System.out.println("Employee does not exist!");
 				//PrintWriter out=response.getWriter();
 				out.println(res);
-				out.println("Employee does not exist!");
+				out.println("Unknown user name or bad password ");
 				return;
 			} else {
 				try {
@@ -61,15 +61,16 @@ public class LoginEmployee extends HttpServlet {
 					e1.printStackTrace();
 				}
 				if(res==true) {
-					out.println(res);
-					out.println("Employee already connected");
+					out.println(!res);
+					out.println("Employee already connected, first Log Out ");
 					System.out.println("Employee already connected");
 					return;
 				}
 				String parkingLot=null;
+				String type= null;
 				try {
 					da.loginEmployee(name,pass);
-					String type=da.getEmployeeType(name);
+				    type=da.getEmployeeType(name);
 					parkingLot=da.getEmployeeParkingLot(name);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -77,7 +78,7 @@ public class LoginEmployee extends HttpServlet {
 				}
 				res=true;
 				out.println(res);
-				out.println("Employee logged in successfully");
+				out.println(type);
 			if(parkingLot!=null) {
 				//PrintWriter out2=response.getWriter();
 				out.println(parkingLot);

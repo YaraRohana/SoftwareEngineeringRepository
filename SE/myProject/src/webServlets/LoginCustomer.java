@@ -35,7 +35,6 @@ public class LoginCustomer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		String customerId = request.getParameter("id");
 		DataAccess da = new DataAccess();
 		boolean res = false;
@@ -49,6 +48,7 @@ public class LoginCustomer extends HttpServlet {
 				System.out.println("Customer does not exist!");
 				PrintWriter out = response.getWriter();
 				out.println(res);
+				out.println("Customer does not exist!");
 				return;
 			}
 			try {
@@ -60,7 +60,8 @@ public class LoginCustomer extends HttpServlet {
 			if (res) {
 				System.out.println("Customer already connected");
 				PrintWriter out = response.getWriter();
-				out.println(res);
+				out.println(!res);
+				out.println("Customer already connected");
 				return;
 			}
 			try {
@@ -68,6 +69,7 @@ public class LoginCustomer extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			res=true;
 			PrintWriter out = response.getWriter();
 			out.println(res);
 		}

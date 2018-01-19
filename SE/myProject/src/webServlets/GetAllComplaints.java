@@ -53,9 +53,10 @@ public class GetAllComplaints extends HttpServlet {
 		for (Complaint complaint : complaints) {
 			try {
 				boolean res = da.getComplaintStatus(complaint.getSubmissionDate(), complaint.isChecked());
-				if (complaintStatus == false && res == true) {
+				if (res == true && complaintStatus==false) {
 					complaintStatus = true;
 					System.out.println("complaint status changed to true");
+					break;
 				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
