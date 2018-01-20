@@ -54,6 +54,18 @@ public class AddRegularOneCarSubscription extends HttpServlet {
 		boolean res1 = false;
 		PrintWriter out = response.getWriter();
 		if (vehicleNumber != null && customerId != null) {
+			
+			try {
+				res = da.checkIfDateIsFromNowOn(startDate, "23:59");
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			if(res == false) {
+				System.out.println("Starting Date already passed!");
+				//PrintWriter outt = response.getWriter();
+				out.println(res);
+			}
+			
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			try {

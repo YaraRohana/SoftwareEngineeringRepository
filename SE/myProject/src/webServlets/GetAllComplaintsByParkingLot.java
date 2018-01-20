@@ -59,7 +59,7 @@ public class GetAllComplaintsByParkingLot extends HttpServlet {
 			for (Complaint complaint : complaints) {
 				jsonComplaint = new JSONObject();
 				try {
-					jsonComplaint.put("parking lot", complaint.getParkingLot());
+					jsonComplaint.put("isChecked", complaint.isChecked());
 					jsonComplaint.put("customerId", complaint.getCustomerId());
 					jsonComplaint.put("submissionDate", complaint.getSubmissionDate());
 					jsonComplaint.put("text", complaint.getComplaintText());

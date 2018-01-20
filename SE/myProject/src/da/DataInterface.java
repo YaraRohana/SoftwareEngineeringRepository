@@ -87,9 +87,9 @@ public interface DataInterface {
 
 	public int getBusinessRegularSubscriptionCost(int numOfCars) throws NumberFormatException, SQLException;
 
-	public int getCancelOrderCredit(Order order) throws SQLException, Exception;
+	public double getCancelOrderCredit(Order order) throws SQLException, Exception;
 
-	public int getCreditByCustomerId(String customerId) throws SQLException;
+	public double getCreditByCustomerId(String customerId) throws SQLException;
 
 	public void updateCreditByCustomerId(String customerId, double newCredit) throws SQLException;
 

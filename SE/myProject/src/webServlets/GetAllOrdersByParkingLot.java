@@ -54,13 +54,15 @@ public class GetAllOrdersByParkingLot extends HttpServlet {
 			for (Order order : orders) {
 				jsonOrder=new JSONObject();
 				try {
-					jsonOrder.put("order ID", order.getOrderId());
+					jsonOrder.put("leavingDate", order.getLeavingDate());
 					jsonOrder.put("type", order.getType());
-					jsonOrder.put("parking lot", order.getParkingLot());
-					jsonOrder.put("arriving at", order.getArrivingAt());
-					jsonOrder.put("leaving at", order.getLeavingAt());
-					jsonOrder.put("customer Id", order.getCustomerId());
-					jsonOrder.put("vehicle number", order.getVehicleNum());
+					jsonOrder.put("parkingLot", order.getParkingLot());
+					jsonOrder.put("arrivingAt", order.getArrivingAt());
+					jsonOrder.put("leavingAt", order.getLeavingAt());
+					jsonOrder.put("arrivingDate", order.getArrivingDate());
+					jsonOrder.put("vehicle", order.getVehicleNum());
+					jsonOrder.put("canceled", order.isCanceled());
+
 					out.println(jsonOrder);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

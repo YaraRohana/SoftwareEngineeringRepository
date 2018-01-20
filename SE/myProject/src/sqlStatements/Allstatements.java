@@ -38,7 +38,7 @@ public class Allstatements {
 	public final static String getAllBusinessSubsByCustomerId = "select * from fur_seal_schema.regularSubscriptions where customerId=? and type='business';";
 
 	public final static String getAllFullSubsByCustomerId = "select * from fur_seal_schema.fullSubscriptions where customerId=?;";
-	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`fullSubscriptions` (`customerId`, `subscriptionId`, `vehicleNumber`, `startingDate`, `arrivedSince`) VALUES (?,?,?,?,?);";
+	public final static String addFullSubscription = "INSERT INTO `fur_seal_schema`.`fullSubscriptions` (`customerId`, `subscriptionId`, `vehicleNumber`, `startingDate`, `arrivedSince`,`email`) VALUES (?,?,?,?,?,?);";
 	public final static String addOneCarRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'oneCar',?,?,?);";
 	public final static String addBusinessRegularSubscription = "INSERT INTO `fur_seal_schema`.`regularSubscriptions` (`customerId`,`subscriptionId`, `vehicleNumber`, `startDate`, `type`, `parkingLot`, `leavingAt`, `email`) VALUES (?,?,?,?,'business',?,?,?);";
 	public final static String cancelOrder = "UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' WHERE `parkingLot`=? AND `vehicleNumber`=? AND `customerId`=? and `arrivingDate`=? and `arrivingAt`=? and `leavingDate`=? and `leavingAt`=?";
@@ -51,7 +51,7 @@ public class Allstatements {
 	public final static String updateCreditByCustomerId = "UPDATE `fur_seal_schema`.`customers` SET `credit`=? WHERE `customerID`=?;";
 
 	public final static String getPrices = "select * from fur_seal_schema.prices where ID='1';";
-	public final static String updatePrices = "UPDATE `fur_seal_schema`.`prices` SET `preOrderPrice`=?, `uponArrivalPrice`=? WHERE `parkingLot`=?;";
+	public final static String updatePrices = "UPDATE `fur_seal_schema`.`prices` SET `preOrderPrice`=?, `uponArrivalPrice`=? WHERE ID='1'";
 
 	public final static String getAllOrdersByArrivingDate = "select * from fur_seal_schema.orders where arrivingDate=? AND arrivingAt=? AND canceled='0';";
 	public final static String getAllRegularSubsByStartingDate = "select * from fur_seal_schema.regularSubscriptions where startDate=?;";
@@ -98,5 +98,9 @@ public class Allstatements {
 	public final static String getFaultedParkingSpotsHistoryByParkingLot="select * from `fur_seal_schema`.`faultedParkingSpotsHistory` where parkingLot=?";
 	public final static String getOrderByOrderID="select * from `fur_seal_schema`.`orders` where orderID=?";
 	public final static String cancelOrderByOrderId="UPDATE `fur_seal_schema`.`orders` SET `canceled`='1' where orderId=?";
-
+	public final static String getNumOfRegularSubsByParkingLot="select * from fur_seal_schema.regularSubscriptions where parkingLot=?";
+	public final static String getAllRegularSubs="select * from fur_seal_schema.regularSubscriptions";
+	public final static String getAllRegularSubsByCustomerIdAndParkingLot = "select * from fur_seal_schema.regularSubscriptions where customerId=?  and parkingLot=?";
+	public final static String getManagerMail="select * from fur_seal_schema.employees where type='companyManager'";
+	//public final static String getPakingLotManager
 }

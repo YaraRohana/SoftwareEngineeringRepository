@@ -59,8 +59,19 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 		String vehicles = request.getParameter("vehicles");
 		Date date1 = null;
 		if (customerId != null && email != null && startDate != null && vehicles != null) {
+			
 	//		int realVehicles = Integer.parseInt(vehicles);
 			boolean res=false;
+			try {
+				res = da.checkIfDateIsFromNowOn(startDate, "23:59");
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			if(res == false) {
+				System.out.println("Arriving Date and Time already passed!");
+				PrintWriter out = response.getWriter();
+				out.println(res);
+			}
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			customer.setConnected(false);
@@ -97,7 +108,7 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 					tmp = new OneCarBusinessSubscription(customerId, subsId, vehicleNum, sqlDate, email,
 							subscriptionType.regularBusinessSubscription, parkingLot, leavingAt);
 					try {
-						da.addBuisnessRegularSubscription(tmp);
+						res=da.addBuisnessRegularSubscription(tmp);
 					} catch (SQLException | ParseException e) {
 						System.out.println("Unable to add business subscription");
 						e.printStackTrace();
@@ -110,6 +121,7 @@ public class AddBusinessRegularSubscription extends HttpServlet {
 			}
 
 			PrintWriter out = response.getWriter();
+			out.println(res);
 			out.println(subsId);
 		}
 

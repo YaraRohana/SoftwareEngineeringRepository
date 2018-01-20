@@ -50,6 +50,16 @@ public class AddPreOrder extends HttpServlet {
 		boolean res = false;
 		if (customerId != null && vehicle != null && email != null && parkingLot != null && leavingDate != null
 				&& leavingTime != null && arrivingDate != null && arrivingTime != null) {
+			PrintWriter out = response.getWriter();
+			try {
+				res = da.checkIfDateIsFromNowOn(arrivingDate, arrivingTime);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			if(res == false) {
+				System.out.println("Starting Date already passed!");
+				out.println(res);
+			}
 			
 			Customer c = new Customer(customerId, email);
 			try {
@@ -76,7 +86,7 @@ public class AddPreOrder extends HttpServlet {
 				e.printStackTrace();
 				return;
 			}
-			PrintWriter out = response.getWriter();
+			//PrintWriter out = response.getWriter();
 			out.println(res);
 		}
 	}

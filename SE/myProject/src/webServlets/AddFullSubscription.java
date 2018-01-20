@@ -50,6 +50,16 @@ public class AddFullSubscription extends HttpServlet {
 		//boolean res1 = false;
 		if (vehicleNumber != null && customerId != null) {
 			PrintWriter out = response.getWriter();
+			try {
+				res = da.checkIfDateIsFromNowOn(startDate, "23:59");
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			if(res == false) {
+				System.out.println("Starting Date already passed!");
+				//PrintWriter out = response.getWriter();
+				out.println(res);
+			}
 			Customer customer = new Customer(customerId, email);
 			customer.setCredit(0);
 			customer.setConnected(false);
@@ -59,7 +69,13 @@ public class AddFullSubscription extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			Vehicle v = new Vehicle(vehicleNumber, customerId);
+			try {
+				res = da.addVehicle(v);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date = null;
 			try {
@@ -82,18 +98,7 @@ public class AddFullSubscription extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			Vehicle v = new Vehicle(vehicleNumber, customerId);
-			try {
-				res = da.addVehicle(v);
-				//PrintWriter out1 = response.getWriter();
-				//out1.println(res);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			out.println(res);
-			//PrintWriter out2 = response.getWriter();
 			out.println(subsId);
 		}
 	}

@@ -53,7 +53,7 @@ public class CancelOrder extends HttpServlet {
 		String arrivingDate = request.getParameter("arrivingDate");
 		String leavingDate = request.getParameter("leavingDate");
 		int finalCredit = 0;
-		int changedCredit = 0;
+		double changedCredit = 0;
 		// boolean result=false;
 		DataAccess da = new DataAccess();
 		if (customerId != null & vehicleNumber != null & parkingLot != null && arrivingAt != null
@@ -64,8 +64,8 @@ public class CancelOrder extends HttpServlet {
 				Order res = new Order(0, OrderType.preOrder, parkingLot, arrivingDate, leavingDate, arrivingAt,
 						leavingAt, customerId, vehicleNumber, false, false, false);
 				da.cancelOrder(res);
-				changedCredit = da.getCancelOrderCredit(res);
-				finalCredit = da.getCreditByCustomerId(customerId);
+				//changedCredit = da.getCancelOrderCredit(res);
+				//finalCredit = da.getCreditByCustomerId(customerId);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -74,7 +74,7 @@ public class CancelOrder extends HttpServlet {
 			}
 
 			out.println(changedCredit);
-			out.println(finalCredit);
+			//out.println(finalCredit);
 		}
 	}
 

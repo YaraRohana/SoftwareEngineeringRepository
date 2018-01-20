@@ -1,5 +1,7 @@
 package allClasses;
 
+import java.io.File;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -11,6 +13,21 @@ public class Main {
 		for (ParkingLot i : cps.getParkingLots()) {
 			System.out.println(i.toString());
 		}*/
+		
+			try {
+				ParkingLot parking = new ParkingLot("Univ", "location", true, false, "wasim", 12);
+				parking.setFaultedParkingSpot(2, 2, 5);
+				parking.setOccupiedParkingSpot(1, 1, 9);
+				parking.setSavedParkingSpot(0, 0, 0);
+			
+				CreatePdf pdf = new CreatePdf(parking,"results" + File.separator + "objects" + File.separator + "newPDF.pdf");
+				pdf.create();
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+				// TODO: handle exception
+			}
+		
 	}
 
 }
