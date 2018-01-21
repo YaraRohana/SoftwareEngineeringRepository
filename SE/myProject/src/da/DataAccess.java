@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 
 import javax.xml.crypto.KeySelector.Purpose;
 
+import org.eclipse.jdt.internal.compiler.ast.ReturnStatement;
+
 import allClasses.Complaint;
 import allClasses.Customer;
 import allClasses.Email;
@@ -132,10 +134,11 @@ public class DataAccess implements DataInterface {
 
 	/**
 	 * 
-	 * @param customerId
+	 * @param customerId wanted customer
 	 * @return boolean value cheking if the customer exists in the CPS,every
 	 *         customer is identified by their id
 	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
 	 */
 	public boolean checkIfCustomerExistsById(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
@@ -150,10 +153,11 @@ public class DataAccess implements DataInterface {
 
 	/**
 	 * 
-	 * @param customerId
+	 * @param customerId wanted customer
 	 * @return boolean value if the customer is connected to the CPS as registered
 	 *         in data base
 	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
 	 */
 	public boolean getCustomerConnectionStatus(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
@@ -168,10 +172,11 @@ public class DataAccess implements DataInterface {
 
 	/**
 	 * 
-	 * @param name
+	 * @param name wanted employee
 	 * @return boolean value if the employee is connected to the CPS as registered
 	 *         in data base
 	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
 	 */
 	public boolean getEmployeeConnectionStatus(String name) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
@@ -235,7 +240,9 @@ public class DataAccess implements DataInterface {
 	 * @return boolean result suggesting if the order already exists(false) or if
 	 *         the order is added successfully
 	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
 	 * @throws ParseException
+	 *             may not be able to parse if null
 	 */
 	public boolean addOrder(Order o) throws SQLException, ParseException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExists);
@@ -267,8 +274,9 @@ public class DataAccess implements DataInterface {
 	 *            with all of the information needed for adding it to the CPS data
 	 *            base: the complaint is added by the parameters: customer
 	 *            id,parking lot and a text stating what the complaint is about
-	 * @return
+	 * @return boolean
 	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
 	 */
 	public boolean addComplaint(Complaint complaint) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addNewComplaint);
@@ -302,9 +310,10 @@ public class DataAccess implements DataInterface {
 		}
 		return allOrders;
 	}
-/**
- * gets all orders from CPS for a customer id 
- */
+
+	/**
+	 * gets all orders from CPS for a customer id
+	 */
 	public ArrayList<Order> getAllOrdersByCustomerId(String id) throws SQLException {
 		boolean result = checkIfCustomerExistsById(id);
 		if (!result) {
@@ -328,9 +337,10 @@ public class DataAccess implements DataInterface {
 		}
 		return allOrders;
 	}
-/**
- * gets all orders for a certain vehicle number
- */
+
+	/**
+	 * gets all orders for a certain vehicle number
+	 */
 	public ArrayList<Order> getAllOrdersByVehicleNumber(String vehicleNum) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByVehicleNum);
 		stm.setString(1, vehicleNum);
@@ -351,6 +361,11 @@ public class DataAccess implements DataInterface {
 		return allOrders;
 	}
 
+	/**
+	 * gets all subscriptions made by a certain customer,both full and regular
+	 * subscriptions
+	 *
+	 */
 	public ArrayList<Subscription> getAllSubsByCustomerId(String customerId) throws SQLException {// TODO: this
 		boolean result = checkIfCustomerExistsById(customerId);
 		if (!result)
@@ -392,6 +407,11 @@ public class DataAccess implements DataInterface {
 		return subs;
 	}
 
+	/**
+	 * adds a vehicle to the CPS data base, a vehicle containts the vehicle number
+	 * and the id of the customer who owns it vehicle insertion is done when adding
+	 * an order(pre order,upon arrival) or a subscription(full,regular)
+	 */
 	public boolean addVehicle(Vehicle v) throws SQLException {
 		boolean res = checkIfVehicleExistsByNumber(v.getVehicleNumber());
 		if (res)
@@ -404,6 +424,9 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * gets all vehicles in the CPS data base
+	 */
 	public ArrayList<Vehicle> getAllVehicles() throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllVehicles);
 		ArrayList<Vehicle> allVehicles = new ArrayList<>();
@@ -416,8 +439,19 @@ public class DataAccess implements DataInterface {
 		return allVehicles;
 	}
 
+	/**
+	 * adds a full subscription to the full subscriptions table in the CPS data base
+	 * 
+	 * @param fullSubscription
+	 *            - an object that contains info about the subscription: customer
+	 *            id,vehicle number,starting date
+	 * @return success upon adding
+	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
+	 * @throws ParseException
+	 *             may not parse if null
+	 */
 	public boolean addFullSubscription(FullSubscription fullSubscription) throws SQLException, ParseException {
-
 		// System.out.println("it's true");
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addFullSubscription);
 		stm.setString(1, fullSubscription.getCustomerId());
@@ -433,6 +467,20 @@ public class DataAccess implements DataInterface {
 
 	}
 
+	/**
+	 * adds a regular subscription with one vehicle, meaning it's not a "business
+	 * client" adds a regular subscription to the regular subscriptions table with
+	 * the information of the customer
+	 * 
+	 * @param oneCarRegularSubscription
+	 *            contains the customer id,vehicle number,starting date and other
+	 *            important information
+	 * @return boolean result upon success
+	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
+	 * @throws ParseException
+	 *             may not parse if null
+	 */
 	public boolean addOneCarRegularSubscription(OneCarRegularSubscription oneCarRegularSubscription)
 			throws SQLException, ParseException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addOneCarRegularSubscription);
@@ -448,6 +496,10 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * gets a vehicle number and returns if it exists in the table of vehicles in
+	 * the CPS database
+	 */
 	public boolean checkIfVehicleExistsByNumber(String vehicleNum) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectVehicleByVehicleNum);
 		stm.setString(1, vehicleNum);
@@ -458,6 +510,11 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
+	/**
+	 * gets all complaints from the complaints table in the CPS database, the table
+	 * contains the following info about a previously filed complaint: customer
+	 * id,parking lot,text of the complaint,returns an arrayList of complaints
+	 */
 	public ArrayList<Complaint> getAllComplaints() throws SQLException {
 		ArrayList<Complaint> complaints = new ArrayList<Complaint>();
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.getAllComplaints);
@@ -475,6 +532,9 @@ public class DataAccess implements DataInterface {
 		return complaints;
 	}
 
+	/**
+	 * returns a boolean indicating if a customer exists in CPS
+	 */
 	public boolean checkIfEmployeeExists(String name, String password) throws SQLException {
 		PreparedStatement statement = c.prepareStatement(sqlStatements.Allstatements.checkIfEmployeeExists);
 		statement.setString(1, name);
@@ -483,6 +543,18 @@ public class DataAccess implements DataInterface {
 		return res.next();
 	}
 
+	/**
+	 * adds a one business regular subscription,
+	 *
+	 * @param sub
+	 *            - an object containing all the relevant information for a
+	 *            subscription to be made
+	 * @return boolean value upon success in adding it to the CPS data base
+	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
+	 * @throws ParseException
+	 *             may not parse if null
+	 */
 	public boolean addBuisnessRegularSubscription(OneCarBusinessSubscription sub) throws SQLException, ParseException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.addBusinessRegularSubscription);
 		stm.setString(1, sub.getCustomerId());
@@ -497,6 +569,13 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * checks if an order exists in the CPS orders table, since the same customer
+	 * can make multiple orders with the same vehicle or with different vehicles ,
+	 * the customer id is not a unique field,neither is the vehicle number,
+	 * therefore each time a new order is being added, we check if the exact same
+	 * order already exists
+	 */
 	public Order checkIfOrderExistsByAllParameters(String customerId, String vehicle, String arrivingDate,
 			String arrivingAt, String leavingDate, String leavingAt, String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfOrderExistsByAllParameters);
@@ -522,6 +601,11 @@ public class DataAccess implements DataInterface {
 
 	}
 
+	/**
+	 * cancels a given order, searches for it in the CPS data base and turns the
+	 * `canceled` bit in it to 1
+	 * 
+	 **/
 	public void cancelOrder(Order order) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.cancelOrder);
 		stm.setString(1, order.getParkingLot());
@@ -535,6 +619,10 @@ public class DataAccess implements DataInterface {
 		System.out.println("Order canceled");
 	}
 
+	/**
+	 * setup parking lot function for the parking lot employee, the input is the
+	 * width of the parking lot, updates the parking lots table
+	 */
 	public void setupParkingLot(String parkingLot, int width) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.setupParkingLot);
 		stm.setInt(1, width);
@@ -543,6 +631,10 @@ public class DataAccess implements DataInterface {
 		System.out.println("Setup of parking lot " + parkingLot + " is finished");
 	}
 
+	/**
+	 * every employee has a boolean connection status in the CPS employees table,
+	 * this function turns off this bit upon logout
+	 */
 	public void logOutEmployee(String name) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logOutEmployee);
 		stm.setString(1, name);
@@ -550,6 +642,10 @@ public class DataAccess implements DataInterface {
 		System.out.println("Employee logged out");
 	}
 
+	/**
+	 * every customer has a boolean connection status in the CPS customers table,
+	 * this function turns off this bit upon logout
+	 */
 	public void logOutCustomer(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logOutCustomer);
 		stm.setString(1, customerId);
@@ -557,6 +653,10 @@ public class DataAccess implements DataInterface {
 		System.out.println("Customer logged out");
 	}
 
+	/**
+	 * every customer has a boolean connection status in the CPS customers table,
+	 * this function turns on this bit upon login
+	 */
 	public void loginCustomer(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logInCustomer);
 		stm.setString(1, customerId);
@@ -565,6 +665,10 @@ public class DataAccess implements DataInterface {
 
 	}
 
+	/**
+	 * every employee has a boolean connection status in the CPS employees table,
+	 * this function turns on this bit upon login
+	 */
 	public void loginEmployee(String name, String password) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.logInEmployee);
 		stm.setString(1, name);
@@ -574,6 +678,11 @@ public class DataAccess implements DataInterface {
 
 	}
 
+	/**
+	 * every employee is assigned a type in the CPS employees table: parking lot
+	 * manager,parking lot employee, customer service employee,this function returns
+	 * the type of the employee
+	 */
 	public String getEmployeeType(String name) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getEmployeeByName);
 		stm.setString(1, name);
@@ -595,6 +704,9 @@ public class DataAccess implements DataInterface {
 		return type1;
 	}
 
+	/**
+	 * returns the parking lot where the employee is employed
+	 */
 	public String getEmployeeParkingLot(String name) throws SQLException {
 		String employeeType = getEmployeeType(name);
 		String parkingLot = null;
@@ -610,6 +722,11 @@ public class DataAccess implements DataInterface {
 		return parkingLot;
 	}
 
+	/**
+	 * upon filing a complaint, the employee has to get back to the customer with a
+	 * reply(and optionally a compensation), this functions handles complaints
+	 * replies
+	 */
 	public void updateCompensationForCustomer(String customerId, int compensation) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
@@ -625,17 +742,17 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 	}
 
+	/**
+	 * gets an order and calculated the cost of the order for the customer,depending
+	 * on the type(pre order,upon arrival) and the time and date of arrival and
+	 * leaving
+	 */
 	@SuppressWarnings("deprecation")
 	public double getOrderCost(String arrivingAt, String leavingAt, String arrivingDate, String leavingDate,
 			OrderType type) throws SQLException, Exception {
 		double preOrderPrice = 0.0, uponArrivalPrice = 0.0;
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-		java.util.Date ArrivingAt = dateFormat.parse(arrivingAt);
-		java.util.Date LeavingAt = dateFormat.parse(leavingAt);
-		java.util.Date ArrivingDate = dateFormat1.parse(arrivingDate);
-		java.util.Date LeavingDate = dateFormat1.parse(leavingDate);
 		java.util.Date Arriving = dateFormat1.parse(arrivingDate);
 		java.util.Date Leaving = dateFormat1.parse(leavingDate);
 		String arriving = null;
@@ -671,6 +788,9 @@ public class DataAccess implements DataInterface {
 		return -1;
 	}
 
+	/**
+	 * gets the cost of the full subscription
+	 */
 	public int getFullSubscriptionCost() throws NumberFormatException, SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
 		// stm.setString(1, parkingLot);
@@ -683,6 +803,9 @@ public class DataAccess implements DataInterface {
 		return price1 * price2;
 	}
 
+	/**
+	 * gets the regular subscription price for one vehicle
+	 */
 	public int getOneCarRegularSubscriptionCost() throws NumberFormatException, SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
 		// stm.setString(1, parkingLot);
@@ -695,6 +818,9 @@ public class DataAccess implements DataInterface {
 		return price1 * price2;
 	}
 
+	/**
+	 * calculates the business regular(multiple cars regular subscription) cost
+	 */
 	public int getBusinessRegularSubscriptionCost(int numOfCars) throws NumberFormatException, SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
 		// stm.setString(1, parkingLot);
@@ -708,50 +834,13 @@ public class DataAccess implements DataInterface {
 		return price1 * price2 * numOfCars;
 	}
 
-	// public int getCancelOrderCredit(Order order) throws SQLException, Exception {
-	// double credit = 0;
-	// int Credit;
-	// String arrivingDate = order.getArrivingDate();
-	// String arrivingAt = order.getArrivingAt();
-	// arrivingDate = arrivingDate + " " + arrivingAt;
-	// DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-	// java.util.Date Arriving = dateFormat.parse(arrivingDate);
-	// java.util.Date now = new java.util.Date();
-	//
-	// long diff = Arriving.getTime() - now.getTime();
-	//
-	// long diffHours = diff / (60 * 60 * 1000) % 24;
-	// long diffDays = diff / (24 * 60 * 60 * 1000);
-	// System.out.println("diff hours " + diffHours);
-	// System.out.println("diff days " + diffDays);
-	// if (diffDays > 0 || diffHours > 3) {
-	// System.out.println("first if");
-	// credit = (9 / 10) * getOrderCost(arrivingAt, order.getLeavingAt(),
-	// arrivingDate, order.getLeavingDate(),
-	// order.getType());
-	// }
-	//
-	// else if (diffHours >= 1 && diffHours <= 3) {
-	// System.out.println("second if");
-	// System.out.println("price is" + getOrderCost(arrivingAt,
-	// order.getLeavingAt(), arrivingDate,
-	// order.getLeavingDate(), order.getType()));
-	// credit = (1 / 2) * getOrderCost(arrivingAt, order.getLeavingAt(),
-	// arrivingDate, order.getLeavingDate(),
-	// order.getType());
-	// } else {
-	// System.out.println("third if");
-	// credit = 0;
-	// }
-	// updateCreditByCustomerId(order.getCustomerId(), credit);
-	// Credit = (int) credit;
-	// return Credit;
-	// // return true;
-	// }
-
+	/**
+	 * if an order is canceled, this function calculated the amount of money the
+	 * customer gets back(if any) using the date and time at which he made the
+	 * cancellation
+	 */
 	public double getCancelOrderCredit(Order order) throws SQLException, Exception {
 		double credit = 0;
-		int Credit;
 		String arrivingDate = order.getArrivingDate();
 		String arrivingAt = order.getArrivingAt();
 		arrivingDate = arrivingDate + " " + arrivingAt;
@@ -784,6 +873,9 @@ public class DataAccess implements DataInterface {
 		// return true;
 	}
 
+	/**
+	 * gets the current credit in the customer's account
+	 */
 	public double getCreditByCustomerId(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
@@ -795,6 +887,9 @@ public class DataAccess implements DataInterface {
 		return credit;
 	}
 
+	/**
+	 * updates the credit in the customer's account
+	 */
 	public void updateCreditByCustomerId(String customerId, double newCredit) throws SQLException {
 		if (customerId != null) {
 			PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
@@ -810,116 +905,9 @@ public class DataAccess implements DataInterface {
 		}
 	}
 
-	// public ParkingLot getParkingLotByNameFromCPS(String parkingLot) throws
-	// SQLException {
-	// if (parkingLot != null) {
-	// CPS cps = CPS.getInstance();
-	// for (ParkingLot i : cps.getParkingLots()) {
-	// if (i.getName().equals(parkingLot)) {
-	// System.out.println("found it,it's " + i.getName());
-	// return i;
-	// }
-	// }
-	// }
-	// return null;
-	// }
-
-	// public void printParkingSpots(String parkingLot) throws SQLException {
-	// ParkingLot pl = getParkingLotByNameFromCPS(parkingLot);
-	// for (int i = 0; i < 3; i++) {
-	// for (int j = 0; j < 3; j++) {
-	// for (int k = 0; k < pl.getWidth(); k++) {
-	// System.out.println("is Saved= " + pl.getParkingSpots()[i][j][k].isSaved() + "
-	// is Faulted= "
-	// + pl.getParkingSpots()[i][j][k].isFaulted() + " is Occupied= "
-	// + pl.getParkingSpots()[i][j][k].isOccupied());
-	// }
-	// }
-	// }
-	// }
-
-	// public boolean saveParkingSpot(String parkingLot, int row, int column, int
-	// width) throws SQLException {
-	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-	// CPS cps = CPS.getInstance();
-	// for (ParkingLot parkinglot : cps.getParkingLots()) {
-	// System.out.println(parkinglot.getName());
-	// if (parkinglot.getName().equals(parkingLot)) {
-	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-	// ParkingSpot ps = tmp[row][column][width];
-	// if (ps.isSaved() == false && ps.isFaulted() == false && ps.isOccupied() ==
-	// false) {
-	// parkinglot.setSavedParkingSpot(row, column, width);
-	// printParkingSpots(parkingLot);
-	// return true;
-	// }
-	// }
-	// }
-	//
-	// }
-	// return false;
-	// }
-	//
-	// public boolean unsaveParkingSpot(String parkingLot, int row, int column, int
-	// width) throws SQLException {
-	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-	// CPS cps = CPS.getInstance();
-	// for (ParkingLot parkinglot : cps.getParkingLots()) {
-	// if (parkinglot.getName().equals(parkingLot)) {
-	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-	// ParkingSpot ps = tmp[row][column][width];
-	// if (ps.isSaved() == true) {
-	// parkinglot.unsaveParkingSpot(row, column, width);
-	// return true;
-	// }
-	// }
-	// }
-	// }
-	// return false;
-	// }
-
-	// public boolean setFaultedParkingSpot(String parkingLot, int row, int column,
-	// int width) throws SQLException {
-	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-	// CPS cps = CPS.getInstance();
-	// for (ParkingLot parkinglot : cps.getParkingLots()) {
-	// if (parkinglot.getName().equals(parkingLot)) {
-	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-	// ParkingSpot ps = tmp[row][column][width];
-	// if (ps.isFaulted() == false) {
-	// parkinglot.setFaultedParkingSpot(row, column, width);
-	// if (ps.isOccupied() == true) {
-	// parkinglot.unsetOccupiedParkingSpot(row, column, width);
-	// }
-	// if (ps.isSaved() == true) {
-	// parkinglot.unsaveParkingSpot(row, column, width);
-	// }
-	// return true;
-	// }
-	// }
-	// }
-	// }
-	// return false;
-	// }
-
-	// public boolean unsetFaultedParkingSpot(String parkingLot, int row, int
-	// column, int width) throws SQLException {
-	// if (row >= 0 && row <= 2 && column >= 0 && column <= 2) {
-	// CPS cps = CPS.getInstance();
-	// for (ParkingLot parkinglot : cps.getParkingLots()) {
-	// if (parkinglot.getName().equals(parkingLot)) {
-	// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-	// ParkingSpot ps = tmp[row][column][width];
-	// if (ps.isFaulted() == true) {
-	// parkinglot.unsetFaultedParkingSpot(row, column, width);
-	// return true;
-	// }
-	// }
-	// }
-	// }
-	// return false;
-	// }
-
+	/**
+	 * changes the prices of the parking lots
+	 */
 	public boolean employeePriceChange(String name, int preOrder, int uponArrival) throws SQLException, Exception {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.updatePrices);
 		stm.setInt(1, preOrder);
@@ -928,6 +916,9 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * generates a random subscription id
+	 */
 	public String getSaltString() {
 		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		StringBuilder salt = new StringBuilder();
@@ -941,6 +932,9 @@ public class DataAccess implements DataInterface {
 
 	}
 
+	/**
+	 * gets the email of the customer from the DB
+	 */
 	public String getCustomerMailById(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
 		stm.setString(1, customerId);
@@ -952,10 +946,17 @@ public class DataAccess implements DataInterface {
 		return email;
 	}
 
+	/**
+	 * when the employee replied to the complaint, the reply is sent to the customer
+	 * via mail
+	 */
 	public void sendComplaintReplyToMail(String email, String reply) {
 		Email.sendEmail(email, "Complaint Reply", reply);
 	}
 
+	/**
+	 * returns an arrayList of orders by a given date and time
+	 */
 	public ArrayList<Order> getAllPreOrdersByArrivingDate(String arriveDate, String arrivingAt) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByArrivingDate);
 		stm.setString(1, arriveDate);
@@ -979,6 +980,13 @@ public class DataAccess implements DataInterface {
 		return allOrders;
 	}
 
+	/**
+	 * deletes an order, for internal use only
+	 * 
+	 * @param or wanted order
+	 * @return boolean res
+	 * @throws SQLException DB connection
+	 */
 	public boolean deleteOrder(Order or) throws SQLException {
 		Order checkOrder = checkIfOrderExistsByAllParameters(or.getCustomerId(), or.getVehicleNum(),
 				or.getArrivingDate(), or.getArrivingAt(), or.getLeavingDate(), or.getLeavingAt(), or.getParkingLot());
@@ -999,6 +1007,14 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * chekcs if a certain vehicle is currently parked in any parking lot
+	 * 
+	 * @param vehicleId vehicle
+	 * @return boolean value indicating if the vehicle is in any of the parking lots
+	 * @throws SQLException
+	 *             gets information from DB therefore could be an exception
+	 */
 	public boolean isVehicleParking(String vehicleId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.checkIfVehicleParking);
 		stm.setString(1, vehicleId);
@@ -1009,6 +1025,10 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
+	/**
+	 * returns all the full subscriptions whose starting date are equal to the
+	 * startDate input
+	 */
 	public ArrayList<FullSubscription> getAllFullSubsByStartingDate(Date startDate) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByStartingDate);
 		stm.setDate(1, startDate);
@@ -1024,6 +1044,10 @@ public class DataAccess implements DataInterface {
 		return subs;
 	}
 
+	/**
+	 * returns all full subscriptions whose have been parking in a parking lot since
+	 * the arriveDate
+	 */
 	public ArrayList<FullSubscription> getAllFullSubsByArrivedSince(Date arriveDate) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByArrivedSince);
 		stm.setDate(1, arriveDate);
@@ -1039,6 +1063,10 @@ public class DataAccess implements DataInterface {
 		return subs;
 	}
 
+	/**
+	 * returns all the regular subscriptions whose starting date are equal to the
+	 * startDate input
+	 */
 	public ArrayList<Subscription> getAllRegSubsByStartingDate(Date startDate) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByStartingDate);
 		stm.setDate(1, startDate);
@@ -1062,40 +1090,10 @@ public class DataAccess implements DataInterface {
 		}
 		return subs;
 	}
-	//
-	// public ParkingSpot[][][] getParkingLotImage(String parkingLot) throws
-	// SQLException {
-	// CPS cps = CPS.getInstance();
-	// if (parkingLot != null) {
-	// for (ParkingLot i : cps.getParkingLots()) {
-	// if (i.getName().equals(parkingLot)) {
-	// return i.getParkingSpots();
-	// }
-	// }
-	// }
-	// return null;
-	// }
 
-	// public ArrayList<ParkingSpot[][][]> getAllParkingLotsImages() throws
-	// SQLException {
-	// CPS cps = CPS.getInstance();
-	// ArrayList<ParkingSpot[][][]> parkingSpots = new
-	// ArrayList<ParkingSpot[][][]>();
-	// ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
-	// for (ParkingLot parkingLot : parkingLots) {
-	// parkingSpots.add(getParkingLotImage(parkingLot.getName()));
-	// }
-	// return parkingSpots;
-	// }
-
-	// public void printAllParkingLots() throws SQLException {
-	// CPS cps = CPS.getInstance();
-	// ArrayList<ParkingLot> parkingLots = cps.getParkingLots();
-	// for (ParkingLot parkingLot : parkingLots) {
-	// System.out.println(parkingLot.getName());
-	// }
-	// }
-
+	/**
+	 * returns boolean if the complaint has been checked by an employee
+	 */
 	public boolean getComplaintStatus(String SubDate, boolean isChecked) throws SQLException {
 		DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		java.util.Date submissionDate = null;
@@ -1117,15 +1115,8 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
-	/*
-	 * ArrayList<Order> getAllVehiclesCurrentlyInParkingLot(String parkingLot)
-	 * throws SQLException{ PreparedStatement
-	 * stm=c.prepareStatement(sqlStatements.Allstatements.
-	 * getAllVehiclesCurrentlyInParkingLot); stm.setString(1, parkingLot); ResultSet
-	 * res=stm.executeQuery(); ArrayList<Order> orders=new ArrayList<Order>();
-	 * while(res.next()) { Order o=new Order(res.get, type, parkingLot,
-	 * arrivingDate, leavingDate, arrivingAt, leavingAt, customerId, vehicleNum,
-	 * arrivingLate, leavingLate, isCanceled) } }
+	/**
+	 * set complaint as checked after it's been handled by an employee
 	 */
 	public void setComplaintAsCheckedByCustomerId(String customerId) throws SQLException {
 		PreparedStatement a = c.prepareStatement(sqlStatements.Allstatements.getComplaintByCustomerId);
@@ -1139,6 +1130,9 @@ public class DataAccess implements DataInterface {
 		stm.executeUpdate();
 	}
 
+	/**
+	 * returns number of executed(and not canceled) orders by parking lot
+	 */
 	public int getNumberOfExecutedOrdersByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getNumberOfExecutedOrdersByParkingLot);
 		stm.setString(1, parkingLot);
@@ -1150,6 +1144,9 @@ public class DataAccess implements DataInterface {
 		return sum;
 	}
 
+	/**
+	 * returns number of canceled orders by parking lot
+	 */
 	public int getNumberOfCanceledOrdersByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getNumberOfCanceledOrdersByParkingLot);
 		stm.setString(1, parkingLot);
@@ -1161,6 +1158,9 @@ public class DataAccess implements DataInterface {
 		return sum;
 	}
 
+	/**
+	 * returns number of arrived late orders by a certain parking lot
+	 */
 	public int getNumberOfLateArrivalOrdersByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c
 				.prepareStatement(sqlStatements.Allstatements.getNumberOfLateArrivalOrdersByParkingLot);
@@ -1173,6 +1173,11 @@ public class DataAccess implements DataInterface {
 		return sum;
 	}
 
+	/**
+	 * sets the given parking spot (row,col,width) as faulted in the CPS data base,
+	 * by adding it to the FaultedAndSavedParkingSpots table, after confirming it is
+	 * not occupied\already registered as faulted
+	 */
 	public boolean setParkingSpotAsFaulted(String parkingLot, int row, int col, int width) throws SQLException {
 		ParkingSpot tmp = getParkingSpotStatus(parkingLot, row, col, width);
 		if (tmp.isFaulted() == true) {
@@ -1193,6 +1198,11 @@ public class DataAccess implements DataInterface {
 		return true;
 	}
 
+	/**
+	 * sets the given parking spot (row,col,width) as saved in the CPS data base, by
+	 * adding it to the FaultedAndSavedParkingSpots table, after confirming it is
+	 * not occupied\already registered as saved
+	 */
 	public boolean setParkingSpotAsSaved(String parkingLot, int row, int col, int width) throws SQLException {
 		ParkingSpot tmp = getParkingSpotStatus(parkingLot, row, col, width);
 		if (tmp.isSaved() == true) {
@@ -1238,6 +1248,10 @@ public class DataAccess implements DataInterface {
 		stm.execute();
 	}
 
+	/**
+	 * returns all the information about the parking spot (row,column,width):
+	 * isSaved,isFaulted,isOccupied
+	 */
 	public ParkingSpot getParkingSpotStatus(String parkingLot, int row, int col, int width) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getParkingSpotStatusFaultedOrSaved);
 		stm.setString(1, parkingLot);
@@ -1271,6 +1285,11 @@ public class DataAccess implements DataInterface {
 		return tmp;
 	}
 
+	/**
+	 * gets the current image of the a certain parking lot: for every 3*3*width the
+	 * parking spots we have the function provides the following info about every
+	 * parking spot: isSaved,isFaulted,isOccupied
+	 */
 	public ParkingSpot[][][] getParkingLotImageNew(String parkingLot) throws SQLException {
 		int currWidth = getWidthByParkingLot(parkingLot);
 		if (currWidth == 0)
@@ -1295,6 +1314,24 @@ public class DataAccess implements DataInterface {
 		return currImage;
 	}
 
+	/**
+	 * main and actual function inserting a vehicle into a parking lot in the DB,
+	 * given the indices (row,col,width) the function calculates the optimal parking
+	 * spot for inserting the vehicle according to the arrival and leaving time and
+	 * date
+	 * 
+	 * @param parkingLot
+	 *            the wanted parking lot to be inserted at
+	 * @param vehicleNumber
+	 *            the wanted vehicle number for insertion
+	 * @param type
+	 *            type of order(pre order,upon arrival)
+	 * @return does not return anything
+	 * @throws SQLException
+	 *             connects to the DB so there may be an exception
+	 * @throws ParseException
+	 *             cannot patsr if null
+	 */
 	public boolean insertCarIntoParkingLot(String parkingLot, String vehicleNumber, String type)
 			throws SQLException, ParseException {
 		if (parkingLot != null && vehicleNumber != null && type != null) {
@@ -1470,85 +1507,18 @@ public class DataAccess implements DataInterface {
 		return false;
 	}
 
-	// public double removeCarFromParkingLot(String vehicleNumber, String
-	// parkingLot) throws SQLException, Exception {
-	// String customerId = null;
-	// String leavingDate = null;
-	// String leavingAt = null;
-	// String arrivingDate = null;
-	// String arrivingAt = null;
-	// String temp = null;
-	// java.util.Date leaving = null;
-	// java.util.Date now = new java.util.Date();
-	// String type = null;
-	// int row = -1, column = -1, width = -1;
-	// long diff;
-	//
-	// DateFormat fullDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-	// if (vehicleNumber != null && parkingLot != null) {
-	// double cost = 0;
-	// PreparedStatement stm =
-	// c.prepareStatement(sqlStatements.Allstatements.getVehicleFromOccupiedParkingSpots);
-	// stm.setString(1, vehicleNumber);
-	// stm.setString(2, parkingLot);
-	// ResultSet res = stm.executeQuery();
-	// while (res.next()) {
-	// row = res.getInt("row");
-	// column = res.getInt("column");
-	// width = res.getInt("width");
-	// leavingDate = res.getString("leavingDate");
-	// leavingAt = res.getString("leavingAt");
-	// type = res.getString("type");
-	// customerId = res.getString("customerId");
-	// }
-	// temp = leavingDate + " " + leavingAt;
-	// System.out.println("tempis" + temp);
-	// leaving = fullDateFormat.parse(temp);
-	// diff = now.getTime() - leaving.getTime();
-	// diff /= 60000;
-	// if (diff > 3) {
-	// System.out.println("diff>3");
-	// PreparedStatement stmm =
-	// c.prepareStatement(sqlStatements.Allstatements.setLeavingLate);
-	// stmm.setString(1, customerId);
-	// stmm.setString(2, vehicleNumber);
-	// stmm.setString(3, parkingLot);
-	// stmm.setString(4, leavingDate);
-	// stmm.setString(5, leavingAt);
-	// stmm.executeUpdate();
-	// }
-	// if (type.equals("uponArrivalOrder")) {
-	// System.out.println("in upon arrival");
-	// OrderType uponArrival = OrderType.uponArrivalOrder;
-	// PreparedStatement stmm =
-	// c.prepareStatement(sqlStatements.Allstatements.getOrderByNotArriving);
-	// stmm.setString(1, parkingLot);
-	// stmm.setString(2, vehicleNumber);
-	// stmm.setString(3, customerId);
-	// stmm.setString(4, leavingDate);
-	// stmm.setString(5, leavingAt);
-	// ResultSet ress = stmm.executeQuery();
-	// while (ress.next()) {
-	// // System.out.println("found the order " + ress.getInt("orderID") +
-	// // ress.getString("parkingLot"));
-	// arrivingDate = ress.getString("arrivingDate");
-	// arrivingAt = ress.getString("arrivingAt");
-	// }
-	// cost = getOrderCost(arrivingAt, leavingAt, arrivingDate, leavingDate,
-	// uponArrival);
-	// System.out.println("cost is" + cost);
-	// }
-	//
-	// unsetParkingSpotAsOccupied(parkingLot, customerId, vehicleNumber, row,
-	// column, width, leavingDate,
-	// leavingAt);
-	// rearrangeParkingLot(parkingLot, row, column, width);
-	//
-	// return cost;
-	// }
-	// return -1;
-	// }
-
+	/**
+	 * removes a car from it's parking spot in the parking lot
+	 * 
+	 * @param vehicleNumber
+	 *            the wanted vehicle number to be exited out of the parkimg lot
+	 * @param parkingLot
+	 * @return
+	 * @throws SQLException
+	 *             connects to DB so there may be an exception
+	 * @throws Exception
+	 *             other kinds of exceptions
+	 */
 	public double removeCarFromParkingLot(String vehicleNumber, String parkingLot) throws SQLException, Exception {
 		if (isVehicleParking(vehicleNumber) == false) {
 			return -2;
@@ -1648,6 +1618,23 @@ public class DataAccess implements DataInterface {
 		return (-1);
 	}
 
+	/**
+	 * inserts the car into the given parking spot in the DB by adding it to the
+	 * occupied parking spots table
+	 * 
+	 * @param parkingLot
+	 * @param customerId
+	 * @param vehicleNumber
+	 * @param row
+	 * @param column
+	 * @param width
+	 * @param leavingDate
+	 * @param leavingAt
+	 * @param type
+	 * @return boolean status of adding
+	 * @throws SQLException
+	 *             connects to DB so there migh be an exception
+	 */
 	public boolean setParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
 			int column, int width, String leavingDate, String leavingAt, String type) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getVehicleByParkingLotAndSpot);
@@ -1673,21 +1660,23 @@ public class DataAccess implements DataInterface {
 		stm.setString(9, type);
 		stm.executeUpdate();
 		return true;
-		// for (ParkingLot parkinglot : cps.getParkingLots()) {
-		// if (parkinglot.getName().equals(parkingLot)) {
-		// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-		// ParkingSpot ps = tmp[row][column][width];
-		// if (ps.isOccupied() == false) {
-		// parkinglot.setOccupiedParkingSpot(row, column, width);
-		// if (ps.isSaved() == true) {
-		// parkinglot.unsaveParkingSpot(row, column, width);
-		// }
-		// }
-		// }
-		// }
 
 	}
 
+	/**
+	 * deletes the vehicle from the OccupiedParkingSpots table in the CPS DB
+	 * 
+	 * @param parkingLot
+	 * @param customerId
+	 * @param vehicleNumber
+	 * @param row
+	 * @param column
+	 * @param width
+	 * @param leavingDate
+	 * @param leavingAt
+	 * @throws SQLException
+	 *             connects to DB so there might be an exception
+	 */
 	public void unsetParkingSpotAsOccupied(String parkingLot, String customerId, String vehicleNumber, int row,
 			int column, int width, String leavingDate, String leavingAt) throws SQLException {
 		// CPS cps = CPS.getInstance();
@@ -1710,18 +1699,20 @@ public class DataAccess implements DataInterface {
 		stm.setInt(5, column);
 		stm.setInt(6, width);
 		stm.execute();
-
-		// for (ParkingLot parkinglot : cps.getParkingLots()) {
-		// if (parkinglot.getName().equals(parkingLot)) {
-		// ParkingSpot[][][] tmp = parkinglot.getParkingSpots();
-		// ParkingSpot ps = tmp[row][column][width];
-		// if (ps.isOccupied() == true) {
-		// parkinglot.unsetOccupiedParkingSpot(row, column, width);
-		// }
-		// }
-		// }
 	}
 
+	/**
+	 * returns information about the parking spot (row,width,column) in the parking
+	 * lot parkingLot
+	 * 
+	 * @param parkingLot
+	 * @param row
+	 * @param column
+	 * @param width
+	 * @return
+	 * @throws SQLException
+	 *             connects to DB
+	 */
 	public Order getVehicleOrderByParkinLotAndSpot(String parkingLot, int row, int column, int width)
 			throws SQLException {
 		Order o = null;
@@ -1739,6 +1730,14 @@ public class DataAccess implements DataInterface {
 		return o;
 	}
 
+	/**
+	 * gets the width of the parkinglot from the DB
+	 * 
+	 * @param parkingLot
+	 * @return
+	 * @throws SQLException
+	 *             DB
+	 */
 	public int getWidthByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.selectParkingLotByName);
 		stm.setString(1, parkingLot);
@@ -1750,6 +1749,19 @@ public class DataAccess implements DataInterface {
 		return currWidth;
 	}
 
+	/**
+	 * calculated the optimal parking spot for a vehicle to be entered, the
+	 * calculation takes into consideration the starting and leaving times and dates
+	 * 
+	 * @param parkingLot
+	 * @param ThisLeavingDate
+	 * @param ThisLeavingAt
+	 * @return
+	 * @throws SQLException
+	 *             DB
+	 * @throws Exception
+	 *             other
+	 */
 	public int[] getOptemalParkingSpot(String parkingLot, String ThisLeavingDate, String ThisLeavingAt)
 			throws SQLException, Exception {
 		int[] optemalps = new int[3];
@@ -1786,16 +1798,6 @@ public class DataAccess implements DataInterface {
 				}
 			}
 		}
-		// if (optemal == true) {
-		//
-		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		// System.out.println("Row" + optemalps[0]);
-		// System.out.println("Column" + optemalps[1]);
-		// System.out.println("Width" + optemalps[2]);
-		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		//
-		// return optemalps;
-		// }
 
 		for (int i = 0; i < 3; i++) {
 			for (int k = 0; k < currWidth; k++) {
@@ -1824,11 +1826,6 @@ public class DataAccess implements DataInterface {
 							}
 						} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
 							diff = 0;
-							System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-							System.out.println("Row" + optemalps[0]);
-							System.out.println("Column" + optemalps[1]);
-							System.out.println("Width" + optemalps[2]);
-							System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 							return optemalps;
 						}
 					} else {
@@ -1869,12 +1866,6 @@ public class DataAccess implements DataInterface {
 		}
 
 		if (optemal == true) {
-
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			System.out.println("Row" + optemalps[0]);
-			System.out.println("Column" + optemalps[1]);
-			System.out.println("Width" + optemalps[2]);
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			return optemalps;
 		}
 		set = false;
@@ -1925,14 +1916,6 @@ public class DataAccess implements DataInterface {
 								}
 							} else if (tmp.isFaulted() == true || tmp.isSaved() == true) {
 								diff = 0;
-
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-								System.out.println("Row" + optemalps[0]);
-								System.out.println("Column" + optemalps[1]);
-								System.out.println("Width" + optemalps[2]);
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 								return optemalps;
 							}
 						}
@@ -1964,14 +1947,6 @@ public class DataAccess implements DataInterface {
 								}
 							} else if (tmp2.isFaulted() == true || tmp2.isSaved() == true) {
 								diff = 0;
-
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-								System.out.println("Row" + optemalps[0]);
-								System.out.println("Column" + optemalps[1]);
-								System.out.println("Width" + optemalps[2]);
-								System.out.println(
-										"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 								return optemalps;
 							}
 						} else if (tmp1.isOccupied() == true) {
@@ -2001,15 +1976,22 @@ public class DataAccess implements DataInterface {
 				}
 			}
 		}
-
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("Row" + optemalps[0]);
-		System.out.println("Column" + optemalps[1]);
-		System.out.println("Width" + optemalps[2]);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		return optemalps;
 	}
 
+	/**
+	 * re-arranges the parking lot after the vehicle (row,column,width) exists the
+	 * parking lot
+	 * 
+	 * @param parkingSpot
+	 * @param row
+	 * @param column
+	 * @param width
+	 * @throws SQLException
+	 *             DB
+	 * @throws Exception
+	 *             ther
+	 */
 	public void rearrangeParkingLot(String parkingSpot, int row, int column, int width) throws SQLException, Exception {
 		String vehicleNumber = null;
 		String parkingLot = null;
@@ -2065,6 +2047,15 @@ public class DataAccess implements DataInterface {
 		}
 	}
 
+	/**
+	 * returns boolean value if the date is from now on
+	 * 
+	 * @param date
+	 * @param time
+	 * @return
+	 * @throws ParseException
+	 *             can't parse if null
+	 */
 	public boolean checkIfDateIsFromNowOn(String date, String time) throws ParseException {
 		boolean check = false;
 		java.util.Date now = new java.util.Date();
@@ -2079,6 +2070,15 @@ public class DataAccess implements DataInterface {
 		return check;
 	}
 
+	/**
+	 * when arriving or leaving late to/from the parking lot, this function
+	 * calculates the sum of money the customer is refunded or has to pay(if necessary)
+	 * 
+	 * @param o
+	 * @return
+	 * @throws Exception other
+	 * @throws SQLException DB
+	 */
 	public boolean arrivingOrLeavingLateCredit(Order o) throws Exception, SQLException {
 		if (o != null) {
 			double credit = 0;
@@ -2115,49 +2115,12 @@ public class DataAccess implements DataInterface {
 		}
 		return false;
 	}
-	// public boolean arrivingOrLeavingLateCredit(Order o) throws Exception,
-	// SQLException {
-	// if (o != null) {
-	// int credit = 0;
-	// String customerId = null;
-	// String leavingDate = null;
-	// String leavingAt = null;
-	// java.util.Date now = new java.util.Date();
-	// DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	// DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-	// leavingDate = dateFormat.format(now);
-	// leavingAt = timeFormat.format(now);
-	// int cost1 = (int) getOrderCost(o.getLeavingAt(), leavingAt,
-	// o.getLeavingDate(), leavingDate, o.getType());
-	// int cost2 = (int) getOrderCost(o.getArrivingAt(), o.getLeavingAt(),
-	// o.getArrivingDate(), o.getLeavingDate(),
-	// o.getType());
-	// if (o.isArrivingLate() == true) {
-	// credit -= (cost2 / 5);
-	// }
-	// if (o.isLeavingLate() == true) {
-	// credit -= (cost1 * 2);
-	// }
-	// customerId = o.getCustomerId();
-	//
-	// PreparedStatement stm =
-	// c.prepareStatement(sqlStatements.Allstatements.selectCustomerById);
-	// stm.setString(1, customerId);
-	// ResultSet res = stm.executeQuery();
-	// while (res.next()) {
-	// credit += res.getInt("credit");
-	// }
-	//
-	// stm =
-	// c.prepareStatement(sqlStatements.Allstatements.updateCreditByCustomerId);
-	// stm.setInt(1, credit);
-	// stm.setString(2, customerId);
-	// stm.executeQuery();
-	// return true;
-	// }
-	// return false;
-	// }
-
+/**
+ * 
+ * @param parkingLot
+ * @return number of regular subscriptions in parking lot
+ * @throws SQLException
+ */
 	public int getNumOfSubscriptionsByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getNumOfSubsByParkingLot);
 		stm.setString(1, parkingLot);
@@ -2169,7 +2132,12 @@ public class DataAccess implements DataInterface {
 		}
 		return sum;
 	}
-
+/**
+ * 
+ * @param parkingLot
+ * @return number of regular subscriptions with multiple vehicles in parkingLot
+ * @throws SQLException
+ */
 	public int getNumOfRegularSubsWithMultipleVehiclesByParkingLot(String parkingLot) throws SQLException {
 		System.out.println("we're here**********************");
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubs);
@@ -2198,7 +2166,13 @@ public class DataAccess implements DataInterface {
 		}
 		return sum;
 	}
-
+/**
+ * 
+ * @param customerId
+ * @param parkingLot
+ * @return number of customer's regular subscriptions in parkingLot
+ * @throws SQLException
+ */
 	public int getNumOfRegularSubsByCustomerIdAndParkingLot(String customerId, String parkingLot) throws SQLException {
 		PreparedStatement stm = c
 				.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerIdAndParkingLot);
@@ -2212,7 +2186,9 @@ public class DataAccess implements DataInterface {
 		return sum;
 
 	}
-
+/*
+ * returnns number of all subscriptions by customer id
+ */
 	public int getNumberOfSubscriptionsByCustomerId(String customerId) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllRegularSubsByCustomerId);
 		stm.setString(1, customerId);
@@ -2229,7 +2205,11 @@ public class DataAccess implements DataInterface {
 		}
 		return sum;
 	}
-
+/**
+ * 
+ * @return total number of CPS customers with multiple vehicles subscriptions
+ * @throws SQLException
+ */
 	public int getNumberOfCustomersWithMoreThanOneSubscription() throws SQLException {
 		ArrayList<Customer> allCustomers = new ArrayList<Customer>();
 		allCustomers = getAllCustomers();
@@ -2242,7 +2222,12 @@ public class DataAccess implements DataInterface {
 		}
 		return sum;
 	}
-
+/**
+ * 
+ * @param parkingLot
+ * @return all orders in parkingLot
+ * @throws SQLException DB
+ */
 	public ArrayList<Order> getAllOrdersByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllOrdersByParkingLot);
 		stm.setString(1, parkingLot);
@@ -2261,7 +2246,12 @@ public class DataAccess implements DataInterface {
 		}
 		return allOrders;
 	}
-
+/**
+ * 
+ * @param parkingLot
+ * @return all subscriptions in parking lot
+ * @throws SQLException DB
+ */
 	public ArrayList<Subscription> getAllSubsByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllFullSubsByParkingLot);
 		stm.setString(1, parkingLot);
@@ -2300,7 +2290,9 @@ public class DataAccess implements DataInterface {
 
 		return subs;
 	}
-
+/*
+ * returns all complaints filed on parkingLot
+ */
 	public ArrayList<Complaint> getAllComplaintsByParkingLot(String parkingLot) throws SQLException {
 		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getAllComplaintsByParkingLot);
 		stm.setString(1, parkingLot);
@@ -2315,7 +2307,12 @@ public class DataAccess implements DataInterface {
 		}
 		return complaints;
 	}
-
+/**
+ * contains info about the previous faukted parking spots
+ * @param parkingLot
+ * @return arraylist with all the faluted parking spots
+ * @throws SQLException
+ */
 	public ArrayList<FaultedParkingSpotHistory> getFaultedParkingSpotsHistoryByParkingLot(String parkingLot)
 			throws SQLException {
 		PreparedStatement stm = c
@@ -2330,7 +2327,12 @@ public class DataAccess implements DataInterface {
 		}
 		return history;
 	}
-
+/**
+ * 
+ * @param parkingLot
+ * @return is full
+ * @throws SQLException
+ */
 	public boolean isParkingLotFull(String parkingLot) throws SQLException {
 		if (parkingLot != null) {
 			int width = getWidthByParkingLot(parkingLot);
@@ -2353,7 +2355,11 @@ public class DataAccess implements DataInterface {
 		}
 		return false;
 	}
-
+/**
+ * 
+ * @return manager's mail
+ * @throws SQLException DB
+ */
 	public String getManagerMail() throws SQLException {
 		// TODO Auto-generated method stub
 		String email = null;
@@ -2382,6 +2388,18 @@ public class DataAccess implements DataInterface {
 			return email;
 		}
 		return email;
+	}
+
+	public ArrayList<Integer> getAllPrices() throws SQLException {
+		PreparedStatement stm = c.prepareStatement(sqlStatements.Allstatements.getPrices);
+		// stm.setString(1, parkingLot);
+		ResultSet res = stm.executeQuery();
+		ArrayList<Integer> orderPrices = new ArrayList<Integer>();
+		while (res.next()) {
+			orderPrices.add(Integer.parseInt(res.getString("preOrderPrice")));
+			orderPrices.add(Integer.parseInt(res.getString("uponArrivalPrice")));
+		}
+		return orderPrices;
 	}
 
 }

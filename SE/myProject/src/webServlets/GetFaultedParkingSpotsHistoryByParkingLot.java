@@ -57,9 +57,9 @@ public class GetFaultedParkingSpotsHistoryByParkingLot extends HttpServlet {
 				historyObject = new JSONObject();
 				try {
 					historyObject.put("parkingLot", faultedParkingSpotHistory.getParkingLot());
-					historyObject.put("row", faultedParkingSpotHistory.getRow());
-					historyObject.put("column", faultedParkingSpotHistory.getColumn());
-					historyObject.put("width", faultedParkingSpotHistory.getWidth());
+					historyObject.put("row", Integer.toString(faultedParkingSpotHistory.getRow()));
+					historyObject.put("column", Integer.toString(faultedParkingSpotHistory.getColumn()));
+					historyObject.put("width", Integer.toString(faultedParkingSpotHistory.getWidth()));
 					historyObject.put("date", faultedParkingSpotHistory.getDate());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
